@@ -17,6 +17,7 @@ function page() {
   });
   const result=await response.json();
   if(response.ok){
+    localStorage.setItem("token",result.token);
   router.push("/");
   }
   else {
