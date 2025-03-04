@@ -3,6 +3,7 @@ import Auth from "../../models/auth";
 import connectDB from "../../libs/mongodb";
 import bcryptjs from "bcryptjs";
 import {User} from "../../types/user";
+
 export async function POST(req:NextRequest) {
     await connectDB();
     try {
