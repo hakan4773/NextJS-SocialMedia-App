@@ -18,7 +18,7 @@ function Navbar() {
         </Link>
 </div>
 
-<div className='space-x-4 flex items-center hidden md:flex'>
+<div className='space-x-4  items-center hidden md:flex'>
 <Link href='/login' >Login</Link>
 <Link href='/register'>Register</Link>
 </div>

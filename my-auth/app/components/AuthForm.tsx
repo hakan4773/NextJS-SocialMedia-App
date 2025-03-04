@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React from 'react'
 import { FcGoogle } from "react-icons/fc";
 import { SlSocialFacebook } from "react-icons/sl";
-import { GrTwitter } from "react-icons/gr";
+import { FaXTwitter } from "react-icons/fa6";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -34,10 +34,13 @@ resolver:zodResolver(type==="register" ? registerSchema:loginSchema)
 })
   return (
 
-    <form  onSubmit={handleSubmit(onSubmit)} className='max-w-md mx-auto mt-8 p-6 bg-white shadow-md rounded '>
+    <form  onSubmit={handleSubmit(onSubmit)} 
+    className='max-w-md mx-auto
+     mt-8  p-6   shadow-xl text-white rounded bg-gradient-to-b from-indigo-700 via-purple-600 to-pink-400 ... '>
+
 {type === "register" && ( 
    <div className="mb-4">
-          <label className="block text-gray-700">Name</label>
+          <label className="block text-gray-100">Name</label>
           <input
             {...register("name")}
             className="w-full p-2 border rounded"
@@ -47,7 +50,7 @@ resolver:zodResolver(type==="register" ? registerSchema:loginSchema)
         </div>
 )}
 <div  className='mb-4'>
-<label className="block text-gray-700">Email</label>
+<label className="block text-gray-100">Email</label>
     <input
       {...register("email")}
      className='w-full rounded border p-2' type='email'> 
@@ -58,7 +61,7 @@ resolver:zodResolver(type==="register" ? registerSchema:loginSchema)
 
 
 <div  className='mb-4'>
-<label className="block text-gray-700">Password</label>
+<label className="block text-gray-100">Password</label>
     <input
            {...register("password")}  className='w-full rounded border p-2' type='password'>
     </input>
@@ -68,21 +71,21 @@ resolver:zodResolver(type==="register" ? registerSchema:loginSchema)
 
 <button
         type="submit"
-        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600" >
+        className="w-full bg-blue-500 text-white cursor-pointer p-2 rounded hover:bg-blue-600" >
         {type === "register" ? "Register" : "Login"}
       </button>
 
       <div className='mt-2 w-full flex flex-col justify-center items-center'>
-<p >Ya da </p>
-<div>
-Zaten bir Hesabınız Varmı
-<Link href={type === "register" ? "/login" :"/register"} className='text-blue-600 mx-1 underline'> {type === "register" ? "Login " : "Register"}</Link>
+<p >Or </p>
+<div className='font-stretch-95% '>
+Already have an account?
+<Link href={type === "register" ? "/login" :"/register"} className='text-blue-200 mx-1 underline hover:text-blue-600'> {type === "register" ? "Login " : "Register"}</Link>
 </div>
 
 <div className='flex justify-center items-center mt-4 space-x-4'>
  <Link href={"google"}> <FcGoogle className='text-4xl mt-2 transition-all delay-150 hover:scale-120' /></Link>
 <Link href={"facebook"}> <SlSocialFacebook className='text-4xl mt-2 text-blue-600  transition-all delay-150 hover:scale-120' /></Link>
-<Link href={"twitter"}> <GrTwitter className='text-4xl mt-2 text-blue-400 transition-all delay-150 hover:scale-120' /></Link>
+<Link href={"twitter"}> <FaXTwitter className='text-4xl mt-2 text-black transition-all delay-150 hover:scale-120' /></Link>
 </div>
 </div>
     </form>
