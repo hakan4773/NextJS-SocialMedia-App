@@ -36,7 +36,7 @@ resolver:zodResolver(type==="register" ? registerSchema:loginSchema)
 
     <form  onSubmit={handleSubmit(onSubmit)} 
     className='max-w-md mx-auto
-     mt-8  p-6   shadow-xl text-white rounded bg-gradient-to-b from-indigo-700 via-purple-600 to-pink-400 ... '>
+     mt-0 p-6   shadow-xl text-white rounded bg-gradient-to-b from-indigo-700 via-purple-600 to-pink-400 ... '>
 
 {type === "register" && ( 
    <div className="mb-4">
