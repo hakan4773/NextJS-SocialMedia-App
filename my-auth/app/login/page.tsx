@@ -1,14 +1,28 @@
 "use client"
-
 import React from 'react'
 import { motion } from "motion/react"
-
 import AuthForm from '../components/AuthForm'
 import { LoginFormData } from '../types/auth';
-const handleSubmit = (data: LoginFormData) => {
-  console.log("login data:", data);
-};
+import { useRouter } from 'next/navigation';
+
 function page() {
+  const router=useRouter();
+  const handleSubmit = async (data: LoginFormData) => {
+  const response =await fetch("/api/login",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify(data)
+  });
+  const result=await response.json();
+  if(response.ok){
+  router.push("/");
+  }
+  else {
+     throw new Error(result.message);
+  }
+  };
   return (
 
     <motion.div
