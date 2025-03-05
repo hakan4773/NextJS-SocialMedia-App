@@ -28,12 +28,12 @@ return NextResponse.json({message: "wrong password"},{status:400});
 const token =jwt.sign({
     id:user._id,
     email:user.email},
-    process.env.JWT_SECRET as string,
+    process.env.JWT_SECRET!,
     {
         expiresIn:"1h"
     }
 )
-
+console.log(token)
 
 return NextResponse.json({message: "User logged in successfully",token},{status:200});
 }

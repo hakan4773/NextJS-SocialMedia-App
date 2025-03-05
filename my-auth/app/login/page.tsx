@@ -4,9 +4,12 @@ import { motion } from "motion/react"
 import AuthForm from '../components/AuthForm'
 import { LoginFormData } from '../types/auth';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '../context/AuthContext';
 
 function page() {
   const router=useRouter();
+  const {login}=useAuth();
+
   const handleSubmit = async (data: LoginFormData) => {
   const response =await fetch("/api/login",{
     method:"POST",
@@ -16,14 +19,32 @@ function page() {
     body:JSON.stringify(data)
   });
   const result=await response.json();
+console.log(result.token)
+
   if(response.ok){
-    localStorage.setItem("token",result.token);
-  router.push("/");
+    localStorage.setItem("token", result.token);
+    
+    const verifyResponse = await fetch("/api/protected", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${result.token}`,
+      },
+    });
+    const verifyResult = await verifyResponse.json();
+
+    if (verifyResponse.ok && verifyResult.user) {
+      login(verifyResult.user);
+      router.push("/");
+    } else {
+      console.error(verifyResult.message || "Token verification failed");
+    }
+  } else {
+    throw new Error(result.message);
   }
-  else {
-     throw new Error(result.message);
-  }
-  };
+};
+
+
   return (
 
     <motion.div

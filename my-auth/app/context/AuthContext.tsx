@@ -1,10 +1,9 @@
 "use client";
 import { useContext, createContext, useState, ReactNode } from "react";
-import jwt from "jsonwebtoken";
 
 interface AuthContextType {
     user: { id: string; email: string } | null;
-    login: (token: string) => void;
+    login: (userData: { id: string; email: string }) => void;
     logout: () => void;
 }
 
@@ -17,16 +16,10 @@ interface AuthProviderProps {
 export default function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<{ id: string; email: string } | null>(null);
 
+
     // Login function
-    const login = (token: string) => {
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string; email: string };
-            setUser(decoded);
-            localStorage.setItem("token", token);
-        } catch (error) {
-            console.error("Invalid token:", error instanceof Error ? error.message : "Unknown error");
-            setUser(null);
-        }
+    const login = (userData: { id: string; email: string }) => {
+        setUser(userData);
     };
 
     // Logout function
