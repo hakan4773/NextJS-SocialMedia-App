@@ -6,6 +6,9 @@ import { LoginFormData } from '../types/auth';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import { ThreeDot } from "react-loading-indicators";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+
 function page() {
   const router=useRouter();
   const {login}=useAuth();
@@ -13,6 +16,9 @@ function page() {
 
   const handleSubmit = async (data: LoginFormData) => {
     setLoading(true)
+
+    try {
+      
   const response =await fetch("/api/login",{
     method:"POST",
     headers:{
@@ -39,14 +45,17 @@ function page() {
       setLoading(false)
       login(verifyResult.user);
       router.push("/");
-
-
-    } else {
-      console.error(verifyResult.message || "Token verification failed");
-    }
+    } 
   } else {
-    throw new Error(result.message);
-  }
+    toast.error(result.message || "Login failed ❌");
+      }
+} catch (error) {
+  toast.error("An error occurred during login ❌"); 
+} finally {
+  setLoading(false);
+}
+
+
 };
 if(loading){
 

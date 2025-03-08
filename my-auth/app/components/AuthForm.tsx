@@ -1,6 +1,6 @@
 "use client"  
 import Link from 'next/link';
-import React from 'react'
+import React, { useState } from 'react'
 import { FcGoogle } from "react-icons/fc";
 import { SlSocialFacebook } from "react-icons/sl";
 import { FaXTwitter } from "react-icons/fa6";
@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { LoginFormData, RegisterFormData } from "../types/auth";
+
 
 const registerSchema=z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -25,6 +26,7 @@ type:FormType,
 onSubmit:(data:RegisterFormData | LoginFormData)=>void
 }
 function AuthForm({type,onSubmit}:AuthFormProps) {
+
 const {
   register,
   handleSubmit,
@@ -32,6 +34,7 @@ const {
 }=useForm<RegisterFormData | LoginFormData>({
 resolver:zodResolver(type==="register" ? registerSchema:loginSchema)
 })
+console.log(errors)
   return (
 
     <form  onSubmit={handleSubmit(onSubmit)} 
@@ -46,7 +49,8 @@ resolver:zodResolver(type==="register" ? registerSchema:loginSchema)
             className="w-full p-2 border rounded"
             type="text"
           />
-          {/* {errors.name && <p className="text-red-500">{errors.name.message}</p>} */}
+             {errors.name && (<p className='text-red-500'>{errors.name.message}</p>)}
+
         </div>
 )}
 <div  className='mb-4'>
@@ -55,7 +59,7 @@ resolver:zodResolver(type==="register" ? registerSchema:loginSchema)
       {...register("email")}
      className='w-full rounded border p-2' type='email'> 
     </input>
-    {errors.email && <p className='text-red-500'>{errors.email.message}</p>}
+    {errors.email && (<p className='text-red-500'>{errors.email.message}</p>)}
 
 </div>
 

@@ -24,10 +24,10 @@ function Navbar() {
 <div className='space-x-4  items-center hidden md:flex'>
 {!user ? (
             <>
-              <Link href="/login" className="text-gray-700 hover:text-gray-900">
+              <Link href="/login" className="text-gray-700 cursor-pointer hover:text-gray-900">
                 Login
               </Link>
-              <Link href="/register" className="text-gray-700 hover:text-gray-900">
+              <Link href="/register" className="text-gray-700 cursor-pointer hover:text-gray-900">
                 Register
               </Link>
             </>
@@ -38,7 +38,7 @@ function Navbar() {
               </Link>
               <button
                 onClick={logout}
-                className="text-gray-700 hover:text-gray-900"
+                className="text-gray-700 hover:text-gray-900 cursor-pointer"
               >
                 Logout
               </button>
@@ -46,7 +46,7 @@ function Navbar() {
           )}
 </div>
 
-<button onClick={()=>setIsOpen(!isOpen)} className='md:hidden '>
+<button onClick={()=>setIsOpen(!isOpen)} className='md:hidden cursor-pointer'>
 {isOpen ? <IoClose size={30} /> : <IoMenu size={30} />}</button>
 
 {
@@ -85,7 +85,7 @@ function Navbar() {
                     logout();
                     setIsOpen(false);
                   }}
-                  className="block text-gray-700 hover:text-gray-900"
+                  className="block text-gray-700 cursor-pointer hover:text-gray-900"
                 >
                   Logout
                 </button>
