@@ -17,8 +17,6 @@ interface AuthProviderProps {
 export default function AuthProvider({ children }: AuthProviderProps) {
     const router=useRouter();
     const [user, setUser] = useState<{ id: string; email: string } | null>(null);
-
-
     useEffect(() => {
         const token = localStorage.getItem("token");
       

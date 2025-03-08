@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContext";
 import { useRouter } from "next/navigation";
 export default function Home() {
@@ -8,12 +8,16 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
+    
     const token = localStorage.getItem("token");
 
     if (!token) {
       router.push("/login");
     }
   }, [user]);
+
+
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-400 to-pink-600 ... text-white" >
 <div className="pt-16 w-full max-w-md mx-auto text-white">
