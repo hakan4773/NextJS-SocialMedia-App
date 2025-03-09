@@ -16,8 +16,5 @@ try {
 } catch (error:any) {
     console.error("Token verification error:", error.message);
     return NextResponse.json({ message: 'Geçersiz token' });
-
 }
-
-
 }

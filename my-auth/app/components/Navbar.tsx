@@ -33,7 +33,7 @@ function Navbar() {
             </>
           ) : (
             <>
-              <Link href="/profile" className="text-gray-700 hover:text-gray-900">
+              <Link href="/profile/edit" className="text-gray-700 hover:text-gray-900">
                 Profile
               </Link>
               <button
@@ -74,7 +74,7 @@ function Navbar() {
             ) : (
               <>
                 <Link
-                  href="/profile"
+                  href="/profile/edit"
                   className="block text-gray-700 hover:text-gray-900"
                   onClick={() => setIsOpen(false)}
                 >

@@ -1,6 +1,6 @@
 "use client"  
 import Link from 'next/link';
-import React, { useState } from 'react'
+import React from 'react'
 import { FcGoogle } from "react-icons/fc";
 import { SlSocialFacebook } from "react-icons/sl";
 import { FaXTwitter } from "react-icons/fa6";

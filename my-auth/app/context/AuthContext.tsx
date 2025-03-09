@@ -3,8 +3,8 @@ import { useRouter } from "next/navigation";
 import { useContext, createContext, useState, ReactNode, useEffect } from "react";
 
 interface AuthContextType {
-    user: { id: string; email: string } | null;
-    login: (userData: { id: string; email: string }) => void;
+    user: { id: string,name:string, email: string,password:string } | null;
+    login: (userData: { id: string;name:string, email: string,password:string }) => void;
     logout: () => void;
 }
 
@@ -16,7 +16,7 @@ interface AuthProviderProps {
 
 export default function AuthProvider({ children }: AuthProviderProps) {
     const router=useRouter();
-    const [user, setUser] = useState<{ id: string; email: string } | null>(null);
+    const [user, setUser] = useState<{ id: string,name:string, email: string,password:string } | null>(null);
     useEffect(() => {
         const token = localStorage.getItem("token");
       
@@ -44,7 +44,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       }, []);
       
     // Login function
-    const login = (userData: { id: string; email: string }) => {
+    const login = (userData: { id: string,name:string, email: string,password:string}) => {
         setUser(userData);
     };
 
