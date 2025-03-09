@@ -2,9 +2,20 @@
 import { useAuth } from '../../context/AuthContext'
 import React, {  useState } from 'react'
 import { toast } from 'react-toastify';
-
+import { useRouter } from 'next/navigation';
+import * as z from "zod";
 function page() {
+  const router=useRouter();
 const {user}=useAuth();
+const [errors, setErrors] = useState<{ newPassword?: string }>({});
+
+const resetSchema=z.object({
+  newPassword:z.string().min(6,"New Password must be at least 6 characters")
+})
+
+
+
+
 const [formData,setFormData]=useState({oldPassword: "",
   newPassword: ""});
 
@@ -15,6 +26,14 @@ const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
 
 const handleSubmit = async(e: React.FormEvent) => {
   e.preventDefault();
+
+const result =resetSchema.safeParse(formData);
+if (!result.success) {
+const errorMessages=result.error.format();
+setErrors({ newPassword: errorMessages.newPassword?._errors[0] });
+return ;
+}
+
 try {
   const response=await fetch("/api/profile",{
     method:"PUT",
@@ -98,18 +117,21 @@ try {
                focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/20 text-white placeholder-gray-500`}
               placeholder="Yeni şifre giriniz"
             />
-           
+            {errors.newPassword && (
+    <p className="text-red-500 text-sm">{errors.newPassword}</p>
+  )}
           </div>
 
           <button
-            type="submit"
+            type="submit" 
             className="w-full bg-gradient-to-r cursor-pointer from-blue-500 to-indigo-600 text-white p-2 rounded hover:from-blue-600 hover:to-indigo-700 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
           Güncelle
           </button>
           <button
             type="button"
-            className="w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-600 transition-all mt-2"
+            onClick={()=>router.push("/")}
+            className="w-full bg-gray-500 cursor-pointer text-white p-2 rounded hover:bg-gray-600 transition-all mt-2"
           >
             Geri Dön
           </button>
