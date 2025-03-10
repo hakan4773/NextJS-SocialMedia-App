@@ -43,15 +43,19 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         }
       }, []);
       
-    // Login function
     const login = (userData: { id: string,name:string, email: string,password:string}) => {
         setUser(userData);
     };
 
-    // Logout function
-    const logout = () => {
-        setUser(null);
+    const logout = async() => {
+      try {
+        await fetch("/api/logout", { method: "POST" }); 
         localStorage.removeItem("token");
+        setUser(null); 
+        router.push("/login"); 
+      } catch (error) {
+        console.error("Logout error:", error);
+      }
     };
 
     return (

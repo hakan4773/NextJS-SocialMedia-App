@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { ThreeDot } from "react-loading-indicators";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie"
 
 function page() {
   const router=useRouter();
@@ -27,9 +28,10 @@ function page() {
     body:JSON.stringify(data)
   });
   const result=await response.json();
-  console.log(result.token)
 
   if(response.ok){
+    Cookies.set("token", result.token, { expires: 1, path: "/" });
+
     localStorage.setItem("token", result.token);
     
     const verifyResponse = await fetch("/api/protected", {
