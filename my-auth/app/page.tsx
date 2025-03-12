@@ -7,6 +7,8 @@ import { CiHashtag, CiImageOn } from "react-icons/ci";
 import { SlCalender } from "react-icons/sl";
 import { RiSurveyLine } from "react-icons/ri";
 import Modal from "./components/Modal";
+import LeftBar from "./components/LeftBar";
+import RightBar from "./components/RightBar";
 export default function Home() {
 
 const router = useRouter();  
@@ -50,8 +52,12 @@ setContent(content +"#")
   }
 
   return (
-    <div className=" min-h-screen bg-slate-100  py-24 p-4" >
-<div className="flex justify-center bg-white rounded-md shadow-md">
+    <div className=" min-h-screen bg-slate-100  py-24 p-4  flex justify-center" >
+      <div className="hidden md:block w-1/4 px-4 ">
+         <LeftBar />
+      </div>
+     
+<div className="w-full md:w-1/2 flex justify-center bg-white rounded-md shadow-md max-w-[500px] h-full">
   {/* resim-avatar */}
   <div className="m-2">
   <img
@@ -116,6 +122,13 @@ setContent(content +"#")
 </div>
 
       </div>
+
+
+<div className="hidden md:block w-1/4 p-4">
+<RightBar />
+
+</div>
+
     </div>
 
   );
