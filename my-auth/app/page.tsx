@@ -124,7 +124,7 @@ setContent(content +"#")
       </div>
 
 
-<div className="hidden md:block w-1/4 p-4">
+<div className="hidden md:block w-1/4 px-4">
 <RightBar />
 
 </div>
