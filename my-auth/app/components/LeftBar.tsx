@@ -34,7 +34,7 @@ function LeftBar() {
 
 </div>
 <div className='w-full bg-white rounded-md shadow-md '>
-<ul className='p-4  space-y-3 text-sm hover:underline'>
+<ul className='p-4  space-y-3 text-sm '>
     <li className='flex  space-x-4 hover:underline'><FaBookmark size={20} /><Link href={"/Saves"} className='font-semibold'>Kaydedilenler </Link></li>
     <li className='flex  space-x-4 hover:underline'><SlCalender size={20} /><Link href={"/etkinlik"} className='font-semibold'>Etkinliklerim </Link></li>
     <li className='flex  space-x-4 hover:underline'><MdFavoriteBorder size={20} /><Link href={"/interest"} className='font-semibold'>İlgi Alanlarım </Link></li>

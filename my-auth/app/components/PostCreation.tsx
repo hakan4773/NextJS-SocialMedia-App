@@ -44,7 +44,7 @@ setContent(content +"#")
     <img
                 src={"/5.jpg"}
                 alt="Avatar"
-                className="w-16 h-16 rounded-full border-2 border-white  object-cover"
+                className="w-14 h-12 rounded-full border-2 border-white  object-cover"
               />
            
     </div>
