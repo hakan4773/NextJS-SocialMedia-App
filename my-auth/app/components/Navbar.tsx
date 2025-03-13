@@ -17,13 +17,17 @@ export default function Navbar() {
   }, [user])
 
   return (
-    <header className='bg-white to-purple-400 shadow-md fixed top-0 w-full z-50'>
+    <header className='bg-gradient-to-r from-indigo-500 to-purple-600 shadow-md fixed top-0 w-full z-50'>
       <nav className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
         <div className="flex items-center">
-          <Link href="/" className="flex items-center space-x-3">
-            <Image src="/logo.png" alt="Logo" width={32} height={32} />
-            <span className="text-xl font-bold text-gray-800">SosyalApp</span>
+          <Link href="/" className="flex items-center space-x-1">
+            <Image src="/PİO2.png" alt="Logo"
+            className="w-16  h-8 object-cover mt-2 " 
+             width={512} 
+            height={512}
+              />
+            <span className="text-2xl font-bold text-white ">Paylaşio</span>
           </Link>
         </div>
 
@@ -50,7 +54,7 @@ export default function Navbar() {
                 onClick={() => setNotification(prev => !prev)}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors relative"
               >
-                <MdOutlineNotificationsActive size={24} className="text-gray-600" />
+                <MdOutlineNotificationsActive size={24} className="text-white" />
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   3
                 </span>
@@ -79,7 +83,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             {!user ? (
               <>
-                <Link href="/login" className="text-gray-600 hover:text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-100">
+                <Link href="/login" className="text-white hover:text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-100">
                   Giriş Yap
                 </Link>
                 <Link href="/register" className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
@@ -88,7 +92,7 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link href="/profile" className="text-gray-600 hover:text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-100">
+                <Link href="/profile" className="text-white hover:text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-100">
                   Profilim
                 </Link>
                 <button
