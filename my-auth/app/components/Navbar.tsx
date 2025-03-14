@@ -20,8 +20,8 @@ export default function Navbar() {
     <header className='bg-gradient-to-r from-indigo-500 to-purple-600 shadow-md fixed top-0 w-full z-50'>
       <nav className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
-        <div className="flex items-center">
-          <Link href="/" className="flex items-center space-x-1">
+        <div className="flex items-center lg:mx-2 mx-12">
+          <Link href="/" className="flex items-center ">
             <Image src="/PİO2.png" alt="Logo"
             className="w-16  h-8 object-cover mt-2 " 
              width={512} 
