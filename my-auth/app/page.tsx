@@ -1,16 +1,19 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "./context/AuthContext";
 import { useRouter } from "next/navigation";
 import LeftBar from "./components/LeftBar";
 import RightBar from "./components/RightBar";
 import Posts from "./components/Posts";
 import PostCreation from "./components/PostCreation";
+import { IoMenu } from "react-icons/io5";
 export default function Home() {
 
 const router = useRouter();  
 const { user } = useAuth();
+const [isOpen, setIsOpen] = useState(false);
+const toggleSidebar = () => setIsOpen(!isOpen);
 
   useEffect(() => {
     
@@ -24,7 +27,7 @@ const { user } = useAuth();
 
 
   return (
-    <div className=" min-h-screen bg-slate-100  py-24 p-4  flex justify-center" >
+    <div className=" min-h-screen bg-slate-100  py-24  p-4 flex justify-center" >
 {/* Sol kısım */}
 
       <div className="hidden md:block w-1/4 px-4 ">

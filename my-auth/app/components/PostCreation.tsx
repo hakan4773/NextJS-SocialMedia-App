@@ -93,7 +93,8 @@ setContent(content +"#")
   
   {/*gönderi paylaş butonu */}
   <div className="flex  text-white">
-      <button className="p-2 bg-blue-600 rounded-md cursor-pointer hover:bg-blue-300">Paylaş</button>
+      <button disabled={content ? false :true} onClick={()=>alert("MERHABA")}
+       className={`${content ?  'p-2 bg-blue-600 rounded-full cursor-pointer hover:bg-blue-300' : 'p-2 bg-gray-500 rounded-full  '} `}>Post Yayınla</button>
   </div>
   
   
