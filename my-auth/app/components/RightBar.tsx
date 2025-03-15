@@ -42,23 +42,23 @@ export default function RightBar() {
       {/* Trendler */}
       <div className="p-4 bg-white rounded-lg shadow-md">
         <h3 className="text-lg font-semibold flex"><FaArrowTrendUp  className="mr-2" />Trendler</h3>
-        <ul className="mt-2 space-y-2 text-xl">
+        <ul className="mt-2  text-xl">
           {trends.map((trend,index) => (
             
-            <div key={trend.tag} className="hover:bg-slate-200">
+            <div key={trend.tag} className="hover:bg-gray-50 " >
             <div className="relative  flex justify-end items-end ">
                 <button onClick={() => toggleSetting(index)} className="cursor-pointer" ><PiDotsThreeBold /></button>
 
                 {openSettingIndex === index && ( <div className="absolute right-0 top-full mt-2 p-2 w-52 text-sm bg-white rounded-lg shadow-lg z-50"> 
                     <div className="max-h-96 overflow-y-auto"> 
-                    <p  className="relative p-2 hover:bg-gray-100 cursor-pointer">Bunu önerme</p> 
-                    <p  className="relative p-2 hover:bg-gray-100 cursor-pointer">Spam</p> 
+                    <p  className="relative p-2 hover:bg-gray-50 cursor-pointer">Bunu önerme</p> 
+                    <p  className="relative p-2 hover:bg-gray-50 cursor-pointer">Spam</p> 
 
                     </div> </div> )}
             </div>
 
-            <li className="text-blue-400 text-sm  p-2 flex justify-between">
-             <Link href="/trend"><b>{trend.tag}</b> • {trend.count} paylaşım </Link> 
+            <li className="text-blue-400 text-sm  p-2 flex justify-between ">
+             <Link href="/trend" className="mb-2"><b >{trend.tag}</b> • {trend.count} paylaşım </Link> 
             <p className="text-gray-400">{trend.categories}</p>
             </li>
             

@@ -13,8 +13,8 @@ function LeftBar() {
   return (
     <div className='flex  flex-col space-y-4'>
 {/* Profil özeti */}
-<div className='w-full bg-white rounded-md shadow-md'>
-<div className="m-2" >
+<div className='w-full text-white '>
+<div className=" flex bg-gradient-to-r from-blue-500 to-purple-500 p-6 rounded-md shadow-md" >
   <img
               src={"/5.jpg"}
               alt="Avatar"
@@ -22,7 +22,7 @@ function LeftBar() {
             />
             <div className='p-2 '>
                 <p className='font-bold text-xl'>Ahmet Yılmaz</p>
-                <p>Yazılım geliştiricisi</p>
+                <p className='text-sm '>Yazılım geliştiricisi</p>
             </div>
          
   </div>
@@ -44,7 +44,7 @@ Followers
        <span className='text-blue-600 font-bold'>100</span>
 </li>
     <li className='flex justify-between  hover:underline'>
-      <Link href={"/post"} className='text-gray-600'>Gönderi Sayısı  </Link>
+      <Link href={"/profile"} className='text-gray-600'>Gönderi Sayısı  </Link>
       <span className='text-blue-600 font-bold'>10</span></li>
 
 </ul>
@@ -54,9 +54,9 @@ Followers
 
 <div className='w-full bg-white rounded-md shadow-md '>
 <ul className='p-4  space-y-3 text-sm '>
-    <li className='flex  space-x-4 hover:bg-gray-100 '><FaBookmark size={20} className='text-blue-500'/><Link href={"/Saves"} className=''>Kaydedilenler </Link></li>
-    <li className='flex  space-x-4 '><SlCalender size={20} className='text-blue-500' /><Link href={"/etkinlik"} className=''>Etkinliklerim </Link></li>
-    <li className='flex  space-x-4 '><MdFavoriteBorder size={20} className='text-blue-500' /><Link href={"/interest"} className=''>İlgi Alanlarım </Link></li>
+    <li className='flex  space-x-4 hover:bg-gray-50 p-2 '><FaBookmark size={20} className='text-blue-500'/><Link href={"/Saves"} className='transition-colors'>Kaydedilenler </Link></li>
+    <li className='flex  space-x-4 hover:bg-gray-50  p-2  '><SlCalender size={20} className='text-blue-500' /><Link href={"/etkinlik"} className='transition-colors'>Etkinliklerim </Link></li>
+    <li className='flex  space-x-4 hover:bg-gray-50  p-2 '><MdFavoriteBorder size={20} className='text-blue-500' /><Link href={"/interest"} className='transition-colors'>İlgi Alanlarım </Link></li>
 
 
 
