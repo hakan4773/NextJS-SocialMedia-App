@@ -156,7 +156,7 @@ const toggleSetting=(index:any)=>{
                   )}
                 </div>
 
-                <Link href="/trend" className="block p-3 rounded-lg hover:bg-white transition-colors">
+                <Link href="/tweets" className="block p-3 rounded-lg hover:bg-white transition-colors">
                   <div className="text-sm text-blue-500 font-semibold">{trend.tag}</div>
                   <div className="flex justify-between items-center mt-1">
                     <span className="text-xs text-gray-500">{trend.count} paylaşım</span>

@@ -4,6 +4,7 @@ import { motion } from "motion/react"
 import AuthForm from '../components/AuthForm'
 import { RegisterFormData } from '../types/auth';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 function page() {
   const router=useRouter();
   const handleSubmit =async (data: RegisterFormData) => {
@@ -20,7 +21,7 @@ function page() {
     router.push("/login");
   }
   else  {
-    throw new Error(result.message);
+     toast.error("An error occurred during register ❌"); 
   }
 
   };

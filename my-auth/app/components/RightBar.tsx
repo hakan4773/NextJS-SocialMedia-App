@@ -58,7 +58,7 @@ export default function RightBar() {
             </div>
 
             <li className="text-blue-400 text-sm  p-2 flex justify-between ">
-             <Link href="/trend" className="mb-2"><b >{trend.tag}</b> • {trend.count} paylaşım </Link> 
+             <Link href="/tweets" className="mb-2"><b >{trend.tag}</b> • {trend.count} paylaşım </Link> 
             <p className="text-gray-400">{trend.categories}</p>
             </li>
             
