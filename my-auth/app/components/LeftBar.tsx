@@ -1,10 +1,15 @@
+"use client"
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 import { FaBookmark } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
 import { MdFavoriteBorder } from "react-icons/md";
+import Followers from './Followers';
+import Following from './Following';
 
 function LeftBar() {
+  const [isFollowersOpen, setIsFollowersOpen] = useState(false);
+  const [isFollowingOpen, setIsFollowingOpen] = useState(false);
   return (
     <div className='flex  flex-col space-y-4'>
 {/* Profil özeti */}
@@ -26,18 +31,32 @@ function LeftBar() {
 
 <div className='w-full bg-white rounded-md shadow-md '>
 <ul className='p-4  space-y-3 text-sm'>
-    <li className='flex justify-between  hover:underline'><Link href={"/followers"} className='font-semibold'>Followers  </Link><span className='text-blue-500'>50</span></li>
-    <li className='flex justify-between  hover:underline'><Link href={"/following"} className='font-semibold'>Following  </Link><span className='text-blue-500'>100</span></li>
-    <li className='flex justify-between  hover:underline'><Link href={"/post"} className='font-semibold'>Gönderi Sayısı  </Link><span className='text-blue-500'>10</span></li>
+    <li className='flex justify-between  hover:underline'>
+      <button onClick={()=>setIsFollowersOpen(true)} data-modal-target="default-modal" data-modal-toggle="default-modal" className='text-gray-600 cursor-pointer' type="button">
+Followers
+</button>
+      <span className='text-blue-600 font-bold'>50</span></li>
+    
+    <li className='flex justify-between  hover:underline'>
+  
+      <button onClick={()=>setIsFollowingOpen(true)} data-modal-target="default-modal" data-modal-toggle="default-modal" className='text-gray-600 cursor-pointer' type="button">
+      Following</button>
+       <span className='text-blue-600 font-bold'>100</span>
+</li>
+    <li className='flex justify-between  hover:underline'>
+      <Link href={"/post"} className='text-gray-600'>Gönderi Sayısı  </Link>
+      <span className='text-blue-600 font-bold'>10</span></li>
 
 </ul>
-
+<Followers isFollowersOpen={isFollowersOpen} setIsFollowersOpen={setIsFollowersOpen} />
+<Following isFollowingOpen={isFollowingOpen} setIsFollowingOpen={setIsFollowingOpen} />
 </div>
+
 <div className='w-full bg-white rounded-md shadow-md '>
 <ul className='p-4  space-y-3 text-sm '>
-    <li className='flex  space-x-4 hover:underline'><FaBookmark size={20} /><Link href={"/Saves"} className='font-semibold'>Kaydedilenler </Link></li>
-    <li className='flex  space-x-4 hover:underline'><SlCalender size={20} /><Link href={"/etkinlik"} className='font-semibold'>Etkinliklerim </Link></li>
-    <li className='flex  space-x-4 hover:underline'><MdFavoriteBorder size={20} /><Link href={"/interest"} className='font-semibold'>İlgi Alanlarım </Link></li>
+    <li className='flex  space-x-4 hover:bg-gray-100 '><FaBookmark size={20} className='text-blue-500'/><Link href={"/Saves"} className=''>Kaydedilenler </Link></li>
+    <li className='flex  space-x-4 '><SlCalender size={20} className='text-blue-500' /><Link href={"/etkinlik"} className=''>Etkinliklerim </Link></li>
+    <li className='flex  space-x-4 '><MdFavoriteBorder size={20} className='text-blue-500' /><Link href={"/interest"} className=''>İlgi Alanlarım </Link></li>
 
 
 
