@@ -18,10 +18,10 @@ function page() {
   const result = await response.json();
   console.log(result);
   if(response.ok){
-    router.push("/login");
+    router.push("/register/addimage");
   }
   else  {
-     toast.error("An error occurred during register ❌"); 
+     toast.error("Kayıt başarısız oldu ❌"); 
   }
 
   };

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
  export interface IUser extends Document {
-  username: string;
+  name: string;
   email: string;
   password: string;
   bio?: string;
@@ -13,7 +13,7 @@ import mongoose from 'mongoose';
  } 
 
 const AuthSchema = new mongoose.Schema({
-    username: { type: String, required: true},
+    name: { type: String, required: true},
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     bio: { type: String },

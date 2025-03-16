@@ -2,11 +2,18 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { FiEdit2, FiSettings } from 'react-icons/fi'
-import { User } from '../types/user'
 import { getUserDetails } from '../utils/getUsers'
 
+interface UserType{
+  id:string,
+  name:string,
+  email:string,
+  password:string,
+  bio:string
+} 
+
 export default function ProfilePage() {
-const [userData,setUserData]=useState<User |null>()
+const [userData,setUserData]=useState<UserType |null>()
 
 useEffect(()=>{
 

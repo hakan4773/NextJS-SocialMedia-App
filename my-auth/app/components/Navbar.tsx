@@ -19,7 +19,8 @@ export default function Navbar() {
 
   return (
     <header className='bg-gradient-to-r from-indigo-500 to-purple-600 shadow-md fixed top-0 w-full z-50'>
-  <ResponsiveBar />
+ 
+ {user && <ResponsiveBar />} 
 
       <nav className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}

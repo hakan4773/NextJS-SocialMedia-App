@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Auth from "../../models/auth";
 import connectDB from "../../libs/mongodb";
-import {User} from "../../types/user";
 import jwt from "jsonwebtoken"
 import bcryptjs from "bcryptjs";
 interface DecodedToken {
