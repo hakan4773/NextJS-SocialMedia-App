@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext"
 import Image from 'next/image'
 import { MdOutlineNotificationsActive } from "react-icons/md"
 import { FiSearch } from "react-icons/fi"
+import ResponsiveBar from './ResponsiveBar'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -18,6 +19,8 @@ export default function Navbar() {
 
   return (
     <header className='bg-gradient-to-r from-indigo-500 to-purple-600 shadow-md fixed top-0 w-full z-50'>
+  <ResponsiveBar />
+
       <nav className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
         <div className="flex items-center lg:mx-2 mx-12">
