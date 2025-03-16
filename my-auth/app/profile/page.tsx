@@ -1,7 +1,23 @@
+"use client"
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import { FiEdit2, FiSettings } from 'react-icons/fi'
+import { User } from '../types/user'
+import { getUserDetails } from '../utils/getUsers'
 
 export default function ProfilePage() {
+const [userData,setUserData]=useState<User |null>()
+
+useEffect(()=>{
+
+const fetchData=async()=>{
+const userData=await getUserDetails();
+setUserData(userData.user)
+}
+fetchData();
+
+},[])
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-700 via-purple-600 to-pink-400  py-24">
       <div className="max-w-4xl mx-auto px-4">
@@ -24,14 +40,14 @@ export default function ProfilePage() {
             
             <div className="flex-1">
               <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold text-gray-800">Ahmet Yılmaz</h1>
+                <h1 className="text-2xl font-bold text-gray-800">{userData?.name}</h1>
                 <button className="flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200">
                   <FiSettings size={18} />
                   <span>Ayarlar</span>
                 </button>
               </div>
-              <p className="text-gray-600 mt-1">@ahmetyilmaz</p>
-              <p className="text-gray-700 mt-3">Frontend Geliştirici | React & Next.js Uzmanı</p>
+              <p className="text-gray-600 mt-1">{userData?.email}</p>
+              <p className="text-gray-700 mt-3">{userData?.bio}</p>
             </div>
           </div>
         </div>

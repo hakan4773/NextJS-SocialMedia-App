@@ -14,6 +14,8 @@ import { SlCalender } from "react-icons/sl";
 import { MdFavoriteBorder } from "react-icons/md";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { PiDotsThreeBold } from "react-icons/pi";
+import { getUserDetails } from "./utils/getUsers";
+import { User } from "./types/user";
 export default function Home() {
 
 const router = useRouter();  
@@ -21,18 +23,20 @@ const { user } = useAuth();
 const [isOpen, setIsOpen] = useState(false);
 const toggleSidebar = () => setIsOpen(!isOpen);
 const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
+const [userData,setUserData]=useState<User |null>()
+
 const toggleSetting=(index:any)=>{
   setOpenSettingIndex(openSettingIndex === index ? null: index)
 }
-  useEffect(() => {
-    
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-    }
-  }, [user]);
-
+ useEffect(()=>{
  
+ const fetchData=async()=>{
+ const userData=await getUserDetails();
+ setUserData(userData.user)
+ }
+ fetchData();
+ 
+ },[])
   const trends = [
     { tag: "#Tatil", count: 150,categories:"Tatil" },
     { tag: "#Yemek", count: 100 ,categories:"Yemek"},
@@ -61,23 +65,24 @@ const toggleSetting=(index:any)=>{
               isOpen ? "translate-x-0" : "-translate-x-full"
             }`}
           >
-            <div className="w-full flex flex-col h-full">
-              {/* profile */}
-              <div className=" flex bg-gradient-to-r from-blue-500 to-purple-500 p-6">
-                <Link href={"/profile"} className="flex items-center space-x-4">
-                  <img
-                    src={"/5.jpg"}
-                    alt="Avatar"
-                    className="w-16 h-16 rounded-full border-2 border-white  object-cover"
-                  />
-                </Link>
-                <div className="p-2 text-white">
-                  <p className="font-bold text-xl">Ahmet Yılmaz</p>
-                  <p>Yazılım geliştiricisi</p>
-                  <p className="text-sm text-slate-200">Türkiye</p>
+             <div className='w-full flex flex-col h-full'>
+      {/* Profil Bölümü */}
+      <div className="p-6 bg-gradient-to-r from-blue-500 to-purple-500">
+        <Link href="/profile" className="flex items-center space-x-4">
+          <img
+            src="/5.jpg"
+            alt="Avatar"
+            className="w-16 h-16 rounded-full border-2 border-white shadow-lg object-cover hover:scale-105 transition-transform duration-200"
+          />
+          <div className='text-white'>
+            <p className='font-bold text-xl'>{userData?.name}</p>
+            <p className="opacity-90">{userData?.bio}</p>
 
-                </div>
-              </div>
+          </div>
+        </Link>
+      </div>
+
+              
 {/* istatistikler */}
               <div className="  border-t py-4 bg-gray-50 ">
                 <ul className="px-6 flex justify-between text-sm">

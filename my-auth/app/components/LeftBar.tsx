@@ -1,15 +1,26 @@
 "use client"
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaBookmark } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
 import { MdFavoriteBorder } from "react-icons/md";
 import Followers from './Followers';
 import Following from './Following';
-
+import { User } from '../types/user';
+import { getUserDetails } from '../utils/getUsers';
 function LeftBar() {
+  
   const [isFollowersOpen, setIsFollowersOpen] = useState(false);
   const [isFollowingOpen, setIsFollowingOpen] = useState(false);
+const [userData, setUserData] = useState<User |null>(null);
+
+useEffect(() => {
+  const fetchData = async () => {
+    const userData = await getUserDetails();
+    setUserData(userData.user);
+  };
+  fetchData();
+}, []);
   return (
     <div className='flex  flex-col space-y-4'>
 {/* Profil özeti */}
@@ -21,8 +32,8 @@ function LeftBar() {
               className="w-16 h-16 rounded-full border-2 border-white  object-cover"
             />
             <div className='p-2 '>
-                <p className='font-bold text-xl'>Ahmet Yılmaz</p>
-                <p className='text-sm '>Yazılım geliştiricisi</p>
+                <p className='font-bold text-xl'>{userData?.name}</p>
+                <p className='text-sm '>{userData?.bio}</p>
             </div>
          
   </div>
