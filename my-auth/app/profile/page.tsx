@@ -9,7 +9,8 @@ interface UserType{
   name:string,
   email:string,
   password:string,
-  bio:string
+  bio:string;
+  profileImage:string
 } 
 
 export default function ProfilePage() {
@@ -34,7 +35,7 @@ fetchData();
           <div className="flex items-center space-x-6">
             <div className="relative">
               <Image
-                src="/5.jpg"
+                src={userData?.profileImage || '/profil.jpg'}
                 alt="Profil Fotoğrafı"
                 width={120}
                 height={120}

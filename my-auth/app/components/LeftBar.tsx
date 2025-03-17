@@ -8,11 +8,19 @@ import Followers from './Followers';
 import Following from './Following';
 import { User } from '../types/user';
 import { getUserDetails } from '../utils/getUsers';
+interface UserTypes {
+  id?: string;
+  name: string;
+  email: string;
+  password: string;
+  bio:string;
+  profileImage:string;
+}
 function LeftBar() {
   
   const [isFollowersOpen, setIsFollowersOpen] = useState(false);
   const [isFollowingOpen, setIsFollowingOpen] = useState(false);
-const [userData, setUserData] = useState<User |null>(null);
+const [userData, setUserData] = useState<UserTypes |null>(null);
 
 useEffect(() => {
   const fetchData = async () => {
@@ -27,7 +35,7 @@ useEffect(() => {
 <div className='w-full text-white '>
 <div className=" flex bg-gradient-to-r from-blue-500 to-purple-500 p-6 rounded-md shadow-md" >
   <img
-              src={"/5.jpg"}
+              src={userData?.profileImage}
               alt="Avatar"
               className="w-16 h-16 rounded-full border-2 border-white  object-cover"
             />

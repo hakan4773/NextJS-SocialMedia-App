@@ -9,13 +9,20 @@ import { SlCalender } from 'react-icons/sl'
 import { User } from '../types/user'
 import { getUserDetails } from '../utils/getUsers'
 import { PiDotsThreeBold } from 'react-icons/pi'
-
+interface UserTypes {
+  id?: string;
+  name: string;
+  email: string;
+  password: string;
+  bio:string;
+  profileImage:string;
+}
 function ResponsiveBar() {
     
     const [isOpen, setIsOpen] = useState(false);
     const toggleSidebar = () => setIsOpen(!isOpen);
     const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
-    const [userData,setUserData]=useState<User |null>()
+    const [userData,setUserData]=useState<UserTypes |null>()
     
     const toggleSetting=(index:any)=>{
       setOpenSettingIndex(openSettingIndex === index ? null: index)
@@ -59,7 +66,7 @@ function ResponsiveBar() {
   <div className="p-6 bg-gradient-to-r from-blue-500 to-purple-500">
     <Link href="/profile" className="flex items-center space-x-4">
       <img
-        src="/5.jpg"
+        src={userData?.profileImage}
         alt="Avatar"
         className="w-16 h-16 rounded-full border-2 border-white shadow-lg object-cover hover:scale-105 transition-transform duration-200"
       />
