@@ -1,13 +1,19 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from "motion/react"
 import AuthForm from '../components/AuthForm'
-import { RegisterFormData } from '../types/auth';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+
+interface RegisterTypes{
+  userId?:string;
+  name?: string;
+  email: string;
+  password: string;
+}
 function page() {
   const router=useRouter();
-  const handleSubmit =async (data: RegisterFormData) => {
+  const handleSubmit =async (data: RegisterTypes) => {
     const response =await fetch("/api/register", {
       method: "POST",
     headers:{
@@ -16,9 +22,13 @@ function page() {
   ,body: JSON.stringify(data)
   })
   const result = await response.json();
-  console.log(result);
   if(response.ok){
-    router.push("/register/addimage");
+    if (result.userId) {
+      localStorage.setItem("userId", result.userId); 
+      router.push("/register/addimage");
+    } else {
+      console.error("User ID is undefined");
+    }
   }
   else  {
      toast.error("Kayıt başarısız oldu ❌"); 

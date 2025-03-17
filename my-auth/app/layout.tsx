@@ -17,7 +17,7 @@ export default function RootLayout({
       <body>
       <Suspense fallback={<Loading />}>
          <AuthProvider> 
-          <Loading />
+          
         <Navbar />
         <ToastContainer  position="top-right"  />
         {children}
