@@ -48,7 +48,8 @@ function page() {
 
     const data = await res.json();
     if (res.ok) {
-      alert("Profil resmi başarıyla güncellendi!");
+      localStorage.removeItem("userId");
+      router.push("/login")
     } else {
       alert(data.message);
     }
