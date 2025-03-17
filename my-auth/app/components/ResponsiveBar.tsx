@@ -72,8 +72,7 @@ function ResponsiveBar() {
       />
       <div className='text-white'>
         <p className='font-bold text-xl'>{userData?.name}</p>
-        <p className="opacity-90">{userData?.bio}</p>
-
+        <p className="opacity-90">{userData?.bio ||<Link href={"/profile/edit"}>Profil yazısı ekleyin ✏️</Link>}</p>
       </div>
     </Link>
   </div>

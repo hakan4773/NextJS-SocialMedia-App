@@ -41,7 +41,8 @@ useEffect(() => {
             />
             <div className='p-2 '>
                 <p className='font-bold text-xl'>{userData?.name}</p>
-                <p className='text-sm '>{userData?.bio}</p>
+              
+              <p className='text-sm '>{userData?.bio ||<Link href={"/profile/edit"}>Profil yazısı ekleyin ✏️</Link>}</p>
             </div>
          
   </div>
