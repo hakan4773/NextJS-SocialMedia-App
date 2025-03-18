@@ -6,6 +6,9 @@ import { SlCalender } from "react-icons/sl";
 import { RiSurveyLine } from "react-icons/ri";
 import Modal from "../components/Modal";
 import { getUserDetails } from "../utils/getUsers";
+import { useRouter } from "next/navigation";
+import { ThreeDot } from "react-loading-indicators";
+import { toast } from "react-toastify";
 interface UserTypes {
   id?: string;
   name: string;
@@ -15,13 +18,14 @@ interface UserTypes {
   profileImage:string;
 }
 function PostCreation() {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router=useRouter();//yönlendirme için
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);//resim ekleme için
+  const [preview, setPreview] = useState<string | null>(null);//resim görüntüleme için
+  const [isModalOpen, setIsModalOpen] = useState(false);//Etkinlik modalı için
   const [content, setContent] = useState<string | number | any>("");
-  const [userData,setUserData]=useState<UserTypes |null>();
-  const handleTag = () => {
-    setContent(content + "#");
-  };
+  const [tags, setTags] = useState<string | [] | any>([]);
+  const [userData,setUserData]=useState<UserTypes |null>();//Kullanıcı bilgisi için
+  const [loading,setLoading]=useState(false)
   const handleOpen = () => {
     setIsModalOpen(true);
   };
@@ -33,18 +37,74 @@ function PostCreation() {
   const handleSelectImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
+      setSelectedImage(file);
+      const reader=new FileReader();
+      reader.onload=()=>{
+setPreview(reader.result as string)
+      }
+      reader.readAsDataURL(file);
     }
   };
 
-  useEffect(()=>{
+useEffect(()=>{
 const fetchData=async()=>{
 const userData=await getUserDetails();
 setUserData(userData.user);
 }
 fetchData();
   },[])
+
+const handleSubmit=async()=>{
+  setLoading(true)
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert("Lütfen giriş yapın!");
+    return;
+  }
+  if (!content.trim()) {
+    alert("Lütfen bir şeyler yazın!");
+    return;
+  }
+try {
+  const extractedTags = content.match(/#\w+/g) || [];
+
+  const formData=new FormData();
+formData.append("content",content)
+formData.append("tags", JSON.stringify(extractedTags));
+if (selectedImage) {
+  formData.append("image", selectedImage);
+}
+
+const response=await fetch("/api/posts",{
+  method:"POST",
+  body:formData,
+  headers: {
+    "Authorization": `Bearer ${token}`
+  },
+})
+
+const data=await response.json();
+
+if (response.ok) { 
+window.location.href = "/"; 
+  toast.success("Gönderi başarıyla paylaşıldı")
+}
+   else { 
+    console.error("Gönderi paylaşma başarısız:", data.message); 
+    alert("Gönderi paylaşılırken bir hata oluştu: " + data.message); 
+  }
+} catch (error) {
+console.error("Gönderi paylaşma hatası:", error);
+alert("Bir hata meydana geldi. Lütfen tekrar dene.");
+}
+
+}
+if(loading){
+  <div className="flex justify-center items-center h-screen">
+  <ThreeDot variant="bounce" color="#32cd32" size="medium" text="" textColor="" />
+  </div>
+}
+
   return (
     <div className="flex w-full bg-white rounded-md shadow-md">
       {/* resim-avatar */}
@@ -64,7 +124,14 @@ fetchData();
           onChange={(e) => setContent(e.target.value)}
           className="border rounded-xl border-gray-300  w-full p-2 h-24"
           placeholder="Ne paylaşmak istersin?"
-        ></textarea>
+        >
+{preview && (
+  <div className="mt-2">
+    <img src={preview} alt="Preview" className="w-32 h-32 object-cover rounded-md" />
+  </div>
+)}
+
+        </textarea>
 
         {/* Butonlar ve araçlar */}
         <div className=" h-auto p-2  flex flex-row justify-between">
@@ -83,7 +150,7 @@ fetchData();
                 ></input>
               </label>
             </div>
-
+          
             {/* Etkinlik oluşturma */}
             <div>
               <button
@@ -100,6 +167,11 @@ fetchData();
               </button>
               <Modal isOpen={isModalOpen} onClose={handleClose} />
             </div>
+
+
+
+
+            
             {/* Anket oluşturma */}
             <div>
               <RiSurveyLine
@@ -107,22 +179,14 @@ fetchData();
                 className="text-red-500 hover:text-blue-700"
               />
             </div>
-            {/* Tag oluşturma */}
-            <div>
-              <button className="cursor-pointer" onClick={handleTag}>
-                <CiHashtag
-                  size={25}
-                  className="text-blue-800 hover:text-blue-900 "
-                />
-              </button>
+
             </div>
-          </div>
 
           {/*gönderi paylaş butonu */}
           <div className="flex  text-white">
             <button
-              disabled={content ? false : true}
-              onClick={() => alert("MERHABA")}
+              disabled={!content.trim()}
+              onClick={handleSubmit}
               className={`${
                 content
                   ? "p-2 bg-blue-600 rounded-full cursor-pointer hover:bg-blue-300"
