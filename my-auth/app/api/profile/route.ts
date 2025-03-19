@@ -3,6 +3,7 @@ import Auth from "../../models/auth";
 import connectDB from "../../libs/mongodb";
 import jwt from "jsonwebtoken"
 import bcryptjs from "bcryptjs";
+import Post from "@/app/models/Post";
 interface DecodedToken {
   id: string;
   iat: number;
@@ -38,7 +39,7 @@ return NextResponse.json({message:"Şifre güncelleme başarılı"}, { status: 2
 
 export async function GET(req:NextRequest) {
   await connectDB();
-  try {
+  try { //fonksiyon kullan
     const authHeader=req.headers.get("authorization");
     if (!authHeader) {
       return NextResponse.json({ message: "Yetkisiz erişim!" }, { status: 401 });
@@ -47,10 +48,12 @@ export async function GET(req:NextRequest) {
   const decoded=jwt.verify(token,process.env.JWT_SECRET!) as DecodedToken;
   
   const user = await Auth.findById(decoded.id).select("-password");;  
+
   if (!user ) {
     return NextResponse.json({ message: "kullanıcı bulunamadı!" }, { status: 404 });
 }
-return NextResponse.json({ user },{status:201})
+const posts = await Post.find({ user: decoded.id }).sort({ createdAt: -1 });
+return NextResponse.json({ user ,posts},{status:201})
 
   } catch (error:any) {
     return NextResponse.json({error:"Bir hata oluştu.",details:error.message},{status:500})

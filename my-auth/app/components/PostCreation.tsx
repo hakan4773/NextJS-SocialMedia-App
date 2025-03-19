@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { CiHashtag, CiImageOn } from "react-icons/ci";
+import {  CiImageOn } from "react-icons/ci";
 import { SlCalender } from "react-icons/sl";
 import { RiSurveyLine } from "react-icons/ri";
 import Modal from "../components/Modal";
 import { getUserDetails } from "../utils/getUsers";
-import { useRouter } from "next/navigation";
 import { ThreeDot } from "react-loading-indicators";
 import { toast } from "react-toastify";
 interface UserTypes {
@@ -18,12 +17,10 @@ interface UserTypes {
   profileImage:string;
 }
 function PostCreation() {
-  const router=useRouter();//yönlendirme için
   const [selectedImage, setSelectedImage] = useState<File | null>(null);//resim ekleme için
   const [preview, setPreview] = useState<string | null>(null);//resim görüntüleme için
   const [isModalOpen, setIsModalOpen] = useState(false);//Etkinlik modalı için
   const [content, setContent] = useState<string | number | any>("");
-  const [tags, setTags] = useState<string | [] | any>([]);
   const [userData,setUserData]=useState<UserTypes |null>();//Kullanıcı bilgisi için
   const [loading,setLoading]=useState(false)
   const handleOpen = () => {
@@ -59,10 +56,12 @@ const handleSubmit=async()=>{
   const token = localStorage.getItem('token');
   if (!token) {
     alert("Lütfen giriş yapın!");
+    setLoading(false);
     return;
   }
   if (!content.trim()) {
     alert("Lütfen bir şeyler yazın!");
+    setLoading(false);
     return;
   }
 try {
@@ -87,7 +86,8 @@ const data=await response.json();
 
 if (response.ok) { 
 window.location.href = "/"; 
-  toast.success("Gönderi başarıyla paylaşıldı")
+setLoading(false);
+toast.success("Gönderi başarıyla paylaşıldı")
 }
    else { 
     console.error("Gönderi paylaşma başarısız:", data.message); 
@@ -100,10 +100,13 @@ alert("Bir hata meydana geldi. Lütfen tekrar dene.");
 
 }
 if(loading){
-  <div className="flex justify-center items-center h-screen">
-  <ThreeDot variant="bounce" color="#32cd32" size="medium" text="" textColor="" />
-  </div>
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <ThreeDot variant="bounce" color="#32cd32" size="medium" text="" textColor="" />
+    </div>
+  );
 }
+
 
   return (
     <div className="flex w-full bg-white rounded-md shadow-md">
@@ -125,11 +128,7 @@ if(loading){
           className="border rounded-xl border-gray-300  w-full p-2 h-24"
           placeholder="Ne paylaşmak istersin?"
         >
-{preview && (
-  <div className="mt-2">
-    <img src={preview} alt="Preview" className="w-32 h-32 object-cover rounded-md" />
-  </div>
-)}
+
 
         </textarea>
 
@@ -144,7 +143,7 @@ if(loading){
                 />
                 <input
                   type="file"
-                  onChange={(e: any) => handleSelectImage(e)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSelectImage(e)}
                   className="hidden"
                   accept="image/*"
                 ></input>
@@ -168,6 +167,7 @@ if(loading){
               <Modal isOpen={isModalOpen} onClose={handleClose} />
             </div>
 
+            
 
 
 
@@ -196,7 +196,11 @@ if(loading){
               Post Yayınla
             </button>
           </div>
-        </div>
+       </div>    {preview && (    <div className="mt-2">
+    <img src={preview} alt="Preview" className="w-full h-32 object-cover rounded-md" />
+  </div>
+)}
+     
       </div>
     </div>
   );

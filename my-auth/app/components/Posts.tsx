@@ -54,8 +54,8 @@ fetchPosts();
     }
   }
   return (
-    <div className=" rounded-md shadow-md space-y-3">
-      {posts?.map((post,index) => (
+    <div className="  space-y-3">
+     {posts &&  posts.length > 0 ? (posts?.map((post,index) => (
         <div key={index} className="p-4 rounded-lg bg-white  shadow-md space-y-4">
           <div className="flex items-center">
             <Image
@@ -125,9 +125,11 @@ fetchPosts();
            </div>
 
           )}
-        </div>
-
-      ))}
+        </div>))
+) : (
+  <div className="text-gray-500 text-center p-4 min-h-[250px]">Henüz paylaşım yapılmadı.</div>
+)}
+  
     </div>
   );
 }
