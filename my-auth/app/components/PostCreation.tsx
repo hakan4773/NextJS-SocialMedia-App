@@ -66,10 +66,10 @@ const handleSubmit=async()=>{
     return;
   }
 try {
-  const extractedTags = content.match(/#\w+/g) || [];
-
+  const extractedTags = content.match(/#\w+/g) || []; //tagleri ayır
+  const cleanedContent = content.replace(/#\w+/g, "").trim();//sil
   const formData=new FormData();
-formData.append("content",content)
+formData.append("content",cleanedContent)
 formData.append("tags", JSON.stringify(extractedTags));
 if (selectedImage) {
   formData.append("image", selectedImage);

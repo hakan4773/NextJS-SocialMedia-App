@@ -8,7 +8,7 @@ export interface IComment extends Document {
 }
 const CommentSchema: Schema = new Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "Auth", required: true },
     post: { type: mongoose.Schema.Types.ObjectId, ref: "Post", required: true },
     content: { type: String, required: true },
   },

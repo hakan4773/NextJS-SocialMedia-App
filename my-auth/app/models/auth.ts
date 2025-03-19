@@ -18,8 +18,8 @@ const AuthSchema = new mongoose.Schema({
     password: { type: String, required: true },
     bio: { type: String },
     profileImage: { type: String },
-    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "Auth" }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "Auth" }],
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     createdAt:{type:Date,default:Date.now}
 });

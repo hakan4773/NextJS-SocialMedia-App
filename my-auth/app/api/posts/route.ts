@@ -54,13 +54,14 @@ export async function GET(req:NextRequest) {
   await connectDB();
   try {
   const decoded = verifyToken(req);
-  console.log(decoded)
+ 
   if (!decoded) {
       return NextResponse.json({ message: "Invalid token" }, { status: 401 });
   }
-  const posts = await Post.find({ user: decoded.id });
+  const posts = await Post.find({ user: decoded.id }).populate("user", "name email profileImage");
+
   if (!posts || posts.length === 0) {
-    return NextResponse.json({ message: "Hiç post bulunamadı!" }, { status: 404 });
+    return NextResponse.json({ message: "Hiç post bulunamadı!",}, { status: 404 });
 }
 return NextResponse.json({ posts },{status:201})
 
