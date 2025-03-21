@@ -13,8 +13,8 @@ export default function FilterUsers({
 }) {
 
   return (
-    <div className="absolute bg-white rounded-md w-full"> 
-      <ul className="  top-full">
+    <div className="filter-container absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg "> 
+     
         {filteredUsers.length > 0 ? (
           filteredUsers.map((user) => (
            
@@ -34,9 +34,8 @@ export default function FilterUsers({
 
           ))
         ) : (
-          <li className="p-2 text-gray-500">Sonuç bulunamadı</li>
+          <p className="p-2 text-gray-500 ">Sonuç bulunamadı</p>
         )}{" "}
-      </ul>
     </div>
   );
 }

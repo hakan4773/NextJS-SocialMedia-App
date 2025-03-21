@@ -53,7 +53,15 @@ else {
 
 
 },[search,users])
-console.log(search)
+
+
+const handleBlur = (e:any) => {
+  if (!e.relatedTarget || !e.relatedTarget.closest(".filter-container")) {
+    setSearch("");
+    setFilteredUser([]);
+  }
+};
+
   return (
     <header className="bg-gradient-to-r from-indigo-500 to-purple-600 shadow-md fixed top-0 w-full z-50">
       {user && <ResponsiveBar />}
@@ -83,8 +91,8 @@ console.log(search)
             placeholder="Kullanıcı ara..."
             value={search}
             onChange={(e)=>setSearch(e.target.value)} 
-         
-              type="text"
+            onBlur={handleBlur}
+                type="text"
               className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
             />
 {search && (
