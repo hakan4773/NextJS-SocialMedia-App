@@ -1,16 +1,16 @@
+import Link from "next/link";
 
 
 const Followers = ({ isFollowersOpen, setIsFollowersOpen }:{isFollowersOpen: boolean;
   setIsFollowersOpen: (open: boolean) => void}) => {
 
+
+
     if (!isFollowersOpen) return null;
-  const followers=[{name:"Ali Yılmaz",description:"Yazılım geliştiricisi",image:"/5.jpg"},
-    {name:"Mehmet yıldız",description:"içerik üreticisi",image:"/orman.jpg"},
-    {name:"Ayşe aslan",description:"Blogger",image:"/3.jpg"},
-    {name:"Ayşe aslan",description:"Blogger",image:"/3.jpg"},
-    {name:"Ayşe aslan",description:"Blogger",image:"/3.jpg"},
- 
-  ]
+    const followers = [
+      { id: "654ab3f21", name: "Ali Yılmaz", description: "Yazılım geliştiricisi", image: "/5.jpg" },
+      { id: "b34f90c12", name: "Mehmet Yıldız", description: "İçerik üreticisi", image: "/orman.jpg" },
+    ];
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50 ">
         <div className="bg-white p-4 rounded-lg shadow-lg w-96 transform transition-all duration-300 ease-in-out hover:scale-105  ">
@@ -28,6 +28,7 @@ const Followers = ({ isFollowersOpen, setIsFollowersOpen }:{isFollowersOpen: boo
     <div className="max-h-96 overflow-y-auto"> 
  {followers.map((follow,index)=>( 
 <div key={index} className="m-2 flex  p-3 justify-between transition-colors duration-200 hover:bg-gray-100" >
+<Link href={`/profile/${follow.id}`} className="flex"> 
 <img
               src={follow.image}
               alt="Avatar"
@@ -37,8 +38,11 @@ const Followers = ({ isFollowersOpen, setIsFollowersOpen }:{isFollowersOpen: boo
                 <p className='font-bold text-gray-800'>{follow.name}</p>
                 <p className="text-sm text-gray-500">{follow.description}</p>
             </div>
+</Link>
 
-     <div className="p-2 mt-2"><button className="border border-gray-300 px-4 py-1 text-sm rounded-full p-2 hover:bg-slate-200 cursor-pointer">Takip ediliyor</button></div>
+     <div className="p-2 mt-2">
+      <button  className="border border-gray-300 px-4 py-1 text-sm rounded-full p-2 hover:bg-slate-200 cursor-pointer">Takip ediliyor</button>
+      </div>
       
   </div>
   

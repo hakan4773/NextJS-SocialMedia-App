@@ -1,64 +1,113 @@
-"use client"
-import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
-import { IoClose, IoMenu } from "react-icons/io5"
-import { useAuth } from "../context/AuthContext"
-import Image from 'next/image'
-import { MdOutlineNotificationsActive } from "react-icons/md"
-import { FiSearch } from "react-icons/fi"
-import ResponsiveBar from './ResponsiveBar'
+"use client";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { IoClose, IoMenu } from "react-icons/io5";
+import { useAuth } from "../context/AuthContext";
+import Image from "next/image";
+import { MdOutlineNotificationsActive } from "react-icons/md";
+import { FiSearch } from "react-icons/fi";
+import ResponsiveBar from "./ResponsiveBar";
+import FilterUsers from "./FilterUsers";
+
+interface UsersTypes {
+_id:number,
+name:string,
+email:string,
+profileImage?: string;
+}
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [notification, setNotification] = useState(false)
-  const { user, logout } = useAuth()
+  const [isOpen, setIsOpen] = useState(false);
+  const [notification, setNotification] = useState(false);
+  const { user, logout } = useAuth();
+   const [users,setUsers]=useState<UsersTypes[]>([])
+   const [search, setSearch] = useState("");
+   const [filteredUsers,setFilteredUser]=useState<UsersTypes[]>([])
+  //Tüm kullanıcıları getir
+   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch("/api/users");
+        const data = await res.json();
+        if (res.ok) setUsers(data.users);
+      } catch (error) {
+        console.error("Kullanıcılar yüklenirken hata oluştu:", error);
+      }
+    };
+    fetchUsers();
+  }, []);
+console.log(users)
+  //Aramaya göre filtreleme
+useEffect(()=>{
+if(!search){
+  setFilteredUser([])
+}
 
-  useEffect(() => {
-    console.log("Navbar user:", user)
-  }, [user])
+else {
+  const results = users.filter((user) =>
+    user.name.toLowerCase().includes(search.toLowerCase())
+  );
+  console.log(results)
+  setFilteredUser(results);
+}
 
+
+},[search,users])
+console.log(search)
   return (
-    <header className='bg-gradient-to-r from-indigo-500 to-purple-600 shadow-md fixed top-0 w-full z-50'>
- 
- {user && <ResponsiveBar />} 
+    <header className="bg-gradient-to-r from-indigo-500 to-purple-600 shadow-md fixed top-0 w-full z-50">
+      {user && <ResponsiveBar />}
 
       <nav className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
         <div className="flex items-center lg:mx-2 mx-12">
           <Link href="/" className="flex items-center ">
-            <Image src="/PİO2.png" alt="Logo"
-            className="w-16  h-8 object-cover mt-2 " 
-             width={512} 
-            height={512}
-              />
+            <Image
+              src="/PİO2.png"
+              alt="Logo"
+              className="w-16  h-8 object-cover mt-2 "
+              width={512}
+              height={512}
+            />
             <span className="text-2xl font-bold text-white ">Paylaşio</span>
           </Link>
         </div>
 
         {/* Arama çubuğu - Orta */}
-        <div className="hidden md:block flex-1 max-w-md mx-8">
+        <div className="hidden md:block flex-1 max-w-md mx-8 relative">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <FiSearch className="text-gray-400" />
             </div>
             <input
+            placeholder="Kullanıcı ara..."
+            value={search}
+            onChange={(e)=>setSearch(e.target.value)} 
+         
               type="text"
               className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
-              placeholder="Ara..."
             />
+{search && (
+  <FilterUsers filteredUsers={filteredUsers} />
+) }
+
+
           </div>
         </div>
 
         {/* Masaüstü Menü */}
-        <div className='flex items-center space-x-4'>
+        <div className="flex items-center space-x-4">
           {/* Bildirimler */}
           {user && (
             <div className="relative">
               <button
-                onClick={() => setNotification(prev => !prev)}
+                onClick={() => setNotification((prev) => !prev)}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors relative"
               >
-                <MdOutlineNotificationsActive size={24} className="text-white" />
+                <MdOutlineNotificationsActive
+                  size={24}
+                  className="text-white"
+                />
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   3
                 </span>
@@ -70,11 +119,17 @@ export default function Navbar() {
                   </div>
                   <div className="max-h-96 overflow-y-auto">
                     <div className="px-4 py-3 hover:bg-gray-50 cursor-pointer">
-                      <p className="text-sm text-gray-800">Yeni bir mesajınız var</p>
-                      <p className="text-xs text-gray-500 mt-1">2 dakika önce</p>
+                      <p className="text-sm text-gray-800">
+                        Yeni bir mesajınız var
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        2 dakika önce
+                      </p>
                     </div>
                     <div className="px-4 py-3 hover:bg-gray-50 cursor-pointer">
-                      <p className="text-sm text-gray-800">Profiliniz beğenildi</p>
+                      <p className="text-sm text-gray-800">
+                        Profiliniz beğenildi
+                      </p>
                       <p className="text-xs text-gray-500 mt-1">1 saat önce</p>
                     </div>
                   </div>
@@ -87,16 +142,25 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             {!user ? (
               <>
-                <Link href="/login" className="text-white hover:text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-100">
+                <Link
+                  href="/login"
+                  className="text-white hover:text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-100"
+                >
                   Giriş Yap
                 </Link>
-                <Link href="/register" className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                <Link
+                  href="/register"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                >
                   Kayıt Ol
                 </Link>
               </>
             ) : (
               <>
-                <Link href="/profile" className="text-white hover:text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-100">
+                <Link
+                  href="/profile"
+                  className="text-white hover:text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-100"
+                >
                   Profilim
                 </Link>
                 <button
@@ -110,8 +174,15 @@ export default function Navbar() {
           </div>
 
           {/* Mobil Menü Butonu */}
-          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2 hover:bg-gray-100 rounded-lg">
-            {isOpen ? <IoClose size={24} className="text-gray-600" /> : <IoMenu size={24} className="text-gray-600" />}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 hover:bg-gray-100 rounded-lg"
+          >
+            {isOpen ? (
+              <IoClose size={24} className="text-gray-600" />
+            ) : (
+              <IoMenu size={24} className="text-gray-600" />
+            )}
           </button>
         </div>
       </nav>
@@ -161,5 +232,5 @@ export default function Navbar() {
         </div>
       )}
     </header>
-  )
-} 
+  );
+}
