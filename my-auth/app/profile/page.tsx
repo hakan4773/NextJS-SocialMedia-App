@@ -80,7 +80,7 @@ export default function ProfilePage() {
                 alt="Profil Fotoğrafı"
                 width={120}
                 height={120}
-                className="rounded-full"
+                className="rounded-full lg:w-32 lg:h-32 w-24 h-24 border-2 border-gray-300"
               />
               <button className="absolute bottom-0 right-0 bg-blue-500 p-2 rounded-full text-white hover:bg-blue-600">
                 <FiEdit2 size={16} />
@@ -92,7 +92,7 @@ export default function ProfilePage() {
                 <h1 className="text-2xl font-bold text-gray-800">
                   {userData?.name}
                 </h1>
-                <div className="flex space-x-2 ">
+                <div className="flex lg:space-x-2 lg:space-y-0 space-y-4 lg:flex-row flex-col">
                 <Link href={"/profile/edit"} className="flex items-center space-x-2 text-white bg-red-500 px-4 py-2 rounded-lg hover:bg-red-300">
                   <CiEdit size={18} />
                   <span> Güncelle</span>
