@@ -24,6 +24,8 @@ import { SlUserFollow } from "react-icons/sl";
    password: string;
    bio: string;
    profileImage: string;
+   followers:string[];
+   following:string[];
  }
 
  interface Post {
@@ -42,12 +44,14 @@ import { SlUserFollow } from "react-icons/sl";
    const [posts, setPosts] = useState<Post[]>([]);
    const [loading, setLoading] = useState(true);
    const [comment, setComment] = useState<Record<number, boolean>>({});
-
    const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
+   const [isFollowing, setIsFollowing] = useState(false);
+
    const toggleSetting = (index: any) => {
      setOpenSettingIndex(openSettingIndex === index ? null : index);
    };
 
+   {/*Kullanıcı bilgisini alma */}
    useEffect(() => {
      const fetchProfile = async () => {
   if (!id) {
@@ -69,9 +73,33 @@ import { SlUserFollow } from "react-icons/sl";
      fetchProfile();
    }, []);
 
+   {/*Yrum panelini açma */}
+
    const handleComment = (id: number) => {
     setComment((prev) => ({ ...prev, [id]: !prev[id] }));
   };
+  console.log(userData?.following)
+
+   {/*Kullanıcı takip etme */}
+  const handleFollow=async ()=>{
+    const token = localStorage.getItem("token");
+const res=await fetch("/api/users/followers",{
+  method: "POST",
+      headers: { "Content-Type": "application/json" ,Authorization: `Bearer ${token}`,},
+      body: JSON.stringify({
+        followingId: id,
+      }),
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      setIsFollowing(true);
+    } else {
+      alert(data.message);
+    }
+
+  }
+
 
    if (loading) return <p>Loading...</p>;
 
@@ -105,14 +133,16 @@ import { SlUserFollow } from "react-icons/sl";
                   <CiEdit size={18} />
                   <span> Mesaj</span>
                 </Link>
-                <button className="flex items-center space-x-2 cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-300">
+                <button  onClick={handleFollow} disabled={isFollowing}
+               
+                className="flex items-center space-x-2 cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-300">
                 <SlUserFollow size={18}/>
-                  <span>Takip Et</span>
+                  <span>{isFollowing && userData?.following?.includes(id.toString()) ? "Takip Ediliyor" : "Takip Et"}</span>
                 </button> </div>
               </div>
 
               <p className="text-gray-600 lg:mt-1 ">{userData?.email}</p>
-              <p className="text-gray-700 mt-3     ">{userData?.bio}</p>
+              <p className="text-gray-700 mt-3  ">{userData?.bio}</p>
             </div>
           </div>
         </div>

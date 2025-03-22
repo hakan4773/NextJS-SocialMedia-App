@@ -3,7 +3,10 @@ import connectDB from "@/app/libs/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import Post from "@/app/models/Post";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   await connectDB();
 
   try {
@@ -13,9 +16,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
-    const posts=await Post.find({ user: id }).sort({ createdAt: -1 });
+    const posts = await Post.find({ user: id }).sort({ createdAt: -1 });
     return NextResponse.json({
-      user,posts
+      user,
+      posts,
     });
   } catch (error: unknown) {
     return NextResponse.json(
