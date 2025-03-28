@@ -6,7 +6,6 @@ import { SlCalender } from "react-icons/sl";
 import { MdFavoriteBorder } from "react-icons/md";
 import Followers from './Followers';
 import Following from './Following';
-import { User } from '../types/user';
 import { getUserDetails } from '../utils/getUsers';
 interface UserTypes {
   id?: string;
@@ -15,6 +14,8 @@ interface UserTypes {
   password: string;
   bio:string;
   profileImage:string;
+  followers:string[];
+  following:string[];
 }
 function LeftBar() {
   
@@ -55,13 +56,13 @@ useEffect(() => {
       <button onClick={()=>setIsFollowersOpen(true)} data-modal-target="default-modal" data-modal-toggle="default-modal" className='text-gray-600 cursor-pointer' type="button">
 Followers
 </button>
-      <span className='text-blue-600 font-bold'>50</span></li>
+      <span className='text-blue-600 font-bold'>{userData?.followers.length}</span></li>
     
     <li className='flex justify-between  hover:underline'>
   
       <button onClick={()=>setIsFollowingOpen(true)} data-modal-target="default-modal" data-modal-toggle="default-modal" className='text-gray-600 cursor-pointer' type="button">
       Following</button>
-       <span className='text-blue-600 font-bold'>100</span>
+       <span className='text-blue-600 font-bold'>{userData?.following.length}</span>
 </li>
     <li className='flex justify-between  hover:underline'>
       <Link href={"/profile"} className='text-gray-600'>Gönderi Sayısı  </Link>

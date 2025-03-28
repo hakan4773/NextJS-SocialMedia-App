@@ -61,8 +61,10 @@ export async function GET(req: NextRequest) {
     if (!decoded) {
       return NextResponse.json({ message: "Invalid token" }, { status: 401 });
     }
+const userID=decoded.id;
+const followeActions=await Auth.findById(userID).populate('followers following');
 
-    //Burdan devam
+return NextResponse.json({followers:followeActions.followers,following:followeActions.following},{status:200});
   } catch (error: any) {
     return NextResponse.json({ details: error.message }, { status: 500 });
   }

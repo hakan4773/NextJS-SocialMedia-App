@@ -1,3 +1,17 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import Link from "next/link";
+
+interface FollowingProps {
+  _id:string,
+  name:string,
+  email:string,
+  profileImage:string,
+  followers:string[],
+  following:string[],
+  bio:string
+}
 const Following = ({
   isFollowingOpen,
   setIsFollowingOpen,
@@ -5,24 +19,29 @@ const Following = ({
   isFollowingOpen: boolean;
   setIsFollowingOpen: (open: boolean) => void;
 }) => {
-  if (!isFollowingOpen) return null;
-  
-  const following = [
-    {
-      name: "Ali Yılmaz",
-      description: "Yazılım geliştiricisi",
-      image: "/5.jpg",
-    },
-    {
-      name: "Mehmet yıldız",
-      description: "içerik üreticisi",
-      image: "/orman.jpg",
-    },
-    { name: "Ayşe aslan", description: "Blogger", image: "/3.jpg" },
-    { name: "Ayşe aslan", description: "Blogger", image: "/3.jpg" },
-    { name: "Ayşe aslan", description: "Blogger", image: "/3.jpg" },
-  ];
 
+  
+  const [following, setFollowing] = useState<FollowingProps[]>([]);
+const {user}=useAuth();
+useEffect(()=>{
+  const fetchFollow=async()=>{
+    const token = localStorage.getItem("token");
+const response=await fetch("/api/users/followers",{
+  headers:{
+    "Content-Type":"application/json",
+    "Authorization":`Bearer ${token}`}
+});
+const data = await response.json();
+
+if (response.ok) {
+  setFollowing(data?.following);
+}
+
+
+  }
+  fetchFollow();
+},[])
+  if (!isFollowingOpen) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50 ">
       <div className="bg-white p-4 rounded-lg shadow-lg w-96 transform transition-all duration-300 ease-in-out hover:scale-105  ">
@@ -49,24 +68,28 @@ const Following = ({
           </button>
         </div>
         <div className="max-h-96 overflow-y-auto">
-          {following.map((follow, index) => (
+          {following.map((follow,index) => (
             <div
-              key={index}
+              key={follow._id || index}
               className="m-2 flex  p-3 justify-between transition-colors duration-200 hover:bg-gray-100"
             >
+              <Link href={`/users/${follow._id}`} className="flex justify-center items-center  "> 
               <img
-                src={follow.image}
+                src={follow.profileImage}
                 alt="Avatar"
                 className="w-12 h-12 rounded-full border-2 border-gray-200  object-cover"
               />
-              <div className="p-2 flex-1" key={index}>
+              <div className="p-2 flex-1" >
                 <p className="font-bold text-gray-800">{follow.name}</p>
-                <p className="text-sm text-gray-500">{follow.description}</p>
+                <p className="text-sm text-gray-500">{follow.bio}</p>
               </div>
+              </Link>
 
               <div className="p-2 mt-2">
+              <div className="flex justify-center mb-1 text-gray-500  text-sm">
+                {user?.id && follow.following.includes(user.id) ? (<p >Followed you</p>):(<p >Not Followed</p>)} </div>
                 <button className="border border-gray-300 px-4 py-1 text-sm rounded-full p-2 hover:bg-slate-200 cursor-pointer">
-                  Takip ediliyor
+                Followed
                 </button>
               </div>
             </div>
