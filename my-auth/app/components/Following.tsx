@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 interface FollowingProps {
   _id:string,
@@ -37,10 +38,39 @@ if (response.ok) {
   setFollowing(data?.following);
 }
 
-
   }
   fetchFollow();
 },[])
+
+const handleFollow =async(userId:string)=>
+  {
+  const token =localStorage.getItem("token");
+  const res=await fetch("/api/users/followers",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      Authorization: `Bearer ${token}`,
+        },
+        body:JSON.stringify({followingId:userId}),
+  })
+
+
+const data=await res.json();
+if(res.ok) {
+  toast.success(data.message);
+//Takip işlemini güncelleme
+  setFollowing(prevFollowing => {
+    if (prevFollowing.some(user => user._id === userId)) {
+      return prevFollowing.filter(user => user._id !== userId); 
+    } else {
+      return [...prevFollowing, data.user];  
+    }
+  });
+}
+else {
+  toast.error(data.message);
+ }
+}
   if (!isFollowingOpen) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50 ">
@@ -87,9 +117,9 @@ if (response.ok) {
 
               <div className="p-2 mt-2">
               <div className="flex justify-center mb-1 text-gray-500  text-sm">
-                {user?.id && follow.following.includes(user.id) ? (<p >Followed you</p>):(<p >Not Followed</p>)} </div>
-                <button className="border border-gray-300 px-4 py-1 text-sm rounded-full p-2 hover:bg-slate-200 cursor-pointer">
-                Followed
+                {user?.id && follow.following.includes(user.id) ? (<p >Followed you</p>):(<p >Not Followed You</p>)} </div>
+                <button onClick={()=>handleFollow(follow._id)} className="border border-gray-300 px-4 py-1 mx-2 text-sm rounded-full p-2 hover:bg-slate-200 cursor-pointer">
+                Unfollow
                 </button>
               </div>
             </div>

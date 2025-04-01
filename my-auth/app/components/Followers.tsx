@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 interface FollowersProps {
   _id: string;
@@ -21,6 +22,7 @@ const Followers = ({
 }) => {
   const { user } = useAuth();
   const [followers, setFollowers] = useState<FollowersProps[]>([]);
+ 
   useEffect(() => {
     const fetchFollow = async () => {
       const response = await fetch("/api/users/followers", {
@@ -38,7 +40,37 @@ const Followers = ({
     fetchFollow();
   }, []);
 
-  console.log(followers);
+const handleFollow=async(userId:string)=>{
+  const token = localStorage.getItem("token");
+  const response = await fetch("/api/users/followers", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ followingId: userId
+     }),
+  });
+  const data = await response.json();
+  if (response.ok) {
+toast.success(data.message);
+   /* Takip işlemini anlık güncelle */
+    setFollowers(followers.map(f => (
+     f._id === userId
+     ? {
+     ...f,
+     followers:user?.id && f.followers.includes(user?.id) 
+       ? f.followers.filter(id => id !== user.id) 
+       : user ? [...f.followers, user.id] : f.followers
+    }:f )));
+
+
+   }
+   else {
+    toast.error(data.message);
+   }
+}
+
 
   if (!isFollowersOpen) return null;
 
@@ -52,7 +84,7 @@ const Followers = ({
             onClick={() => setIsFollowersOpen(false)}
           >
             <svg
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="http:www.w3.org/2000/svg"
               className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
@@ -86,7 +118,7 @@ const Followers = ({
               </Link>
 
               <div className="p-2 mt-2">
-                <button className="border border-gray-300 px-4 py-1 text-sm rounded-full p-2 hover:bg-slate-200 cursor-pointer">
+                <button onClick={()=>handleFollow(follow._id)} className="border border-gray-300 px-4 py-1 text-sm rounded-full p-2 hover:bg-slate-200 cursor-pointer">
                   {user?.id && follow.followers.includes(user.id)
                     ? "Unfollow"
                     : "Follow"}
