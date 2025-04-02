@@ -8,6 +8,7 @@ import Modal from "../components/Modal";
 import { getUserDetails } from "../utils/getUsers";
 import { ThreeDot } from "react-loading-indicators";
 import { toast } from "react-toastify";
+import Survey from "./Survey"
 interface UserTypes {
   id?: string;
   name: string;
@@ -23,6 +24,7 @@ function PostCreation() {
   const [content, setContent] = useState<string | number | any>("");
   const [userData, setUserData] = useState<UserTypes | null>(); //Kullanıcı bilgisi için
   const [loading, setLoading] = useState(false);
+  const [isSurveyOpen, setIsSurveyOpen] = useState(false); //Anket modalı için
   const handleOpen = () => {
     setIsModalOpen(true);
   };
@@ -128,9 +130,15 @@ function PostCreation() {
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="border rounded-xl border-gray-300  w-full p-2 h-24"
-          placeholder="Ne paylaşmak istersin?"
-        ></textarea>
+          className={`border rounded-xl border-gray-300  w-full p-2  ${isSurveyOpen ? "h:8":"h-24"}`}
+          placeholder={isSurveyOpen ? "Soru sorun...":"Ne paylaşmak istersin?"}
+        >
+
+        </textarea>
+        {isSurveyOpen && (
+          <Survey isSurveyOpen={isSurveyOpen}  setIsSurveyOpen={setIsSurveyOpen}/>
+        )}
+
         {/* Butonlar ve araçlar */}
         <div className=" h-auto p-2  flex flex-row justify-between">
           <div className="flex gap-8 ">
@@ -170,10 +178,11 @@ function PostCreation() {
 
             {/* Anket oluşturma */}
             <div>
+              <button className="cursor-pointer" onClick={()=>setIsSurveyOpen(!isSurveyOpen)} type="button">
               <RiSurveyLine
                 size={25}
                 className="text-red-500 hover:text-blue-700"
-              />
+              /></button>
             </div>
           </div>
 
