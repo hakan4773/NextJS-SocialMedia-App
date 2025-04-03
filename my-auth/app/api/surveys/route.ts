@@ -6,13 +6,18 @@ import { verifyToken } from "@/app/utils/jwtUtils";
 export async function POST(req: NextRequest) {
     await connectDB();
   try {
-    const decoded = verifyToken(req);
-     if (!decoded || !decoded.id) {
+    const decoded = verifyToken(req);   
+     const user = decoded?.id;
+     if (!decoded || !user) {
         return NextResponse.json({ error: "Yetkilendirme başarısız" }, { status: 401 });
       }
-    const user = decoded?.id;
 
     const { question, choices, duration } = await req.json();
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() + (duration.days || 0));
+    endDate.setHours(endDate.getHours() + (duration.hours || 0));
+    endDate.setMinutes(endDate.getMinutes() + (duration.minutes || 0));
+    
     if (!question || !choices || !duration) {
         return NextResponse.json(
           { error: "Eksik alanlar var" },
@@ -26,9 +31,10 @@ export async function POST(req: NextRequest) {
       }
     const survey = await Survey.create({
       question,
-      choices,
+      choices: choices.map((choice: string) => ({ text: choice, voters: [] })),
       duration,
       creator: user,
+      endDate
     });
 
     return NextResponse.json({
@@ -48,8 +54,12 @@ export async function GET(req: NextRequest) {
       if (!decoded) {
         return NextResponse.json({ error: "Yetkilendirme başarısız" }, { status: 401 });
       }
-     const surveys = await Survey.find({ creator: user }).sort({ createdAt: -1 }).populate('creator', 'username avatar'); ;
-return NextResponse.json({surveys},{status:200})
+     const surveys = await Survey.find({ creator: user,isActive: true }).sort({ createdAt: -1 }).populate('creator', 'name profileImage'); ;
+     if (!surveys.length) {
+      return NextResponse.json({ message: 'Aktif anket bulunamadı', surveys: [] },{status:400});
+    }
+
+     return NextResponse.json({surveys},{status:200})
     }
     catch(error:any){
         return NextResponse.json({ error: error.message }, { status: 500 });

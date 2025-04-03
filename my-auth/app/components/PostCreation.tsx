@@ -127,16 +127,17 @@ function PostCreation() {
 
       {/* textarea */}
       <div className="w-full p-4 ">
-        <textarea
+          <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className={`border rounded-xl border-gray-300  w-full p-2  ${isSurveyOpen ? "h:8":"h-24"}`}
-          placeholder={isSurveyOpen ? "Soru sorun...":"Ne paylaşmak istersin?"}
+          className={`border rounded-xl border-gray-300  w-full p-2 h-24 ${isSurveyOpen ? "hidden":""}`}
+          placeholder="Ne paylaşmak istersin?"
         >
 
         </textarea>
         {isSurveyOpen && (
-          <Survey isSurveyOpen={isSurveyOpen}  setIsSurveyOpen={setIsSurveyOpen}/>
+           <Survey isSurveyOpen={isSurveyOpen}  setIsSurveyOpen={setIsSurveyOpen}/>
+        
         )}
 
         {/* Butonlar ve araçlar */}
@@ -200,6 +201,7 @@ function PostCreation() {
               Post Yayınla
             </button>
           </div>
+          
         </div>{" "}
         {preview && (
           <div className="mt-2">

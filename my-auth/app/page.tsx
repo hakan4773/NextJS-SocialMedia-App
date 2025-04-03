@@ -4,6 +4,7 @@ import LeftBar from "./components/LeftBar";
 import RightBar from "./components/RightBar";
 import Posts from "./components/Posts";
 import PostCreation from "./components/PostCreation";
+import GetSurveys from "./components/getSurveys";
 export default function Home() {
 
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       {/* orta kısım (içerik kısmı) */}
       <div className="w-full md:w-1/2 flex flex-col justify-center  max-w-[500px] space-y-4 ">
         <PostCreation />
+        <GetSurveys />
         <Posts />
       </div>
 

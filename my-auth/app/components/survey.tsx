@@ -5,6 +5,10 @@ import { IoAdd } from 'react-icons/io5'
 function Survey({isSurveyOpen,setIsSurveyOpen}:any) {
   const [choices, setChoices] = useState(["Seçenek 1", "Seçenek 2"]);
   const [choicesInput,setChoicesInput] = useState<string[]>([]);
+  const [question,setQuestion]=useState<string>("");
+  const [duration, setDuration] = useState({ days: 0, hours: 0, minutes: 0 });
+
+
   const addNewChoice = () => {
     setChoices([...choices, `Seçenek ${choices.length + 1}`]);
   };
@@ -13,16 +17,55 @@ function Survey({isSurveyOpen,setIsSurveyOpen}:any) {
     options[id]=value;
     setChoicesInput(options); 
   }
+{
+}
 
-console.log(choicesInput)
+const handleSubmit =async(e: React.MouseEvent<HTMLButtonElement>)=>{
+e.preventDefault();
+  const token = localStorage.getItem("token");
+  const finalChoices = choicesInput.map((c, i) => c || choices[i]);
 
+    try {
+      const res = await fetch("/api/surveys", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body:JSON.stringify({
+          question,
+          choices: finalChoices,
+          duration,
+        }),
+      });
 
+      const data = await res.json();
+      if (res.ok) {
+        alert("Anket başarıyla oluşturuldu");
+        setIsSurveyOpen(false); 
+        setQuestion(""); 
+        setChoices(["Seçenek 1", "Seçenek 2"]);
+        setChoicesInput([]);
+        setDuration({ days: 0, hours: 0, minutes: 0 });
+      } else {
+        alert(data.message || "Anket oluşturulurken bir hata oluştu");
+            }
+    } catch (error) {
+      alert("Bir hata oluştu, lütfen tekrar deneyin"); 
+  };
+
+}
 
   return (
-      <div className='border rounded-md border-gray-300 '>
+      <div >
        <div className='flex  flex-col space-y-3 '>
+        {/* Soru Alanı */}
+        <input className="p-2 text-xl w-full mb-2  " 
+         value={question} onChange={(e)=>setQuestion(e.target.value)} type="text" placeholder= "Soru sorun..."></input>  
+ 
+        <div className='border rounded-md border-gray-300'>   
+            {/* Seçenekler */}
     {choices.map((choice, index) => (
-          <div key={index} className="p-2 flex space-x-2 items-center">
+          <div key={index} className="p-2 flex space-x-2 items-center ">
             <input
               className="border rounded-md border-gray-300 p-2 w-full"
               type="text"
@@ -50,6 +93,10 @@ console.log(choicesInput)
         min='0'
         max='30'
         placeholder='0'
+        value={duration.days}
+                  onChange={(e) =>
+                    setDuration({ ...duration, days: Number(e.target.value) })
+                  }
         className='w-full border rounded-md border-gray-300 p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none'
       />
     </div>
@@ -62,6 +109,10 @@ console.log(choicesInput)
         min='0'
         max='23'
         placeholder='0'
+        value={duration.hours}
+                  onChange={(e) =>
+                    setDuration({ ...duration, hours: Number(e.target.value) })
+                  }
         className='w-full border rounded-md border-gray-300 p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none'
       />
     </div>
@@ -74,6 +125,10 @@ console.log(choicesInput)
         min='0'
         max='59'
         placeholder='0'
+        value={duration.minutes}
+                  onChange={(e) =>
+                    setDuration({ ...duration, minutes: Number(e.target.value) })
+                  }
         className='w-full border rounded-md border-gray-300 p-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none'
       />
     </div>
@@ -82,11 +137,12 @@ console.log(choicesInput)
 
 <div className='border-t w-full border-gray-300 flex justify-center items-center p-2  hover:bg-red-100 '>
   
- <button className='text-red-500 w-full cursor-pointer' onClick={()=>setIsSurveyOpen(false)}> Anketi Kaldır</button> 
+ <button className='text-red-500 w-full cursor-pointer' onClick={handleSubmit}
+ > Anketi Paylaş</button> 
    </div>
 </div>
 
-
+</div>
 
        </div>
   )

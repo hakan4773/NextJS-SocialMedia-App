@@ -12,13 +12,15 @@ duration:{
     minutes:number;
 }
 creator:mongoose.Types.ObjectId;
+endDate:Date;
+isActive: boolean;
 } 
 const SurveySchema = new mongoose.Schema(
   {
     question: { type: String, required: true },
     choices: [{
         text: { type: String, required: true },
-        voters: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+        voters: [{ type: Schema.Types.ObjectId, ref: 'Auth' }]
       }],
     duration: {
       days: { type: Number, min: 0, max: 30, default: 0 },
@@ -26,6 +28,8 @@ const SurveySchema = new mongoose.Schema(
       minutes: { type: Number, min: 0, max: 59, default: 0 },
     },
     creator: { type: mongoose.Schema.Types.ObjectId, ref: 'Auth', required: true },
+    endDate: { type: Date },
+   isActive: { type: Boolean, default: true },
   },
   { timestamps: true }
 );
