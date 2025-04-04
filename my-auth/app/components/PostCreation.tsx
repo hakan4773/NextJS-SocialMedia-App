@@ -35,6 +35,7 @@ function PostCreation() {
 
   const handleSelectImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    setIsSurveyOpen(false);//Açıksa anket modalını kapat
     if (file) {
       setSelectedImage(file);
       const reader = new FileReader();
@@ -136,7 +137,7 @@ function PostCreation() {
 
         </textarea>
         {isSurveyOpen && (
-           <Survey isSurveyOpen={isSurveyOpen}  setIsSurveyOpen={setIsSurveyOpen}/>
+           <Survey isSurveyOpen={isSurveyOpen} setSelectedImage={setSelectedImage} setPreview={setPreview} setIsSurveyOpen={setIsSurveyOpen}/>
         
         )}
 

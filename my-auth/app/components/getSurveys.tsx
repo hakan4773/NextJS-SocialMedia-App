@@ -26,10 +26,9 @@ function getSurveys() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    const surveyFetch = async () => {
+  //Anketleri getirme
+ const surveyFetch = async () => {   
+   const token = localStorage.getItem("token");
       try {
         const res = await fetch("/api/surveys", {
           method: "GET",
@@ -51,9 +50,36 @@ function getSurveys() {
       }
     };
 
+  useEffect(() => {
     surveyFetch();
   }, []);
-  console.log(surveys)
+
+//Anketlere oy verme
+const vote=async(surveyId:string,choiceIndex:number)=>{
+  const token = localStorage.getItem("token");
+  try {
+    const res = await fetch("/api/surveys/vote", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ surveyId, choiceIndex }),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      surveyFetch();
+    } else {
+      alert(data.error || "Oylama başarısız");
+    }
+  } catch (error) {
+    alert("Oy verme sırasında hata oluştu.");
+  } 
+
+
+}
+
+ 
   if (loading) return <div>Yükleniyor...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
 
@@ -86,9 +112,10 @@ function getSurveys() {
               </div>
               <h2 className="pt-4 ml-2">{survey.question} </h2>
               <ul className="mt-2 space-y-2 ">
-                {survey.choices.map((choice) => (
+                {survey.choices.map((choice,index) => (
                   <li
                     key={choice._id}
+                    onClick={()=> vote(survey._id,index) }
                     className="flex justify-between items-center border border-blue-500 rounded-full p-2 cursor-pointer hover:bg-blue-100"
                   >
                     <span className="text-blue-600 font-bold">{choice.text}</span>

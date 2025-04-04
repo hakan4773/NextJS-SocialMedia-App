@@ -1,14 +1,13 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoAdd } from 'react-icons/io5'
 
-function Survey({isSurveyOpen,setIsSurveyOpen}:any) {
+function Survey({isSurveyOpen,setIsSurveyOpen,setPreview,setSelectedImage}:any) {
   const [choices, setChoices] = useState(["Seçenek 1", "Seçenek 2"]);
   const [choicesInput,setChoicesInput] = useState<string[]>([]);
   const [question,setQuestion]=useState<string>("");
   const [duration, setDuration] = useState({ days: 0, hours: 0, minutes: 0 });
-
-
+  
   const addNewChoice = () => {
     setChoices([...choices, `Seçenek ${choices.length + 1}`]);
   };
@@ -19,6 +18,10 @@ function Survey({isSurveyOpen,setIsSurveyOpen}:any) {
   }
 {
 }
+useEffect(()=>{
+  setPreview(null);
+  setSelectedImage(null);
+})
 
 const handleSubmit =async(e: React.MouseEvent<HTMLButtonElement>)=>{
 e.preventDefault();
