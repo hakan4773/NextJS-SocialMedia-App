@@ -72,7 +72,7 @@ e.preventDefault();
             <input
               className="border rounded-md border-gray-300 p-2 w-full"
               type="text"
-              value={choicesInput[index]}
+              value={choicesInput[index] || ""}
   onChange={(e)=>handleChoiceChange(index,e.target.value)}
               placeholder={choice}
             />
@@ -138,9 +138,9 @@ e.preventDefault();
   </div>
 </div>
 
-<div className='border-t w-full border-gray-300 flex justify-center items-center p-2  hover:bg-red-100 '>
+<div className='border-t w-full border-gray-300 flex bg-blue-500 justify-center items-center p-2  hover:bg-blue-400 '>
   
- <button className='text-red-500 w-full cursor-pointer' onClick={handleSubmit}
+ <button className=' w-full cursor-pointer text-white' onClick={handleSubmit}
  > Anketi Paylaş</button> 
    </div>
 </div>

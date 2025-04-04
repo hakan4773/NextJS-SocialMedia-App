@@ -2,6 +2,7 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { format } from "timeago.js";
+import { useAuth } from "../context/AuthContext";
 
 interface Choice {
   text: string;
@@ -22,10 +23,13 @@ interface Survey {
 }
 
 function getSurveys() {
+  const {user}=useAuth();
+
   const [surveys, setSurveys] = useState<Survey[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [votedSurveyId, setVotedSurveyId] = useState<string | null>(null); // Oy verilen anketin ID’si
+  const [votedChoiceIndex, setVotedChoiceIndex] = useState<number | null>(null); // Oy verilen seçenek index’i
   //Anketleri getirme
  const surveyFetch = async () => {   
    const token = localStorage.getItem("token");
@@ -68,6 +72,8 @@ const vote=async(surveyId:string,choiceIndex:number)=>{
 
     const data = await res.json();
     if (res.ok) {
+      setVotedSurveyId(surveyId); 
+      setVotedChoiceIndex(choiceIndex); 
       surveyFetch();
     } else {
       alert(data.error || "Oylama başarısız");
@@ -78,7 +84,6 @@ const vote=async(surveyId:string,choiceIndex:number)=>{
 
 
 }
-
  
   if (loading) return <div>Yükleniyor...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
@@ -92,7 +97,11 @@ const vote=async(surveyId:string,choiceIndex:number)=>{
       ) : (
         <div className="space-y-4">   
       
-          {surveys.map((survey) => (
+          {surveys.map((survey) => {
+            const hasVoted = survey.choices.some(choice =>
+              choice.voters.includes(user?.id || "")
+            );
+            return (
             <div
               key={survey._id}
               className="border rounded-md p-4 border-gray-200 bg-white shadow-sm"
@@ -112,25 +121,42 @@ const vote=async(surveyId:string,choiceIndex:number)=>{
               </div>
               <h2 className="pt-4 ml-2">{survey.question} </h2>
               <ul className="mt-2 space-y-2 ">
-                {survey.choices.map((choice,index) => (
+                
+                {survey.choices.map((choice,index) => {
+          const isUserVote = choice.voters.includes(user?.id || "");
+
+                  return (
                   <li
                     key={choice._id}
                     onClick={()=> vote(survey._id,index) }
-                    className="flex justify-between items-center border border-blue-500 rounded-full p-2 cursor-pointer hover:bg-blue-100"
+                    
+                    className={`flex justify-between items-center border border-blue-500 rounded-full p-2 cursor-pointer  hover:bg-blue-100 transition-all duration-300
+                      ${
+                        hasVoted
+                            ? isUserVote
+                              ? " bg-blue-500 cursor-text hover:bg-blue-500"
+                              : "bg-white border-0 hover:bg-white  cursor-text "
+                            : " "
+                        }
+                      `}
                   >
-                    <span className="text-blue-600 font-bold">{choice.text}</span>
+                    <span className={`text-blue-600 font-bold  ${
+                     isUserVote ?
+                         "text-white"
+                          : "" }
+                        `} >{choice.text}</span>
                     <span className="text-gray-500">
                       ({choice.voters.length} oy)
                     </span>
                   </li>
-                ))}
+                )})}
               </ul>
               <p className="text-sm text-gray-500 mt-2">
           
                 Bitiş: {new Date(survey.endDate).toLocaleString()}
               </p>
             </div>
-          ))}
+         ) })}
         </div>
       )}
     </div>
