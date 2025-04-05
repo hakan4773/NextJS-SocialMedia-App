@@ -1,8 +1,24 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 
 function Modal({ isOpen,onClose }:any) {
   if (!isOpen) return null;
+  const [activity,setActivity]=useState<string[]>([]);
+
+  const handleSubmit =async()=>{
+const token=localStorage.getItem("token");
+
+const fetchActivity=await fetch("/api/activity",{
+  method:"POST",
+  headers:{
+    Authorization: `Bearer ${token}`
+  },
+  body:JSON.stringify({})
+})
+
+
+  }
+
 
   return (
     <div id="crud-modal" tabIndex={-1} aria-hidden="true" className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-slate-200 bg-opacity-90 scroll-auto">
@@ -16,7 +32,7 @@ function Modal({ isOpen,onClose }:any) {
               ✖
             </button>
           </div>
-          <form className="p-4 md:p-5">
+          <form className="p-4 md:p-5" onSubmit={handleSubmit}>
             <div className="grid gap-4 mb-4 grid-cols-2">
               <div className="col-span-2">
                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Etkinlik Adı</label>
@@ -27,31 +43,23 @@ function Modal({ isOpen,onClose }:any) {
                 <input type="date"  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
              
               </div>
+              
               <div className="col-span-2 sm:col-span-1">
                 <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Saat</label>
                 <input type="time"  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
              
               </div>
-              <div className="col-span-2 sm:col-span-1 w-full">
-                <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kategori</label>
-                <select id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                  <option>Kategori Seçin</option>
-                  <option value="TV">TV/Monitors</option>
-                  <option value="PC">PC</option>
-                  <option value="GA">Gaming/Console</option>
-                  <option value="PH">Phones</option>
-                </select>
-              </div>
-              <div className="col-span-2 sm:col-span-1 w-full">
+           
+              <div className="col-span-2 ">
                 <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Etkinlik Türü</label>
-                <select id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                <select id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500  w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                   <option>Tür seçin</option>
-                  <option value="TV">Online</option>
-                  <option value="PC">Yüz Yüze</option>
+                  <option value="Online">Online</option>
+                  <option value="Yüz Yüze">Yüz Yüze</option>
                 </select>
               </div>
               <div className="col-span-2">
-                <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Açıklama</label>
+                <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Açıklama</label>  
                 <textarea id="description" rows={4} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Örn: konular, program vb."></textarea>
               </div>
             </div>

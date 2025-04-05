@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { CiImageOn } from "react-icons/ci";
 import { SlCalender } from "react-icons/sl";
 import { RiSurveyLine } from "react-icons/ri";
-import Modal from "../components/Modal";
+import Modal from "./ActivityModal";
 import { getUserDetails } from "../utils/getUsers";
 import { ThreeDot } from "react-loading-indicators";
 import { toast } from "react-toastify";
