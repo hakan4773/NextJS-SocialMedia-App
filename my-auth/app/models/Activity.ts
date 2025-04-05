@@ -6,10 +6,10 @@ export interface ActivityProps extends Document {
   description: string;
   creator: mongoose.Types.ObjectId;
   activityDate: {
-    days:Number;
     hours: number;
     minutes: number;
   };
+  startDate: Date;
   isActive: boolean;
 }
 const ActivitySchema=new mongoose.Schema({
@@ -18,10 +18,10 @@ const ActivitySchema=new mongoose.Schema({
     description:{type:String,required:true},
     creator:{type:mongoose.Schema.Types.ObjectId,ref:'Auth',required:true},
     activityDate:{
-      days: { type: Number, min: 0, max: 30, default: 0 },
       hours: { type: Number, min: 0, max: 23, default: 0 },
       minutes: { type: Number, min: 0, max: 59, default: 0 },
     },
-    isActive: { type: Boolean, default: true },
+    startDate: { type: Date, required: true },
+        isActive: { type: Boolean, default: true },
 })
 export default mongoose.models.Activity || mongoose.model<ActivityProps>('Activity', ActivitySchema);

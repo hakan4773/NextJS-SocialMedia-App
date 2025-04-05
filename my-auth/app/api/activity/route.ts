@@ -8,19 +8,24 @@ const decoded=verifyToken(req);
   if (!decoded) {
     return NextResponse.json({ message: "Invalid token" }, { status: 401 });
   }
-  const { activityName, activityDate, activityType, description } = await req.json();
+  const { activityName, startDate , activityType, description,activityDate  } = await req.json();
+  if (!activityName || !activityType || !description || !startDate) {
+    return NextResponse.json(
+      { message: "Tüm alanlar (isim, tip, açıklama) zorunludur" },
+      { status: 400 }
+    );
+  }
+  const parsedDate = new Date();
 
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() + (activityDate.days || 0));
-  startDate.setHours(startDate.getHours() + (activityDate.hours || 0));
-  startDate.setMinutes(startDate.getMinutes() + (activityDate.minutes || 0));
   try {
     await connectDB();
     const activity = await Activity.create({
-      activityName,
-      activityDate,
+      activityName, 
       activityType,
       description,
+      startDate: new Date(startDate), 
+      activityDate: activityDate || { hours: 0, minutes: 0 },
+     
       creator: decoded.id,
     });
 
