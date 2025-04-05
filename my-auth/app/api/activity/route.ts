@@ -8,15 +8,13 @@ const decoded=verifyToken(req);
   if (!decoded) {
     return NextResponse.json({ message: "Invalid token" }, { status: 401 });
   }
-  const { activityName, startDate , activityType, description,activityDate  } = await req.json();
+  const { activityName, startDate , activityType, description,activityDate,createdAt  } = await req.json();
   if (!activityName || !activityType || !description || !startDate) {
     return NextResponse.json(
       { message: "Tüm alanlar (isim, tip, açıklama) zorunludur" },
       { status: 400 }
     );
   }
-  const parsedDate = new Date();
-
   try {
     await connectDB();
     const activity = await Activity.create({
@@ -25,7 +23,7 @@ const decoded=verifyToken(req);
       description,
       startDate: new Date(startDate), 
       activityDate: activityDate || { hours: 0, minutes: 0 },
-     
+      createdAt,
       creator: decoded.id,
     });
 
@@ -34,4 +32,20 @@ const decoded=verifyToken(req);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
     
+}
+
+export async function GET(req:NextRequest) {
+  const decoded=verifyToken(req);
+  if (!decoded) {
+    return NextResponse.json({ message: "Invalid token" }, { status: 401 });
+  }
+  try {
+    await connectDB();
+    const activities = await Activity.find({ creator: decoded.id }).sort({ createdAt: -1 }).populate("creator", "name  profileImage");
+
+    return NextResponse.json({ activities }, { status: 200 });
+  } catch (error:any) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+  
 }

@@ -1,3 +1,4 @@
+import { create } from "domain";
 import mongoose, { Document } from "mongoose";
 
 export interface ActivityProps extends Document {
@@ -11,6 +12,7 @@ export interface ActivityProps extends Document {
   };
   startDate: Date;
   isActive: boolean;
+  createdAt:Date;
 }
 const ActivitySchema=new mongoose.Schema({
     activityName:{type:String,required:true},
@@ -23,5 +25,6 @@ const ActivitySchema=new mongoose.Schema({
     },
     startDate: { type: Date, required: true },
         isActive: { type: Boolean, default: true },
+        createdAt:{type:Date,default:Date.now}
 })
 export default mongoose.models.Activity || mongoose.model<ActivityProps>('Activity', ActivitySchema);
