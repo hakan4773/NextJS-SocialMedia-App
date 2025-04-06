@@ -63,18 +63,18 @@ function ResponsiveBar() {
       >
          <div className='w-full flex flex-col h-full'>
   {/* Profil Bölümü */}
-  <div className="p-6 bg-gradient-to-r from-blue-500 to-purple-500">
+  <div className="p-6 bg-gradient-to-r from-blue-500 to-purple-500 flex items-center space-x-4">
     <Link href="/profile" className="flex items-center space-x-4">
       <img
         src={userData?.profileImage}
         alt="Avatar"
         className="w-16 h-16 rounded-full border-2 border-white shadow-lg object-cover hover:scale-105 transition-transform duration-200"
       />
-      <div className='text-white'>
+     
+    </Link> <div className='text-white'>
         <p className='font-bold text-xl'>{userData?.name}</p>
         <p className="opacity-90">{userData?.bio ||<Link href={"/profile/edit"}>Profil yazısı ekleyin ✏️</Link>}</p>
       </div>
-    </Link>
   </div>
 
           
