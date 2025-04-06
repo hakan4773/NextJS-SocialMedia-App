@@ -3,6 +3,12 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { format } from "timeago.js";
 import { useAuth } from "../context/AuthContext";
+import { IoStatsChartOutline } from "react-icons/io5";
+import { TiPinOutline } from 'react-icons/ti';
+
+import { CiEdit } from "react-icons/ci";
+import { MdDeleteOutline } from "react-icons/md";
+import { PiDotsThreeBold } from "react-icons/pi";
 
 interface Choice {
   text: string;
@@ -30,6 +36,12 @@ function getSurveys() {
   const [error, setError] = useState<string | null>(null);
   const [votedSurveyId, setVotedSurveyId] = useState<string | null>(null); // Oy verilen anketin ID’si
   const [votedChoiceIndex, setVotedChoiceIndex] = useState<number | null>(null); // Oy verilen seçenek index’i
+    const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
+  
+const handleSettingsToggle=(index:any)=>{
+  setOpenSettingIndex(openSettingIndex===index ? null :index)
+}
+
   //Anketleri getirme
  const surveyFetch = async () => {   
    const token = localStorage.getItem("token");
@@ -96,8 +108,8 @@ const vote=async(surveyId:string,choiceIndex:number)=>{
         <p>Henüz aktif anket yok.</p>
       ) : (
         <div className="space-y-4">   
-      
-          {surveys.map((survey) => {
+       
+          {surveys.map((survey,index) => {
             const hasVoted = survey.choices.some(choice =>
               choice.voters.includes(user?.id || "")
             );
@@ -105,7 +117,37 @@ const vote=async(surveyId:string,choiceIndex:number)=>{
             <div
               key={survey._id}
               className="border rounded-md p-4 border-gray-200 bg-white shadow-sm"
-            >
+            ><div className="relative flex justify-end items-end ">
+                <button
+                  onClick={() => handleSettingsToggle(index)}
+                  className="absolute top-0 right-0 cursor-pointer"
+                >
+                  <PiDotsThreeBold size={25} />
+                </button>
+      
+                {openSettingIndex === index && (
+                  <div className="absolute right-0 top-2 mt-2 p-2 w-64 font-semibold bg-white rounded-lg shadow-lg z-50">
+                    <div className="max-h-96 overflow-y-auto">
+                      <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex items-center space-x-4">
+                        <MdDeleteOutline className="text-red-500" size={25} />
+                        <span>Sil</span>
+                      </p>
+                      <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex items-center space-x-4">
+                        <CiEdit size={25} />
+                        <span>Düzenle</span>
+                      </p>
+                      <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex items-center space-x-4">
+                        <TiPinOutline size={25} />
+                        <span>Profile Sabitle</span>
+                      </p>
+                      <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex items-center space-x-4">
+                        <IoStatsChartOutline size={25} />
+                        <span>Post istatistiklerini görüntüle</span>
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
                   <div className="flex items-center ">
                 <Image
                   src={survey.creator?.profileImage}

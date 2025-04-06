@@ -65,18 +65,33 @@ fetchPosts();
   return (
     <div className="  space-y-3">
      {posts &&  posts.length > 0 ? (posts?.map((post,index) => (
-        <div key={index} className="p-4 rounded-lg bg-white  shadow-md space-y-4">
-             {/* seçenekler */}
+        <div key={index} className="p-4 rounded-lg bg-white  shadow-md space-y-2">
+        
+                {/* Kullanıcı bilgisi */}
+          <div className="flex items-center">
+            <Image
+              src={post.user.profileImage}
+              alt="Profile"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+            <div className="ml-3">
+              <h3 className="  text-lg">{post.user.name}</h3>
+              <p className="text-gray-400 text-sm">{format(post?.createdAt)}</p>
+            </div>
+          </div>
+     {/* seçenekler */}
              <div className="relative  flex justify-end ">
                               <button
                                 onClick={() => toggleSetting(index)}
-                                className="absolute top-0 cursor-pointer"
+                                className="absolute bottom-8 cursor-pointer"
                               >
                                 <PiDotsThreeBold size={25} />
                               </button>
           
                               {openSettingIndex === index && (
-                                <div className="absolute right-0 top-2 mt-2 p-2 w-64 font-semibold bg-white rounded-lg shadow-lg z-50">
+                                <div className="absolute right-0 -top-12 mt-2 p-2 w-64 font-semibold bg-white rounded-lg shadow-lg z-50">
                                   <div className="max-h-96 overflow-y-auto">
                                     <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex space-x-4">
                                       <MdDeleteOutline
@@ -100,22 +115,19 @@ fetchPosts();
                                   </div>{" "}
                                 </div>
                               )}
-                            </div>           
-          <div className="flex items-center">
-            <Image
-              src={post.user.profileImage}
-              alt="Profile"
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
-            <div className="ml-3">
-              <h3 className="  text-lg">{post.user.name}</h3>
-              <p className="text-gray-400 text-sm">{format(post?.createdAt)}</p>
-            </div>
+                            </div>   
+
+
+          {/* post bilgisi */}
+          <p className="mt-2 ">{post.content}</p>
+                <div className=" flex space-x-2">
+            {post.tags.map((tag) => (
+              <span key={tag} className="text-blue-400 text-sm">
+              {tag}
+              </span>
+            ))} 
           </div>
           
-          <p className="mt-2 ">{post.content}</p>
           {post.image && (
             <Image
               src={post.image}
@@ -125,14 +137,8 @@ fetchPosts();
               className="mt-2 rounded-lg w-full object-cover"
             />
           )}
-          <div className=" flex space-x-2">
-            {post.tags.map((tag) => (
-              <span key={tag} className="text-blue-400 text-sm">
-              {tag}
-              </span>
-            ))} 
-          </div>
- 
+        
+  
 {/* Etkileşim Çubuğu */}
 <div className="mt-4 flex justify-between items-center ">
         

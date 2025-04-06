@@ -52,17 +52,32 @@ console.log(activities)
     <div className="space-y-6">
     {activities && activities.length > 0 && activities.map((post, index) => (
       <div key={index} className="p-4 rounded-lg bg-white shadow-md space-y-4 relative">
-        {/* Ayar menüsü */}
-        <div className="relative flex justify-end">
+      {/* Kullanıcı bilgisi */}
+     <div className="flex items-center ">
+          <Image
+            src={post.creator.profileImage}
+            alt="Profile"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+          <div className="ml-3">
+            <h3 className="text-lg ">{post.creator.name}</h3>
+            {/* <p className="text-gray-400 text-sm">{format(new Date(post.createdAt), "dd.MM.yyyy HH:mm")}</p> */}
+          </div>
+        </div>
+        
+          {/* Ayar menüsü */}
+        <div className="relative flex justify-end items-end ">
           <button
             onClick={() => toggleSetting(index)}
-            className="absolute top-0 right-0 cursor-pointer"
+            className="absolute bottom-8 right-0 cursor-pointer"
           >
             <PiDotsThreeBold size={25} />
           </button>
 
           {openSettingIndex === index && (
-            <div className="absolute right-0 top-8 mt-2 p-2 w-64 font-semibold bg-white rounded-lg shadow-lg z-50">
+            <div className="absolute right-0 -top-12 mt-2 p-2 w-64 font-semibold bg-white rounded-lg shadow-lg z-50">
               <div className="max-h-96 overflow-y-auto">
                 <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex items-center space-x-4">
                   <MdDeleteOutline className="text-red-500" size={25} />
@@ -85,22 +100,7 @@ console.log(activities)
           )}
         </div>
 
-        {/* Kullanıcı bilgisi */}
-        <div className="flex items-center">
-          <Image
-            src={post.creator.profileImage}
-            alt="Profile"
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
-          <div className="ml-3">
-            <h3 className="text-lg ">{post.creator.name}</h3>
-            {/* <p className="text-gray-400 text-sm">{format(new Date(post.createdAt), "dd.MM.yyyy HH:mm")}</p> */}
-          </div>
-        </div>
-
-     
+ 
   {/* Etkinlik görseli */}
      
           <Image
