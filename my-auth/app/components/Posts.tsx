@@ -92,7 +92,7 @@ fetchPosts();
                   <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">Takip Ediyor</span>
                 </div>
                 <div className="flex items-center space-x-2 text-xs text-gray-500">
-                  <span>{post.user.email.split('@')[0]}</span>
+                  <span>{"@"+post.user.email.split('@')[0]}</span>
                   <span>•</span>
                   <span>{format(post?.createdAt)}</span>
                 </div>

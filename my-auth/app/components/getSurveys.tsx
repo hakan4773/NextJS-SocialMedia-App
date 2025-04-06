@@ -9,6 +9,7 @@ import { TiPinOutline } from 'react-icons/ti';
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 import { PiDotsThreeBold } from "react-icons/pi";
+import { FiBookmark, FiHeart, FiMessageCircle, FiShare } from "react-icons/fi";
 
 interface Choice {
   text: string;
@@ -37,6 +38,7 @@ function getSurveys() {
   const [votedSurveyId, setVotedSurveyId] = useState<string | null>(null); // Oy verilen anketin ID’si
   const [votedChoiceIndex, setVotedChoiceIndex] = useState<number | null>(null); // Oy verilen seçenek index’i
     const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
+    const [comment, setComment] = useState<Record<string, boolean>>({});
   
 const handleSettingsToggle=(index:any)=>{
   setOpenSettingIndex(openSettingIndex===index ? null :index)
@@ -69,7 +71,28 @@ const handleSettingsToggle=(index:any)=>{
   useEffect(() => {
     surveyFetch();
   }, []);
+  const handleComment=(id:number)=>{
+    setComment((prev)=>(
+{...prev,[id]:!prev[id]}
+    ))
+  }
 
+  //Post paylaşım metodu
+  const handleShare=(id:number,content:string)=>{
+    const postUrl=`${window.location.origin}/surveys/${id}`
+    
+    if(navigator.share){
+    navigator.share({
+    title:"Paylaşım",
+    text:content,
+    url:postUrl
+    }).catch((error)=>console.error("Paylaşım hatası",error))
+    
+    }
+    else {
+      alert("paylaşım desteklenmiyor")
+    }
+  }
 //Anketlere oy verme
 const vote=async(surveyId:string,choiceIndex:number)=>{
   const token = localStorage.getItem("token");
@@ -197,7 +220,45 @@ const vote=async(surveyId:string,choiceIndex:number)=>{
           
                 Bitiş: {new Date(survey.endDate).toLocaleString()}
               </p>
+                        <div className="mt-4 pt-3 border-t border-gray-100">
+                          <div className="flex justify-between px-4">
+                            {[
+                              { icon: <FiMessageCircle />, count: 0, color: "hover:text-blue-500" },
+                              { icon: <FiHeart />, count: 0, color: "hover:text-red-500" },
+                              { icon: <FiShare />, count: 0, color: "hover:text-green-500" },
+                              { icon: <FiBookmark />, count: 0, color: "hover:text-yellow-500" }
+                            ].map((item, i) => (
+                              <button
+                                key={i}
+                                className={`flex items-center space-x-1 text-gray-500 ${item.color} transition-colors`}
+                            
+                              >
+                                <span className="text-lg">{item.icon}</span>
+                                {item.count > 0 && <span className="text-xs">{item.count}</span>}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                
+                        {/* Yorum Bölümü */}
+                        {comment[survey?._id] && (
+                          <div className="mt-3 pt-3 border-t border-gray-100">
+                            <div className="flex space-x-2">
+                              <input
+                                className="flex-1 border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
+                                placeholder="Yorum yaz..."
+                              />
+                              <button 
+                                type="submit" 
+                                className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors text-sm font-medium"
+                              >
+                                Gönder
+                              </button>
+                            </div>
+                          </div>
+                        )}
             </div>
+
          ) })}
         </div>
       )}
