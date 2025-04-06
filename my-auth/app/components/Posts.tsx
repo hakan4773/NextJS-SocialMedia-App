@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
-import { FiBookmark, FiHeart, FiMessageCircle, FiShare } from "react-icons/fi";
+import { FiBookmark, FiCheck, FiFileText, FiHeart, FiMessageCircle, FiShare } from "react-icons/fi";
 import { IoStatsChartOutline } from "react-icons/io5";
 import { MdDeleteOutline } from "react-icons/md";
 import { PiDotsThreeBold } from "react-icons/pi";
@@ -10,11 +10,12 @@ import { TiPinOutline } from "react-icons/ti";
 import { format } from "timeago.js";
 interface PostTypes{
   id: number;
+
   content: string;
   tags: string[];
   image: string;
   createdAt: Date;
-  user: { name: string; profileImage: string }; 
+  user: { name: string; profileImage: string ,email:string;}; 
 }
 export default function Posts() {
   const [comment, setComment] = useState<Record<number, boolean>>({});
@@ -63,124 +64,152 @@ fetchPosts();
     }
   }
   return (
-    <div className="  space-y-3">
-     {posts &&  posts.length > 0 ? (posts?.map((post,index) => (
-        <div key={index} className="p-4 rounded-lg bg-white  shadow-md space-y-2">
-        
-                {/* Kullanıcı bilgisi */}
-          <div className="flex items-center">
-            <Image
-              src={post.user.profileImage}
-              alt="Profile"
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
-            <div className="ml-3">
-              <h3 className="  text-lg">{post.user.name}</h3>
-              <p className="text-gray-400 text-sm">{format(post?.createdAt)}</p>
+    <div className="space-y-4">
+    {posts && posts.length > 0 ? (
+      posts?.map((post, index) => (
+        <div 
+          key={index} 
+          className="p-5 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-100"
+        >
+          {/* Üst Bilgi - Kullanıcı Bilgileri */}
+          <div className="flex justify-between items-start">
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <Image
+                  src={post.user.profileImage}
+                  alt="Profile"
+                  width={44}
+                  height={44}
+                  className="rounded-full border-2 border-blue-100"
+                />
+                <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1">
+                  <FiCheck className="text-white text-xs" />
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <h3 className="font-semibold text-gray-800">{post.user.name}</h3>
+                  <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">Takip Ediyor</span>
+                </div>
+                <div className="flex items-center space-x-2 text-xs text-gray-500">
+                  <span>{post.user.email.split('@')[0]}</span>
+                  <span>•</span>
+                  <span>{format(post?.createdAt)}</span>
+                </div>
+              </div>
+            </div>
+  
+            {/* Ayarlar Butonu */}
+            <div className="relative">
+              <button
+                onClick={() => toggleSetting(index)}
+                className="p-1 rounded-full hover:bg-gray-100 text-gray-500"
+              >
+                <PiDotsThreeBold size={20} />
+              </button>
+              
+              {openSettingIndex === index && (
+                <div className="absolute right-0 top-8 mt-1 w-48 bg-white rounded-md shadow-xl z-50 border border-gray-100">
+                  {[
+                    { icon: <MdDeleteOutline className="text-red-500" />, text: "Sil" },
+                    { icon: <CiEdit />, text: "Düzenle" },
+                    { icon: <TiPinOutline />, text: "Profile Sabitle" },
+                    { icon: <IoStatsChartOutline />, text: "İstatistikler" }
+                  ].map((item, i) => (
+                    <button
+                      key={i}
+                      className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center space-x-2"
+                    >
+                      <span>{item.icon}</span>
+                      <span>{item.text}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
-     {/* seçenekler */}
-             <div className="relative  flex justify-end ">
-                              <button
-                                onClick={() => toggleSetting(index)}
-                                className="absolute bottom-8 cursor-pointer"
-                              >
-                                <PiDotsThreeBold size={25} />
-                              </button>
-          
-                              {openSettingIndex === index && (
-                                <div className="absolute right-0 -top-12 mt-2 p-2 w-64 font-semibold bg-white rounded-lg shadow-lg z-50">
-                                  <div className="max-h-96 overflow-y-auto">
-                                    <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex space-x-4">
-                                      <MdDeleteOutline
-                                        className="text-red-500"
-                                        size={25}
-                                      />
-                                      <span>Sil</span>
-                                    </p>
-                                    <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex space-x-4">
-                                      <CiEdit size={25} />
-                                      <span>Düzenle</span>
-                                    </p>
-                                    <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex space-x-4">
-                                      <TiPinOutline size={25} />
-                                      <span>Profile Sabitle</span>{" "}
-                                    </p>
-                                    <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex space-x-4">
-                                      <IoStatsChartOutline size={25} />
-                                      <span>Post istatistiklerini görüntüle</span>
-                                    </p>
-                                  </div>{" "}
-                                </div>
-                              )}
-                            </div>   
-
-
-          {/* post bilgisi */}
-          <p className="mt-2 ">{post.content}</p>
-                <div className=" flex space-x-2">
-            {post.tags.map((tag) => (
-              <span key={tag} className="text-blue-400 text-sm">
-              {tag}
-              </span>
-            ))} 
+  
+          {/* Post İçeriği */}
+          <div className="mt-3 pl-2">
+            <p className="text-gray-800 leading-relaxed">{post.content}</p>
+            
+            {post.tags.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {post.tags.map((tag) => (
+                  <span 
+                    key={tag} 
+                    className="text-blue-500 text-xs bg-blue-50 px-2 py-1 rounded-full hover:bg-blue-100 cursor-pointer"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
+            
+            {post.image && (
+              <div className="mt-3 rounded-lg overflow-hidden border border-gray-100">
+                <Image
+                  src={post.image}
+                  alt="Post"
+                  width={600}
+                  height={300}
+                  className="w-full h-auto object-cover"
+                  layout="responsive"
+                />
+              </div>
+            )}
           </div>
-          
-          {post.image && (
-            <Image
-              src={post.image}
-              alt="Post"
-              width={400}
-              height={200}
-              className="mt-2 rounded-lg w-full object-cover"
-            />
-          )}
-        
   
-{/* Etkileşim Çubuğu */}
-<div className="mt-4 flex justify-between items-center ">
-        
-        <button 
-         onClick={() => handleComment(post.id)}
-         className="flex items-center space-x-1 hover:text-blue-400">
-          <FiMessageCircle size={20} />
-          <span>Yorum</span>
-
-        
-        </button>
-      
-        <button  className="flex items-center space-x-1 hover:text-red-400">
-          <FiHeart  size={20} />
-          <span>{0}</span>
-        </button>
-        <button 
-         onClick={() => handleShare(post.id, post.content)}
-        className="flex items-center space-x-1 hover:text-green-400 cursor-pointer">
-          <FiShare  size={20} />
-          <span>Paylaş</span>
-        </button>
-        <button  className="flex items-center space-x-1 hover:text-yellow-400">
-          <FiBookmark size={20}  />
-          <span>Kaydet</span>
-        </button>
+          {/* Etkileşim Butonları */}
+          <div className="mt-4 pt-3 border-t border-gray-100">
+            <div className="flex justify-between px-4">
+              {[
+                { icon: <FiMessageCircle />, count: 0, color: "hover:text-blue-500" },
+                { icon: <FiHeart />, count: 0, color: "hover:text-red-500" },
+                { icon: <FiShare />, count: 0, color: "hover:text-green-500" },
+                { icon: <FiBookmark />, count: 0, color: "hover:text-yellow-500" }
+              ].map((item, i) => (
+                <button
+                  key={i}
+                  className={`flex items-center space-x-1 text-gray-500 ${item.color} transition-colors`}
+                  onClick={() => {
+                    if (i === 0) handleComment(post.id);
+                    if (i === 2) handleShare(post.id, post.content);
+                  }}
+                >
+                  <span className="text-lg">{item.icon}</span>
+                  {item.count > 0 && <span className="text-xs">{item.count}</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+  
+          {/* Yorum Bölümü */}
+          {comment[post.id] && (
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <div className="flex space-x-2">
+                <input
+                  className="flex-1 border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
+                  placeholder="Yorum yaz..."
+                />
+                <button 
+                  type="submit" 
+                  className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors text-sm font-medium"
+                >
+                  Gönder
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      ))
+    ) : (
+      <div className="flex flex-col items-center justify-center p-8 bg-white rounded-xl border border-gray-100 text-center">
+        <FiFileText className="text-gray-300 text-4xl mb-3" />
+        <h3 className="text-gray-500 font-medium">Henüz paylaşım yapılmadı</h3>
+        <p className="text-gray-400 text-sm mt-1">İlk paylaşımı sen yapmak ister misin?</p>
       </div>
-      {comment[post.id] && (
-           <div className="flex mt-2 space-x-2"> 
-             <input
-              className="border rounded-xl border-gray-300 w-full  p-2"
-              placeholder="Yorum yaz..."
-            />
-            <button type="submit" className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 cursor-pointer">Gönder</button>
-           </div>
-
-          )}
-        </div>))
-) : (
-  <div className="text-gray-500 text-center p-4 min-h-[250px]">Henüz paylaşım yapılmadı.</div>
-)}
-  
-    </div>
+    )}
+  </div>
   );
 }

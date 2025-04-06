@@ -58,7 +58,7 @@ export async function GET(req:NextRequest) {
   if (!decoded) {
       return NextResponse.json({ message: "Invalid token" }, { status: 401 });
   }
-  const posts = await Post.find({ user: decoded.id }).populate("user", "name email profileImage");
+  const posts = await Post.find({ user: decoded.id }).sort({ createdAt: -1 }).populate("user", "name email profileImage");
 
   if (!posts || posts.length === 0) {
     return NextResponse.json({ message: "Hiç post bulunamadı!",}, { status: 404 });
