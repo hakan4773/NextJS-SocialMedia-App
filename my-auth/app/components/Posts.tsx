@@ -64,12 +64,12 @@ fetchPosts();
     }
   }
   return (
-    <div className="space-y-4">
+    <div className="">
     {posts && posts.length > 0 ? (
       posts?.map((post, index) => (
         <div 
           key={index} 
-          className="p-5 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-100"
+          className="p-5 hover:bg-gray-50  cursor-pointer  bg-white shadow-sm hover:shadow-md transition-shadow duration-400 border border-gray-100"
         >
           {/* Üst Bilgi - Kullanıcı Bilgileri */}
           <div className="flex justify-between items-start">

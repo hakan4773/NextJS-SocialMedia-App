@@ -15,8 +15,10 @@ export default function Home() {
         <LeftBar />
       </div>
       {/* orta kısım (içerik kısmı) */}
-      <div className="w-full md:w-1/2 flex flex-col justify-center  max-w-[500px] space-y-4 ">
-        <PostCreation />
+      <div className="w-full md:w-1/2 flex flex-col justify-center  max-w-[500px] ">
+<PostCreation />
+        
+      
         <Activities />
         <GetSurveys />
         <Posts />

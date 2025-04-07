@@ -55,7 +55,7 @@ console.log(activities)
     activities.map((post, index) => (
       <div 
         key={index} 
-        className="p-5 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-100 overflow-hidden"
+        className="p-5  bg-white shadow-sm hover:shadow-md  hover:bg-gray-50  cursor-pointer transition-shadow duration-200 border border-gray-100 overflow-hidden"
       >
         {/* Üst Bilgi - Kullanıcı Bilgileri */}
         <div className="flex justify-between items-start mb-3">

@@ -115,7 +115,7 @@ function PostCreation() {
   }
 
   return (
-    <div className="flex w-full bg-white rounded-md shadow-md">
+    <div className="flex w-full bg-white shadow-md">
       {/* resim-avatar */}
 
       <div className="m-2">

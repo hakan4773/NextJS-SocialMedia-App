@@ -124,13 +124,13 @@ const vote=async(surveyId:string,choiceIndex:number)=>{
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="  space-y-3">
+    <div >
   
               
       {surveys.length === 0 ? (
         <p>Henüz aktif anket yok.</p>
       ) : (
-        <div className="space-y-4">   
+        <div >   
        
           {surveys.map((survey,index) => {
             const hasVoted = survey.choices.some(choice =>
@@ -139,7 +139,7 @@ const vote=async(surveyId:string,choiceIndex:number)=>{
             return (
             <div
               key={survey._id}
-              className="border rounded-md p-4 border-gray-200 bg-white shadow-sm"
+              className="border  p-4 border-gray-200 bg-white  hover:bg-gray-50  cursor-pointer "
             ><div className="relative flex justify-end items-end ">
                 <button
                   onClick={() => handleSettingsToggle(index)}
