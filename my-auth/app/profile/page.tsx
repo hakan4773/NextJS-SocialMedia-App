@@ -1,23 +1,12 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import {
-  FiBookmark,
-  FiEdit2,
-  FiHeart,
-  FiMessageCircle,
-  FiSettings,
-  FiShare,
-} from "react-icons/fi";
-import { PiDotsThreeBold } from "react-icons/pi";
-import { MdDeleteOutline } from "react-icons/md";
-import { TiPinOutline } from "react-icons/ti";
+import { FiEdit2, FiSettings } from "react-icons/fi";
 import { CiEdit } from "react-icons/ci";
-import { IoStatsChartOutline } from "react-icons/io5";
-import { format } from "timeago.js";
 import Link from "next/link";
 import Posts from "../components/Posts";
-
+import GetSurveys from "../components/getSurveys";
+import Activities from "../components/Activities";
 interface UserType {
   id: string;
   name: string;
@@ -27,10 +16,11 @@ interface UserType {
   profileImage: string;
 }
 
-
 export default function ProfilePage() {
   const [userData, setUserData] = useState<UserType | null>();
-
+const [getPosts,setGetPosts]=useState(true);
+const [getSurveys,setGetSurveys]=useState(false);
+const [getActivities,setGetActivities]=useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -42,16 +32,12 @@ export default function ProfilePage() {
       const data = await res.json();
       if (res.ok) {
         setUserData(data.user);
-      
       } else {
         console.error("Profil verisi alınamadı:", data.error);
       }
-
     };
     fetchProfile();
   }, []);
-
-
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-700 via-purple-600 to-pink-400  py-24">
@@ -78,14 +64,18 @@ export default function ProfilePage() {
                   {userData?.name}
                 </h1>
                 <div className="flex lg:space-x-2 lg:space-y-0 space-y-4 lg:flex-row flex-col">
-                <Link href={"/profile/edit"} className="flex items-center space-x-2 text-white bg-red-500 px-4 py-2 rounded-lg hover:bg-red-300">
-                  <CiEdit size={18} />
-                  <span> Güncelle</span>
-                </Link>
-                <button className="flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200">
-                  <FiSettings size={18} />
-                  <span>Ayarlar</span>
-                </button> </div>
+                  <Link
+                    href={"/profile/edit"}
+                    className="flex items-center space-x-2 text-white bg-red-500 px-4 py-2 rounded-lg hover:bg-red-300"
+                  >
+                    <CiEdit size={18} />
+                    <span> Güncelle</span>
+                  </Link>
+                  <button className="flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200">
+                    <FiSettings size={18} />
+                    <span>Ayarlar</span>
+                  </button>{" "}
+                </div>
               </div>
               <p className="text-gray-600 mt-1">{userData?.email}</p>
               <p className="text-gray-700 mt-3">{userData?.bio}</p>
@@ -123,8 +113,47 @@ export default function ProfilePage() {
         </div>
 
         {/* Gönderiler*/}
-<Posts />
+        <div className="bg-white border-slate-100 shadow-md rounded-lg mb-6">
+          <ul className="flex items-center justify-center  p-4 space-x-6">
+          
+              <li className="text-gray-800 font-semibold text-lg  ">
+                  <button className={`${getPosts ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-800'}`} onClick={()=>{
+          setGetPosts(true)
+          setGetSurveys(false) 
+          setGetActivities(false)
+         } }>
+                Gönderiler</button>
+              </li>
+            
+           
+                  <li className="text-gray-800 font-semibold text-lg "> <button className={`${getSurveys ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-800'}`} onClick={()=>{
+              setGetSurveys(true) 
+              setGetPosts(false) 
+              setGetActivities(false)
+              }}>Anketler</button></li> 
 
+        
+               
+                  <li className="text-gray-800 font-semibold text-lg ">
+                       <button  className={`${getActivities ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-800'}`} onClick={()=>{
+              setGetActivities(true) 
+              setGetSurveys(false) 
+              setGetPosts(false) 
+             
+              }}>Etkinlikler</button></li> 
+          </ul>
+{getPosts &&
+  <Posts />
+}
+{getSurveys &&
+         <GetSurveys />
+
+}
+{getActivities &&
+         <Activities />
+
+}  
+        </div>
       </div>
     </div>
   );
