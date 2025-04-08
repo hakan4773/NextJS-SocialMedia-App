@@ -13,6 +13,9 @@ interface UserTypes {
   email: string;
   password: string;
   bio:string;
+  posts:string[];
+  surveys:string[];
+  activities:string[];
   profileImage:string;
   followers:string[];
   following:string[];
@@ -66,7 +69,7 @@ Followers
 </li>
     <li className='flex justify-between  hover:underline'>
       <Link href={"/profile"} className='text-gray-600'>Gönderi Sayısı  </Link>
-      <span className='text-blue-600 font-bold'>10</span></li>
+      <span className='text-blue-600 font-bold'>{(userData?.posts?.length || 0) + (userData?.surveys?.length || 0) + (userData?.activities?.length || 0)}</span></li>
 
 </ul>
 <Followers isFollowersOpen={isFollowersOpen} setIsFollowersOpen={setIsFollowersOpen} />
