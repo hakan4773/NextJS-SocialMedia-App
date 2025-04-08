@@ -47,7 +47,6 @@ fetchPosts();
 
 
 
-console.log(activities)
 
   return (
 <div className="space-y-6">
@@ -158,11 +157,7 @@ console.log(activities)
       </div>
     ))
   ) : (
-    <div className="flex flex-col items-center justify-center p-8 bg-white rounded-xl border border-gray-100 text-center">
-      <FiCalendar className="text-gray-300 text-4xl mb-3" />
-      <h3 className="text-gray-500 font-medium">Henüz etkinlik yok</h3>
-      <p className="text-gray-400 text-sm mt-1">İlk etkinliği sen oluşturmak ister misin?</p>
-    </div>
+  ""
   )}
 </div>
   )

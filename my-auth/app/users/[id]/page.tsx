@@ -3,7 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   FiBookmark,
+  FiCheck,
   FiEdit2,
+  FiFileText,
   FiHeart,
   FiMessageCircle,
   FiShare,
@@ -16,7 +18,9 @@ import { IoStatsChartOutline } from "react-icons/io5";
 import { format } from "timeago.js";
 import { use, useEffect, useState } from "react";
 import { SlUserFollow } from "react-icons/sl";
-
+import GetSurveys from "@/app/components/getSurveys";
+import Interaction from "../components/Interaction";
+import Activities from "@/app/components/Activities";
 interface UserType {
   _id: number;
   name: string;
@@ -29,15 +33,44 @@ interface UserType {
 }
 
 interface Post {
-  _id: number;
+  id: number;
   content: string;
   tags: string[];
   image?: string;
   createdAt: string;
   comments: string[];
   likes: number;
+  user: { name: string; profileImage: string; email: string };
 }
-
+interface Survey{
+  _id:string;
+  question:string;
+  choices:{
+       text: string;
+        voters: string[];
+  };
+  duration:{
+      days:number;
+      hours:number;
+      minutes:number;
+  }
+  creator:string;
+  endDate:Date;
+  isActive: boolean;
+}
+interface Activity{
+  activityName: string;
+    activityType: string;
+    description: string;
+    creator: string[];
+    activityDate: {
+      hours: number;
+      minutes: number;
+    };
+    startDate: Date;
+    isActive: boolean;
+    createdAt:Date;
+}
 export default function ProfilePage({
   params,
 }: {
@@ -46,10 +79,15 @@ export default function ProfilePage({
   const { id } = use(params);
   const [userData, setUserData] = useState<UserType | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [surveys,setSurveys]=useState<Survey[]>([]);
+  const [activities,setActivities]=useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
   const [comment, setComment] = useState<Record<number, boolean>>({});
   const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
   const [isFollowing, setIsFollowing] =useState(false);
+
+ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('posts')
+
   const toggleSetting = (index: any) => {
     setOpenSettingIndex(openSettingIndex === index ? null : index);
   };
@@ -75,6 +113,8 @@ export default function ProfilePage({
       if (res.ok) {
         setUserData(data.user);
         setPosts(data.posts);
+        setSurveys(data.surveys);
+        setActivities(data.activities);
         setIsFollowing(data.isFollowing); 
       
       } else {
@@ -87,8 +127,20 @@ export default function ProfilePage({
     fetchProfile();
   }, [id]);
 
-  {
-    /*Yorum panelini açma */
+  const handleShare=(id:number,content:string)=>{
+    const postUrl=`${window.location.origin}/post/${id}`
+    
+    if(navigator.share){
+    navigator.share({
+    title:"Paylaşım",
+    text:content,
+    url:postUrl
+    }).catch((error)=>console.error("Paylaşım hatası",error))
+    
+    }
+    else {
+      alert("paylaşım desteklenmiyor")
+    }
   }
 
   const handleComment = (id: number) => {
@@ -202,149 +254,134 @@ export default function ProfilePage({
 
         {/* Gönderiler*/}
         <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8  mx-auto ">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
-            Gönderiler
-          </h2>
+       
 
-          {/* Gönderiler Listesi */}
-          {posts.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-gray-500 text-lg">Henüz gönderi yok.</p>
-              <p className="text-gray-400">
-                İlk gönderini paylaşmaya ne dersin?
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-6 ">
-              {posts.map((post, index) => (
-                <div
-                  key={post._id}
-                  className="rounded-lg shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow duration-300 "
-                >
-                  {/* Kullanıcı Bilgisi */}
-                  <div className="flex items-center ">
-                    <Image
-                      src={userData?.profileImage || "/profil.jpg"}
-                      alt="Profile"
-                      width={50}
-                      height={50}
-                      className="rounded-full border-2 border-indigo-500"
-                    />
-                    <div className="ml-4">
-                      <h3 className="text-xl font-semibold text-gray-800">
-                        {userData?.name || "Kullanıcı"}
-                      </h3>
-                      <p className="text-gray-400 text-sm leading-relaxed ">
-                        {format(post?.createdAt)}
-                      </p>
+          {/* Paylaşımlar Listesi */}
+
+<ul className="flex items-center justify-center p-4 space-x-6 text-xl font-semibold">
+  <li><button className={`${activeTab==="posts" ? "border-blue-500 text-blue-600":"border-transparent text-gray-800"}`} onClick={() => setActiveTab('posts')}>Gönderiler</button></li>
+  <li><button className={`${activeTab==="surveys" ? "border-blue-500 text-blue-600":"border-transparent text-gray-800"}`} onClick={() => setActiveTab('surveys')}>Anketler</button></li>
+  <li><button className={`${activeTab==="activities" ? "border-blue-500 text-blue-600":"border-transparent text-gray-800"}`} onClick={() => setActiveTab('activities')}>Etkinlikler</button></li>
+</ul>
+{activeTab==="posts" && 
+         posts && posts.length > 0 ? (
+            posts?.map((post, index) => (
+              <div 
+                key={index} 
+                className="p-5 hover:bg-gray-50  cursor-pointer  bg-white shadow-sm hover:shadow-md transition-shadow duration-400 border border-gray-100"
+              >
+                {/* Üst Bilgi - Kullanıcı Bilgileri */}
+                <div className="flex justify-between items-start">
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <Image
+                        src={userData?.profileImage || "/default-profile.jpg"}
+                        alt="Profile"
+                        width={44}
+                        height={44}
+                        className="rounded-full border-2 border-blue-100"
+                      />
+                      <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1">
+                        <FiCheck className="text-white text-xs" />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex items-center space-x-2">
+                        <h3 className="font-semibold text-gray-800">{userData?.name}</h3>
+                        <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">Takip Ediyor</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-xs text-gray-500">
+                        <span>{"@"+userData?.email.split('@')[0]}</span>
+                        <span>•</span>
+                        <span>{format(post?.createdAt)}</span>
+                      </div>
                     </div>
                   </div>
-                  {/* seçenekler */}
-                  <div className="relative  flex justify-end ">
+        
+                  {/* Ayarlar Butonu */}
+                  <div className="relative">
                     <button
                       onClick={() => toggleSetting(index)}
-                      className=" cursor-pointer"
+                      className="p-1 rounded-full hover:bg-gray-100 text-gray-500"
                     >
-                      <PiDotsThreeBold size={25} />
+                      <PiDotsThreeBold size={20} />
                     </button>
-
+                    
                     {openSettingIndex === index && (
-                      <div className="absolute right-0 top-full mt-2 p-2 w-52 font-semibold bg-white rounded-lg shadow-lg z-50">
-                        <div className="max-h-96 overflow-y-auto">
-                          <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex space-x-4">
-                            <MdDeleteOutline
-                              className="text-red-500"
-                              size={25}
-                            />
-                            <span>Sil</span>
-                          </p>
-                          <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex space-x-4">
-                            <CiEdit size={25} />
-                            <span>Düzenle</span>
-                          </p>
-                          <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex space-x-4">
-                            <TiPinOutline size={25} />
-                            <span>Profile Sabitle</span>{" "}
-                          </p>
-                          <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex space-x-4">
-                            <IoStatsChartOutline size={25} />
-                            <span>Post istatistiklerini görüntüle</span>
-                          </p>
-                        </div>{" "}
+                      <div className="absolute right-0 top-8 mt-1 w-48 bg-white rounded-md shadow-xl z-50 border border-gray-100">
+                        {[
+                          { icon: <MdDeleteOutline className="text-red-500" />, text: "Sil" },
+                          { icon: <CiEdit />, text: "Düzenle" },
+                          { icon: <TiPinOutline />, text: "Profile Sabitle" },
+                          { icon: <IoStatsChartOutline />, text: "İstatistikler" }
+                        ].map((item, i) => (
+                          <button
+                            key={i}
+                            className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center space-x-2"
+                          >
+                            <span>{item.icon}</span>
+                            <span>{item.text}</span>
+                          </button>
+                        ))}
                       </div>
                     )}
                   </div>
-                  {/* Gönderi İçeriği */}
-                  <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-2">
-                    {post.content}
-                  </p>
-                  {/* tagler   */}
-                  <div className=" flex space-x-2 mb-2">
-                    {post.tags.map((tag) => (
-                      <span key={tag} className="text-blue-400 text-sm">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
 
-                  {/* Gönderi Resmi */}
+
+                </div>
+        
+                {/* Post İçeriği */}
+                <div className="mt-3 pl-2">
+                  <p className="text-gray-800 leading-relaxed">{post.content}</p>
+                  
+                  {post.tags.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {post.tags.map((tag) => (
+                        <span 
+                          key={tag} 
+                          className="text-blue-500 text-xs bg-blue-50 px-2 py-1 rounded-full hover:bg-blue-100 cursor-pointer"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  
                   {post.image && (
-                    <div className="relative w-full h-64 sm:h-80 mb-4">
+                    <div className="mt-3 rounded-lg overflow-hidden border border-gray-100">
                       <Image
                         src={post.image}
                         alt="Post"
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded-lg"
+                        width={600}
+                        height={300}
+                        className="w-full h-auto object-cover"
+                        layout="responsive"
                       />
-                    </div>
-                  )}
-
-                  {/*Etkileşim */}
-                  <div className="mt-4 flex justify-between items-center ">
-                    <button
-                      onClick={() => handleComment(post?._id)}
-                      className="flex items-center space-x-1 hover:text-blue-400"
-                    >
-                      <FiMessageCircle size={20} />
-                      <span>Yorum</span>
-                    </button>
-
-                    <button className="flex items-center space-x-1 hover:text-red-400">
-                      <FiHeart size={20} />
-                      <span>{0}</span>
-                    </button>
-                    <button
-                      //  onClick={() => handleShare(post.id, post.content)}
-                      className="flex items-center space-x-1 hover:text-green-400 cursor-pointer"
-                    >
-                      <FiShare size={20} />
-                      <span>Paylaş</span>
-                    </button>
-                    <button className="flex items-center space-x-1 hover:text-yellow-400">
-                      <FiBookmark size={20} />
-                      <span>Kaydet</span>
-                    </button>
-                  </div>
-                  {comment[post._id] && (
-                    <div className="flex mt-2 space-x-2">
-                      <input
-                        className="border rounded-xl bg-gray-200 w-full  p-2"
-                        placeholder="Yorum yaz..."
-                      />
-                      <button
-                        type="submit"
-                        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 cursor-pointer"
-                      >
-                        Gönder
-                      </button>
                     </div>
                   )}
                 </div>
-              ))}
-            </div>
-          )}
+        
+                {/* Etkileşim Butonları */}
+            <Interaction post={post}/>
+
+              </div>
+            ))
+          ) : (
+           ""
+)}
+
+{/* Anketler */}
+{activeTab==="surveys" &&
+<GetSurveys />
+}
+
+{activeTab==="activities" &&
+<Activities />
+}
+
+          
         </div>
+
       </div>
     </div>
   );

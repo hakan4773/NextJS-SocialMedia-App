@@ -121,15 +121,14 @@ const vote=async(surveyId:string,choiceIndex:number)=>{
 }
  
   if (loading) return <div>Yükleniyor...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
+  // if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div >
   
               
       {surveys.length === 0 ? (
-        <p>Henüz aktif anket yok.</p>
-      ) : (
+""      ) : (
         <div >   
        
           {surveys.map((survey,index) => {
@@ -140,38 +139,10 @@ const vote=async(surveyId:string,choiceIndex:number)=>{
             <div
               key={survey._id}
               className="border  p-4 border-gray-200 bg-white  hover:bg-gray-50  cursor-pointer "
-            ><div className="relative flex justify-end items-end ">
-                <button
-                  onClick={() => handleSettingsToggle(index)}
-                  className="absolute top-0 right-0 cursor-pointer"
-                >
-                  <PiDotsThreeBold size={25} />
-                </button>
-      
-                {openSettingIndex === index && (
-                  <div className="absolute right-0 top-2 mt-2 p-2 w-64 font-semibold bg-white rounded-lg shadow-lg z-50">
-                    <div className="max-h-96 overflow-y-auto">
-                      <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex items-center space-x-4">
-                        <MdDeleteOutline className="text-red-500" size={25} />
-                        <span>Sil</span>
-                      </p>
-                      <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex items-center space-x-4">
-                        <CiEdit size={25} />
-                        <span>Düzenle</span>
-                      </p>
-                      <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex items-center space-x-4">
-                        <TiPinOutline size={25} />
-                        <span>Profile Sabitle</span>
-                      </p>
-                      <p className="relative p-2 hover:bg-gray-50 cursor-pointer flex items-center space-x-4">
-                        <IoStatsChartOutline size={25} />
-                        <span>Post istatistiklerini görüntüle</span>
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-                  <div className="flex items-center ">
+            >
+              <div className="flex justify-between items-start">
+              {/* Üst Bilgi - Kullanıcı Bilgileri */}
+                 <div className="flex items-center ">
                 <Image
                   src={survey.creator?.profileImage}
                   alt="Profile"
@@ -184,6 +155,35 @@ const vote=async(surveyId:string,choiceIndex:number)=>{
                   <p className="text-gray-400 text-sm">{format(survey?.createdAt)}</p> 
                 </div>
               </div>
+
+
+              <div className="relative ">
+                <button
+                  onClick={() => handleSettingsToggle(index)}
+                  className="p-1 rounded-full hover:bg-gray-100 text-gray-500"                >
+                  <PiDotsThreeBold size={20} />
+                </button>
+      
+                {openSettingIndex === index && (
+                      <div className="absolute right-0 top-8 mt-1 w-48 bg-white rounded-md shadow-xl z-50 border border-gray-100">
+                        {[
+                          { icon: <MdDeleteOutline className="text-red-500" />, text: "Sil" },
+                          { icon: <CiEdit />, text: "Düzenle" },
+                          { icon: <TiPinOutline />, text: "Profile Sabitle" },
+                          { icon: <IoStatsChartOutline />, text: "İstatistikler" }
+                        ].map((item, i) => (
+                          <button
+                            key={i}
+                            className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center space-x-2"
+                          >
+                            <span>{item.icon}</span>
+                            <span>{item.text}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+              </div>
+               </div>
               <h2 className="pt-4 ml-2">{survey.question} </h2>
               <ul className="mt-2 space-y-2 ">
                 
