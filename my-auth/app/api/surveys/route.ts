@@ -2,6 +2,7 @@ import connectDB from "@/app/libs/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import Survey from "@/app/models/Survey";
 import { verifyToken } from "@/app/utils/jwtUtils";
+import Auth from "@/app/models/auth";
 
 export async function POST(req: NextRequest) {
     await connectDB();
@@ -36,6 +37,11 @@ export async function POST(req: NextRequest) {
       creator: user,
       endDate
     });
+      await Auth.findByIdAndUpdate(
+              decoded.id,
+              { $push: { surveys: survey._id } },
+              { new: true }
+            );
 
     return NextResponse.json({
       message: "Anket başarıyla oluşturuldu",

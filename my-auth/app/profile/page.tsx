@@ -14,10 +14,12 @@ interface UserType {
   password: string;
   bio: string;
   profileImage: string;
+  followers:string[];
+  following:string[];
 }
 
 export default function ProfilePage() {
-  const [userData, setUserData] = useState<UserType | null>();
+const [userData, setUserData] = useState<UserType | null>();
 const [getPosts,setGetPosts]=useState(true);
 const [getSurveys,setGetSurveys]=useState(false);
 const [getActivities,setGetActivities]=useState(false);
@@ -87,17 +89,17 @@ const [getActivities,setGetActivities]=useState(false);
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="bg-white p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold text-gray-700">Paylaşımlar</h3>
-            <p className="text-2xl font-bold text-blue-500 mt-2">245</p>
+            <p className="text-2xl font-bold text-blue-500 mt-2">{}</p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold text-gray-700">Takipçiler</h3>
-            <p className="text-2xl font-bold text-blue-500 mt-2">1.2K</p>
+            <p className="text-2xl font-bold text-blue-500 mt-2">{userData?.followers.length}</p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold text-gray-700">
               Takip Edilenler
             </h3>
-            <p className="text-2xl font-bold text-blue-500 mt-2">348</p>
+            <p className="text-2xl font-bold text-blue-500 mt-2">{userData?.following.length}</p>
           </div>
         </div>
 

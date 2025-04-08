@@ -5,6 +5,7 @@ import { verifyToken } from "@/app/utils/jwtUtils";
 import path from "path";
 import fs, { existsSync } from 'fs';
 import { writeFile } from "fs/promises";
+import Auth from "@/app/models/auth";
 
 export async function POST(req: NextRequest) {
     await connectDB();
@@ -37,12 +38,13 @@ fs.mkdirSync(uploadDir,{recursive:true})
      imagePath = `/image/${image.name}`;
   }
 
-
-
-
         const newPost = new Post({ content,tags, image:image ? imagePath : null,  user: decoded.id }); 
         await newPost.save();
-
+        await Auth.findByIdAndUpdate(
+          decoded.id,
+          { $push: { posts: newPost._id } }, // Yeni postun ID’sini ekle
+          { new: true }
+        );
         return NextResponse.json({ message: "Post created successfully" }, { status: 201 });
     } catch (error: any) {
         console.error("Post creation error:", error.message);

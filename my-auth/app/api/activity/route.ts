@@ -2,6 +2,7 @@ import connectDB from "@/app/libs/mongodb";
 import { NextResponse,NextRequest } from "next/server";
 import { verifyToken } from "@/app/utils/jwtUtils";
 import Activity from "@/app/models/Activity";
+import Auth from "@/app/models/auth";
 
 export async function POST(req:NextRequest) {
 const decoded=verifyToken(req);
@@ -26,6 +27,12 @@ const decoded=verifyToken(req);
       createdAt,
       creator: decoded.id,
     });
+     await  Auth.findByIdAndUpdate(
+                  decoded.id,
+                  { $push: { activities: activity._id } },
+                  { new: true }
+                );
+    
 
     return NextResponse.json({message:"Etkinlik başarıyla oluşturuldu",activity}, { status: 201 });
   } catch (error:any) {
