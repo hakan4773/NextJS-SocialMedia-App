@@ -1,16 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { FiBookmark, FiHeart, FiMessageCircle, FiShare } from "react-icons/fi";
-interface Post {
-  id: number;
-  content: string;
-  tags: string[];
-  image?: string;
-  createdAt: string;
-  comments: string[];
-  likes: number;
-  user: { name: string; profileImage: string; email: string };
-}
+import { Post } from "@/app/types/user";
 function Interaction({ post }: { post: Post }) {
   const [comment, setComment] = useState<Record<number, boolean>>({});
 

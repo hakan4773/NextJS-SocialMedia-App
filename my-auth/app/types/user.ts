@@ -10,6 +10,9 @@ export interface UserType {
   email: string;
   password: string;
   bio: string;
+  posts:string[];
+  surveys:string[];
+  activities:string[];
   profileImage: string;
   followers: string[];
   following: string[];
@@ -25,13 +28,15 @@ export interface UserType {
     likes: number;
     user: { name: string; profileImage: string; email: string };
   }
+ export interface Choice {
+    text: string;
+    voters: string[];
+    _id: string;
+  }
 export  interface Survey{
     _id:string;
     question:string;
-    choices:{
-         text: string;
-          voters: string[];
-    };
+    choices:Choice;
     duration:{
         days:number;
         hours:number;
@@ -57,3 +62,14 @@ export  interface Survey{
       isActive: boolean;
       createdAt:Date;
   }
+
+ export interface FollowingProps {
+    _id:string,
+    name:string,
+    email:string,
+    profileImage:string,
+    followers:string[],
+    following:string[],
+    bio:string
+  }
+ 

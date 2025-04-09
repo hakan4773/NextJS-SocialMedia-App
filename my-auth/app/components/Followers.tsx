@@ -3,16 +3,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import { FollowingProps } from "../types/user";
 
-interface FollowersProps {
-  _id: string;
-  name: string;
-  email: string;
-  profileImage: string;
-  followers: string[];
-  following: string[];
-  bio: string;
-}
 const Followers = ({
   isFollowersOpen,
   setIsFollowersOpen,
@@ -21,7 +13,7 @@ const Followers = ({
   setIsFollowersOpen: (open: boolean) => void;
 }) => {
   const { user } = useAuth();
-  const [followers, setFollowers] = useState<FollowersProps[]>([]);
+  const [followers, setFollowers] = useState<FollowingProps[]>([]);
  
   useEffect(() => {
     const fetchFollow = async () => {

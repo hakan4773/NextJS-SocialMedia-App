@@ -3,16 +3,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import { FollowingProps } from "../types/user";
 
-interface FollowingProps {
-  _id:string,
-  name:string,
-  email:string,
-  profileImage:string,
-  followers:string[],
-  following:string[],
-  bio:string
-}
 const Following = ({
   isFollowingOpen,
   setIsFollowingOpen,

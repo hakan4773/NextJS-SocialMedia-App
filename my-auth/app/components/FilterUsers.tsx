@@ -1,15 +1,10 @@
 import Link from "next/link";
 import React from "react";
-interface UsersTypes {
-  _id: number;
-  name: string;
-  email: string;
-  profileImage?: string;
-}
+import { UserType } from "../types/user";
 export default function FilterUsers({
   filteredUsers,
 }: {
-  filteredUsers: UsersTypes[];
+  filteredUsers: UserType[];
 }) {
 
   return (

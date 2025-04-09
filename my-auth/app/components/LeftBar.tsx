@@ -7,24 +7,12 @@ import { MdFavoriteBorder } from "react-icons/md";
 import Followers from './Followers';
 import Following from './Following';
 import { getUserDetails } from '../utils/getUsers';
-interface UserTypes {
-  id?: string;
-  name: string;
-  email: string;
-  password: string;
-  bio:string;
-  posts:string[];
-  surveys:string[];
-  activities:string[];
-  profileImage:string;
-  followers:string[];
-  following:string[];
-}
+import { UserType } from '../types/user';
 function LeftBar() {
   
   const [isFollowersOpen, setIsFollowersOpen] = useState(false);
   const [isFollowingOpen, setIsFollowingOpen] = useState(false);
-const [userData, setUserData] = useState<UserTypes |null>(null);
+const [userData, setUserData] = useState<UserType |null>(null);
 
 useEffect(() => {
   const fetchData = async () => {

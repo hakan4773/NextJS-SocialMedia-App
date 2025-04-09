@@ -10,20 +10,9 @@ import { TiPinOutline } from 'react-icons/ti';
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
 import { FiCalendar, FiEye, FiMapPin, FiUsers } from 'react-icons/fi';
+import { Activity } from '../types/user';
+
 function Activities() {
-interface Activity {
-  activityName: string;
-  activityDate: {   hours: number; minutes: number };
-    activityType:string;
-  creator: {
-    profileImage: string;
-    name: string;
-  };
-  description: string;
-  profileImage?: string;
-  startDate:Date;
-  createdAt:Date;
-}
 
 const [activities, setActivities] = useState<Activity[]>([]);
   const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);

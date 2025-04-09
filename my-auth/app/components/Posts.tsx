@@ -9,20 +9,10 @@ import { PiDotsThreeBold } from "react-icons/pi";
 import { TiPinOutline } from "react-icons/ti";
 import { format } from "timeago.js";
 import Interaction from "../users/components/Interaction";
-
-interface PostTypes{
-  id: number;
-  content: string;
-  tags: string[];
-  image?: string;
-  createdAt: string;
-  comments: string[];
-  likes: number;
-  user: { name: string; profileImage: string; email: string };
-}
+import { Post } from "../types/user";
 export default function Posts() {
 
-  const [posts,setPosts]=useState<PostTypes[] | null>(null)
+  const [posts,setPosts]=useState<Post[] | null>(null)
   
   const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
   const toggleSetting = (index: any) => {

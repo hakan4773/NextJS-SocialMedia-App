@@ -9,20 +9,13 @@ import { getUserDetails } from "../utils/getUsers";
 import { ThreeDot } from "react-loading-indicators";
 import { toast } from "react-toastify";
 import Survey from "./Survey"
-interface UserTypes {
-  id?: string;
-  name: string;
-  email: string;
-  password: string;
-  bio: string;
-  profileImage: string;
-}
+import { UserType } from "../types/user";
 function PostCreation() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null); //resim ekleme için
   const [preview, setPreview] = useState<string | null>(null); //resim görüntüleme için
   const [isModalOpen, setIsModalOpen] = useState(false); //Etkinlik modalı için
   const [content, setContent] = useState<string | number | any>("");
-  const [userData, setUserData] = useState<UserTypes | null>(); //Kullanıcı bilgisi için
+  const [userData, setUserData] = useState<UserType | null>(); //Kullanıcı bilgisi için
   const [loading, setLoading] = useState(false);
   const [isSurveyOpen, setIsSurveyOpen] = useState(false); //Anket modalı için
   const handleOpen = () => {

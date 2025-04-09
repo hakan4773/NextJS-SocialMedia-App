@@ -9,20 +9,13 @@ import { SlCalender } from 'react-icons/sl'
 import { User } from '../types/user'
 import { getUserDetails } from '../utils/getUsers'
 import { PiDotsThreeBold } from 'react-icons/pi'
-interface UserTypes {
-  id?: string;
-  name: string;
-  email: string;
-  password: string;
-  bio:string;
-  profileImage:string;
-}
+import { UserType } from '../types/user'
 function ResponsiveBar() {
     
     const [isOpen, setIsOpen] = useState(false);
     const toggleSidebar = () => setIsOpen(!isOpen);
     const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
-    const [userData,setUserData]=useState<UserTypes |null>()
+    const [userData,setUserData]=useState<UserType |null>()
     
     const toggleSetting=(index:any)=>{
       setOpenSettingIndex(openSettingIndex === index ? null: index)

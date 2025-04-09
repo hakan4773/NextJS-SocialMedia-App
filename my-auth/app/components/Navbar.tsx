@@ -8,21 +8,15 @@ import { MdOutlineNotificationsActive } from "react-icons/md";
 import { FiSearch } from "react-icons/fi";
 import ResponsiveBar from "./ResponsiveBar";
 import FilterUsers from "./FilterUsers";
-
-interface UsersTypes {
-_id:number,
-name:string,
-email:string,
-profileImage?: string;
-}
+import { UserType } from "../types/user";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [notification, setNotification] = useState(false);
   const { user, logout } = useAuth();
-   const [users,setUsers]=useState<UsersTypes[]>([])
+   const [users,setUsers]=useState<UserType[]>([])
    const [search, setSearch] = useState("");
-   const [filteredUsers,setFilteredUser]=useState<UsersTypes[]>([])
+   const [filteredUsers,setFilteredUser]=useState<UserType[]>([])
   //Tüm kullanıcıları getir
    useEffect(() => {
     const fetchUsers = async () => {

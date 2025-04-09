@@ -9,19 +9,7 @@ import GetSurveys from "../components/getSurveys";
 import Activities from "../components/Activities";
 import Followers from "../components/Followers";
 import Following from "../components/Following";
-interface UserType {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  bio: string;
-  posts:string[];
-  surveys:string[];
-  activities:string[];
-  profileImage: string;
-  followers:string[];
-  following:string[];
-}
+import { UserType } from "../types/user";
 
 export default function ProfilePage() {
 const [userData, setUserData] = useState<UserType | null>();
@@ -30,6 +18,8 @@ const [getSurveys,setGetSurveys]=useState(false);
 const [getActivities,setGetActivities]=useState(false);
   const [isFollowersOpen, setIsFollowersOpen] = useState(false);
   const [isFollowingOpen, setIsFollowingOpen] = useState(false);
+ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('posts')
+
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
@@ -188,39 +178,30 @@ const [getActivities,setGetActivities]=useState(false);
           <ul className="flex items-center justify-center  p-4 space-x-6">
           
               <li className="text-gray-800 font-semibold text-lg  ">
-                  <button className={`${getPosts ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-800'}`} onClick={()=>{
-          setGetPosts(true)
-          setGetSurveys(false) 
-          setGetActivities(false)
-         } }>
+                  <button  onClick={()=>setActiveTab("posts")} className={`${activeTab==="posts" ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-800'}`}
+               >
                 Gönderiler</button>
               </li>
             
            
-                  <li className="text-gray-800 font-semibold text-lg "> <button className={`${getSurveys ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-800'}`} onClick={()=>{
-              setGetSurveys(true) 
-              setGetPosts(false) 
-              setGetActivities(false)
-              }}>Anketler</button></li> 
+                  <li className="text-gray-800 font-semibold text-lg "> 
+                    <button onClick={()=>setActiveTab("surveys")} className={`${activeTab==="surveys" ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-800'}`}
+                    >Anketler</button></li> 
 
         
                
                   <li className="text-gray-800 font-semibold text-lg ">
-                       <button  className={`${getActivities ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-800'}`} onClick={()=>{
-              setGetActivities(true) 
-              setGetSurveys(false) 
-              setGetPosts(false) 
-             
-              }}>Etkinlikler</button></li> 
+                       <button onClick={()=>setActiveTab("activities")} className={`${activeTab==="activities" ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-800'}`} 
+                     >Etkinlikler</button></li> 
           </ul>
-{getPosts &&
+{activeTab==="posts" &&
   <Posts />
 }
-{getSurveys &&
+{activeTab==="surveys"  &&
          <GetSurveys />
 
 }
-{getActivities &&
+{activeTab==="activities"  &&
          <Activities />
 
 }  
