@@ -10,7 +10,6 @@ import {
   FiHeart,
   FiMapPin,
   FiMessageCircle,
-  FiSettings,
   FiShare,
   FiUserPlus,
   FiUsers,
@@ -28,59 +27,10 @@ import { tr } from 'date-fns/locale'
 import Interaction from "../components/Interaction";
 import Followers from "@/app/components/Followers";
 import Following from "@/app/components/Following";
-interface UserType {
-  _id: number;
-  name: string;
-  email: string;
-  password: string;
-  bio: string;
-  profileImage: string;
-  followers: string[];
-  following: string[];
-}
-
-interface Post {
-  id: number;
-  content: string;
-  tags: string[];
-  image?: string;
-  createdAt: string;
-  comments: string[];
-  likes: number;
-  user: { name: string; profileImage: string; email: string };
-}
-interface Survey{
-  _id:string;
-  question:string;
-  choices:{
-       text: string;
-        voters: string[];
-  };
-  duration:{
-      days:number;
-      hours:number;
-      minutes:number;
-  }
-  creator:string;
-  endDate:Date;
-  isActive: boolean;
-}
-interface Activity{
-  activityName: string;
-    activityType: string;
-    description: string;
-    creator: {
-      profileImage: string;
-      name: string;
-    };
-    activityDate: {
-      hours: number;
-      minutes: number;
-    };
-    startDate: Date;
-    isActive: boolean;
-    createdAt:Date;
-}
+import { UserType } from "@/app/types/user";
+import { Post } from "@/app/types/user";
+import { Survey } from "@/app/types/user";
+import { Activity } from "@/app/types/user";
 export default function ProfilePage({
   params,
 }: {
@@ -104,9 +54,7 @@ export default function ProfilePage({
     setOpenSettingIndex(openSettingIndex === index ? null : index);
   };
 
-  {
-    /*Kullanıcı bilgisini alma */
-  }
+  {/*Kullanıcı bilgisini alma */}
   useEffect(() => {
     const fetchProfile = async () => {
       if (!id) {
@@ -159,9 +107,7 @@ export default function ProfilePage({
     setComment((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  {
-    /*Kullanıcı takip etme */
-  }
+  {/*Kullanıcı takip etme */}
   const handleFollow = async () => {
     const token = localStorage.getItem("token");
 
@@ -188,74 +134,71 @@ export default function ProfilePage({
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-700 via-purple-600 to-pink-400  py-24">
       <div className="max-w-4xl mx-auto px-4">
-        {/* Profil bilgisi */}
-         <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6">
-       <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
-         {/* Profil Fotoğrafı */}
-         <div className="relative mx-auto md:mx-0">
-           <div className="relative">
-             <Image
-               src={userData?.profileImage || "/profil.jpg"}
-               alt="Profil Fotoğrafı"
-               width={120}
-               height={120}
-               className="rounded-full w-24 h-24 md:w-32 md:h-32 border-2 border-gray-300 object-cover"
-             />
-             <button 
-               className="absolute bottom-0 right-0 bg-blue-500 p-2 rounded-full text-white hover:bg-blue-600 transition-colors"
-               aria-label="Profil fotoğrafını düzenle"
-             >
-               <FiEdit2 size={16} />
-             </button>
-           </div>
-         </div>
-     
-         {/* Profil Bilgileri */}
-         <div className="flex-1 w-full">
-           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-             <div className="flex justify-center text-center flex-col">
-               <h1 className="text-xl md:text-2xl font-bold text-gray-800 break-words">
-                 {userData?.name}
-               </h1>
-     
-               <p className="text-gray-600 text-sm md:text-base">{userData?.email}</p>
-             </div>
-             
-             <div className="flex flex-col sm:flex-row gap-2">
-               <Link
-                 href="/profile/edit"
-                 className="flex items-center justify-center space-x-2 text-white bg-red-500 px-3 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm md:text-base"
-               >
-                 <CiEdit size={18} />
-                 <span>Güncelle</span>
-               </Link>
-               <button 
-                 className="flex items-center justify-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors text-sm md:text-base"
-                 aria-label="Ayarlar"
-               >
-                 <FiSettings size={18} />
-                 <span>Ayarlar</span>
-               </button>
-             </div>
-           </div>
-     
-           {/* Bio ve Açıklama */}
-           <div className="mt-3 space-y-2">
-             {userData?.bio && (
-               <p className="text-gray-700 text-sm md:text-base break-words">
-                 {userData.bio}
-               </p>
-             )}
-             <p className="text-gray-700 text-sm md:text-base">
-               5 yıllık frontend geliştirme deneyimine sahibim. Modern web
-               teknolojileri konusunda uzmanlaşmış olup, kullanıcı deneyimini en
-               üst düzeyde tutmayı hedefliyorum. Açık kaynak projelere katkıda
-               bulunmayı ve toplulukla bilgi paylaşımını seviyorum.
-             </p>
-           </div>
-         </div>
-       </div>
-     </div>
+        {/* Profil Başlığı */}
+        <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6">
+     <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
+    {/* Profil Fotoğrafı */}
+    <div className="relative mx-auto md:mx-0">
+      <div className="relative">
+        <Image
+          src={userData?.profileImage || "/profil.jpg"}
+          alt="Profil Fotoğrafı"
+          width={120}
+          height={120}
+          className="rounded-full w-24 h-24 md:w-32 md:h-32 border-2 border-gray-300 object-cover"
+        />
+        <button 
+          className="absolute bottom-0 right-0 bg-blue-500 p-2 rounded-full text-white hover:bg-blue-600 transition-colors"
+          aria-label="Profil fotoğrafını düzenle"
+        >
+          <FiEdit2 size={16} />
+        </button>
+      </div>
+    </div>
+	
+    {/* Profil Bilgileri */}
+     <div className="flex-1 w-full">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div className="flex justify-center text-center flex-col">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-800 break-words">
+            {userData?.name}
+          </h1>
+
+          <p className="text-gray-600 text-sm md:text-base">{userData?.email}</p>
+        </div>
+        
+  <div className="flex lg:space-x-2 lg:space-y-0 space-y-4 lg:flex-row flex-col">
+                  <Link
+                    href={"/profile/edit"}
+                    className="flex items-center space-x-2 text-white bg-black px-4 py-2 rounded-lg hover:bg-gray-600"
+                  >
+                    <CiEdit size={18} />
+                    <span> Mesaj</span>
+                  </Link>
+                  <button
+                    onClick={handleFollow}
+  
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
+                      isFollowing ? "bg-gray-500 text-white" : "bg-blue-500 text-white hover:bg-blue-300"
+                    }`}                  >
+                    <SlUserFollow size={18} />
+                    <span>{isFollowing ? "Takip Ediliyor" : "Takip Et"}</span>
+                  </button>{" "}
+                </div>
+      </div>
+
+      {/* Bio ve Açıklama */}
+      <div className="mt-3 space-y-2">
+        {userData?.bio && (
+          <p className="text-gray-700 text-sm md:text-base break-words">
+            {userData.bio}
+          </p>
+        )}
+
+      </div>
+    </div>
+  </div>
+</div>
 
         {/* İstatistikler */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -316,11 +259,10 @@ export default function ProfilePage({
   </div>
 
   {/* Modaller */}
-  {/* <Followers isFollowersOpen={isFollowersOpen} setIsFollowersOpen={setIsFollowersOpen} />
-  <Following isFollowingOpen={isFollowingOpen} setIsFollowingOpen={setIsFollowingOpen} /> */}
+  <Followers isFollowersOpen={isFollowersOpen} setIsFollowersOpen={setIsFollowersOpen} />
+  <Following isFollowingOpen={isFollowingOpen} setIsFollowingOpen={setIsFollowingOpen} />
 </div>
-
-   
+     
 
         {/* Gönderiler*/}
         <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8  mx-auto ">

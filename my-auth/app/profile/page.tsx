@@ -52,7 +52,7 @@ const [getActivities,setGetActivities]=useState(false);
       <div className="max-w-4xl mx-auto px-4">
         {/* Profil bilgisi */}
         <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6">
-  <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
+     <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
     {/* Profil Fotoğrafı */}
     <div className="relative mx-auto md:mx-0">
       <div className="relative">
