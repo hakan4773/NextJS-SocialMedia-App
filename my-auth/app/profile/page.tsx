@@ -13,9 +13,6 @@ import { UserType } from "../types/user";
 
 export default function ProfilePage() {
 const [userData, setUserData] = useState<UserType | null>();
-const [getPosts,setGetPosts]=useState(true);
-const [getSurveys,setGetSurveys]=useState(false);
-const [getActivities,setGetActivities]=useState(false);
   const [isFollowersOpen, setIsFollowersOpen] = useState(false);
   const [isFollowingOpen, setIsFollowingOpen] = useState(false);
  const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('posts')
@@ -98,12 +95,7 @@ const [getActivities,setGetActivities]=useState(false);
             {userData.bio}
           </p>
         )}
-        <p className="text-gray-700 text-sm md:text-base">
-          5 yıllık frontend geliştirme deneyimine sahibim. Modern web
-          teknolojileri konusunda uzmanlaşmış olup, kullanıcı deneyimini en
-          üst düzeyde tutmayı hedefliyorum. Açık kaynak projelere katkıda
-          bulunmayı ve toplulukla bilgi paylaşımını seviyorum.
-        </p>
+     
       </div>
     </div>
   </div>

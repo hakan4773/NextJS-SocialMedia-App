@@ -1,12 +1,13 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useContext, createContext, useState, ReactNode, useEffect } from "react";
-
+import { UserType } from "../types/user";
 interface AuthContextType {
-    user: { id: string,name:string, email: string,password:string } | null;
-    login: (userData: { id: string;name:string, email: string,password:string }) => void;
+    user: UserType | null;
+    login: (userData: UserType) => void;
     logout: () => void;
-    loading:boolean;
+    loading: boolean;
+    setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -17,7 +18,7 @@ interface AuthProviderProps {
 
 export default function AuthProvider({ children }: AuthProviderProps) {
     const router=useRouter();
-    const [user, setUser] = useState<{ id: string,name:string, email: string,password:string } | null>(null);
+    const [user, setUser] = useState<UserType | null>(null);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -46,7 +47,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         setLoading(false);
       }, []);
       
-    const login = (userData: { id: string,name:string, email: string,password:string}) => {
+    const login = (userData:UserType) => {
         setUser(userData);
     };
     if (user === undefined) {
@@ -64,7 +65,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     };
 
     return (
-        <AuthContext.Provider value={{ user ,login, logout,loading }}>
+        <AuthContext.Provider value={{ user ,login, logout,loading,setUser }}>
             {children}
         </AuthContext.Provider>
     );

@@ -98,7 +98,7 @@ fetchPosts();
         {/* Etkinlik Görseli */}
         <div className="relative rounded-lg overflow-hidden mb-3 border border-gray-100">
           <Image
-            src={post.profileImage || "/image/yedo.jpg"}
+            src={ "/image/yedo.jpg"}
             alt="Etkinlik Görseli"
             width={600}
             height={300}
