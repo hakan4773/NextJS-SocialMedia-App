@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { FiBookmark, FiHeart, FiMessageCircle, FiShare } from "react-icons/fi";
 import { Post } from "@/app/types/user";
+import { toast } from "react-toastify";
 function Interaction({ post }: { post: Post }) {
   const [comment, setComment] = useState<Record<number, boolean>>({});
 
@@ -26,6 +27,47 @@ function Interaction({ post }: { post: Post }) {
     }
   };
 
+
+  const handleSavePost =async(postId:string)=>{
+    if (!postId || postId === "undefined") {
+      toast.error("Gönderi ID'si bulunamadı!");
+      return;
+    }
+    const token = localStorage.getItem("token");
+try {
+  const res=await fetch("/api/profile",{
+  method:"POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+ 
+body: JSON.stringify({ postId })
+});
+const data=await res.json();
+console.log(data)
+if(res.ok)
+{
+  toast.success("post kaydetme başarılı");
+  
+}
+
+
+else {
+  toast.error(data.message || "Bir hata oluştu");
+}
+
+} catch (error) {
+  toast.success("post kaydetme başarısız");
+  
+}
+  }
+
+
+
+
+
+
   return (
     <div>
       <div className="mt-4 pt-3 border-t border-gray-100">
@@ -44,8 +86,10 @@ function Interaction({ post }: { post: Post }) {
               key={i}
               className={`flex items-center space-x-1 text-gray-500 ${item.color} transition-colors`}
               onClick={() => {
-                if (i === 0) handleComment(post?.id);
-                if (i === 2) handleShare(post?.id, post?.content);
+                // if (i === 0) handleComment(post?.id);
+                // if (i === 2) handleShare(post?.id, post?.content);
+                if (i === 3) handleSavePost(post.id);
+
               }}
             >
               <span className="text-lg">{item.icon}</span>
@@ -56,7 +100,7 @@ function Interaction({ post }: { post: Post }) {
       </div>
 
       {/* Yorum Bölümü */}
-      {comment[post.id] && (
+      {/* {comment[post.id] && (
         <div className="mt-3 pt-3 border-t border-gray-100">
           <div className="flex space-x-2">
             <input
@@ -71,7 +115,7 @@ function Interaction({ post }: { post: Post }) {
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

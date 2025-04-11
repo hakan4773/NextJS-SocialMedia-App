@@ -124,6 +124,7 @@ if (!postId) {
     { status: 400 }
   );
 }
+
  const user = await Auth.findByIdAndUpdate(
   userID,
       { $addToSet: { savedPosts: postId } }, // Aynı postu tekrar kaydetmeyi önler
@@ -136,6 +137,7 @@ if (!postId) {
         { status: 404 }
       );
     }
+
 
     // 4. Başarılı yanıt
     return NextResponse.json(
