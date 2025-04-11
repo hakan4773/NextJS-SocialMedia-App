@@ -1,112 +1,129 @@
-"use client"    
-import { useAuth } from '../../context/AuthContext'
-import React, { useEffect, useState } from 'react'
+"use client"
+import { useAuth } from '../../context/AuthContext';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import * as z from "zod";
 import { FiArrowLeft } from 'react-icons/fi';
-function page() {
-  const router=useRouter();
-const {user,setUser}=useAuth();
-const [errors, setErrors] = useState<{ newPassword?: string }>({});
-const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
 const resetSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  bio: z.string().max(150, "Bio cannot exceed 150 characters").optional(),
+  name: z.string().min(2, "Ad en az 2 karakter olmalı"),
+  bio: z.string().max(150, "Bio en fazla 150 karakter olabilir").optional(),
   oldPassword: z.string().optional(),
-  newPassword: z
-    .string()
-    .optional()
-    .refine((val) => !val || val.length >= 6, {
-      message: "New password must be at least 6 characters",
-    }),
+  newPassword: z.string().optional().refine(val => !val || val.length >= 6, {
+    message: "Yeni şifre en az 6 karakter olmalı"
+  })
 });
 
-const [formData, setFormData] = useState({
-  name: user?.name || "",
-  bio: user?.bio || "",
-  profileImage:user?.profileImage,
-  oldPassword: "",
-  newPassword: ""
-});
-const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
-  const {value,name}=e.target;
-  setFormData({...formData,[name]:value})
-}
-const handleImageChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
-if(e.target.files && e.target.files[0]){
-  setSelectedFile(e.target.files[0]);
-}
-}
+function Page() {
+  const router = useRouter();
+  const { user, setUser } = useAuth();
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-useEffect(() => {
-  const fetchProfile = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-    const res = await fetch("/api/profile", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await res.json();
-    if (res.ok) {
-      setFormData(data.user);
-    } else {
-      console.error("Profil verisi alınamadı:", data.error);
+  const [formData, setFormData] = useState({
+    name: user?.name || "",
+    bio: user?.bio || "",
+    profileImage: user?.profileImage,
+    oldPassword: "",
+    newPassword: ""
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
     }
   };
-  fetchProfile();
-}, []);
-const handleSubmit = async(e: React.FormEvent) => {
-  e.preventDefault();
 
-const result =resetSchema.safeParse(formData);
-if (!result.success) {
-const errorMessages=result.error.format();
-setErrors({ newPassword: errorMessages.newPassword?._errors[0] });
-return ;
-}
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const res = await fetch("/api/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setFormData({
+          ...formData,
+          name: data.user.name,
+          bio: data.user.bio,
+          profileImage: data.user.profileImage,
+        });
+      } else {
+        console.error("Profil verisi alınamadı:", data.error);
+      }
+    };
+    fetchProfile();
+  }, []);
 
-try {
-  const token=localStorage.getItem("token");
-  console.log(token)
-  const fd = new FormData();
-  fd.append("email", user?.email || "");
-  if (formData.name !== user?.name) fd.append("name", formData.name);
-  if (formData.bio !== user?.bio) fd.append("bio", formData.bio);
-  if (formData.newPassword) {
-    fd.append("oldPassword", formData.oldPassword);
-    fd.append("newPassword", formData.newPassword);
-  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  if (selectedFile) {
-    fd.append("profileImage", selectedFile);
-  }
+    const result = resetSchema.safeParse(formData);
+    if (!result.success) {
+      const fieldErrors = result.error.format();
+      setErrors({
+        name: fieldErrors.name?._errors[0] || "",
+        newPassword: fieldErrors.newPassword?._errors[0] || "",
+      });
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const fd = new FormData();
+      fd.append("email", user?.email || "");
+
+      fd.append("name", formData.name);
+      if (formData.bio !== user?.bio) fd.append("bio", formData.bio);
+      if (formData.newPassword) {
+        fd.append("oldPassword", formData.oldPassword);
+        fd.append("newPassword", formData.newPassword);
+      }
+
+      if (selectedFile) {
+        fd.append("profileImage", selectedFile);
+      }
+
+      const response = await fetch("/api/profile", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: fd,
+      });
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        toast.success("Profil başarıyla güncellendi");
+
+        setUser(updatedUser);
+        setFormData({
+          ...formData,
+          oldPassword: "",
+          newPassword: "",
+        });
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || "Güncelleme başarısız");
+      }
+    } 
+
+      catch (err) {
+        console.error(err);
+        toast.error("Bir hata oluştu, lütfen tekrar deneyin.");
+      }
+    };
 
 
-  const response=await fetch("/api/profile",{
-    method:"PUT",
-    headers: {
-      'Authorization': `Bearer ${token}` 
-    },
-     body: fd
-   })
-  
-  if(response.ok){
-    const data =await response.json();
-    toast.success("Profil başarıyla güncellendi");
-    setFormData(data);
-  }
-  else {
-    toast.error("Güncelleme başarısız");
-  }
-
-} catch (error:any) {
-  toast.error("Bir hata oluştu, lütfen tekrar deneyin");
-}
-
-
-
-
-};
   return (
     <div className="min-h-screen py-8 flex items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 relative animate-fade-in">
     <div className="pt-16 w-full max-w-md mx-auto">
@@ -224,4 +241,4 @@ try {
   )
 }
 
-export default page
+export default Page

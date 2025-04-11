@@ -27,6 +27,7 @@ export async function PUT(req: NextRequest) {
         { status: 404 }
       );
     }
+    
     if (!name || name.trim() === "") {
       return NextResponse.json(
         { message: "İsim alanı zorunludur" },
@@ -39,14 +40,17 @@ export async function PUT(req: NextRequest) {
 
     // Şifre güncellemesi yapılacaksa kontrol et
     if (newPassword) {
+      if (!oldPassword) {
+        return NextResponse.json({ message: "Eski şifre gerekli" }, { status: 400 });
+      }
       const isMatch = await bcryptjs.compare(oldPassword, user.password);
       if (!isMatch) {
         return NextResponse.json({ message: "Eski şifre yanlış" }, { status: 400 });
       }
-
       const hashedPassword = await bcryptjs.hash(newPassword, 10);
       user.password = hashedPassword;
     }
+    
 
     // Profil resmi varsa kaydet
     if (file) {
