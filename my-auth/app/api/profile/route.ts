@@ -27,8 +27,8 @@ export async function PUT(req: NextRequest) {
         { status: 404 }
       );
     }
-    
-    if (!name || name.trim() === "") {
+
+      if (!name || name.trim() === "") {
       return NextResponse.json(
         { message: "İsim alanı zorunludur" },
         { status: 400 }
@@ -99,6 +99,55 @@ export async function GET(req:NextRequest) {
     return NextResponse.json({ message: "kullanıcı bulunamadı!" }, { status: 404 });
 }
 return NextResponse.json({ user }, { status: 200 });
+
+  } catch (error:any) {
+    return NextResponse.json({error:"Bir hata oluştu.",details:error.message},{status:500})
+  }
+
+
+}
+
+export async function POST(req:NextRequest) {
+  await connectDB();
+  try { 
+    const decoded=verifyToken(req);
+    const userID =decoded?.id
+  if (!userID ) {
+    return NextResponse.json({ message: "kullanıcı bulunamadı!" }, { status: 404 });
+}
+
+const { postId } = await req.json();
+if (!postId) {
+
+  return NextResponse.json(
+    { success: false, message: "Post ID gereklidir" },
+    { status: 400 }
+  );
+}
+ const user = await Auth.findByIdAndUpdate(
+  userID,
+      { $addToSet: { savedPosts: postId } }, // Aynı postu tekrar kaydetmeyi önler
+      { new: true }
+    ).select("savedPosts");
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: "Kullanıcı bulunamadı" },
+        { status: 404 }
+      );
+    }
+
+    // 4. Başarılı yanıt
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Post başarıyla kaydedildi",
+        savedPosts: user.savedPosts
+      },
+      { status: 200 }
+    );
+
+
 
   } catch (error:any) {
     return NextResponse.json({error:"Bir hata oluştu.",details:error.message},{status:500})
