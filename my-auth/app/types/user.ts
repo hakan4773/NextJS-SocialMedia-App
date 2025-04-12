@@ -31,15 +31,19 @@ export interface UserType {
 export  interface Survey{
     _id:string;
     question:string;
-    choices:Choice;
+    choices:Choice[];
     duration:{
         days:number;
         hours:number;
         minutes:number;
     }
-    creator:string;
+    creator:{
+      name:string,
+      profileImage:string
+    };
     endDate:Date;
     isActive: boolean;
+    createdAt:Date;
   }
  export interface Activity{
     activityName: string;

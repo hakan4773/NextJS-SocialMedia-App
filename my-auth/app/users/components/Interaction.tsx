@@ -40,7 +40,7 @@ function Interaction({ item, type }: InteractionProps) {
     }
     const token = localStorage.getItem("token");
 try {
-  const res=await fetch("/api/profile",{
+  const res=await fetch("/api/posts/saved",{
   method:"POST",
   headers: {
     "Content-Type": "application/json",
@@ -67,9 +67,6 @@ else {
   
 }
   }
-
-
-
 
 
 
