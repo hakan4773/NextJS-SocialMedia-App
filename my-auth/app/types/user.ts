@@ -14,7 +14,7 @@ export interface UserType {
 }
 
  export interface Post {
-    id: string;
+    _id: string;
     content: string;
     tags: string[];
     image?: string;

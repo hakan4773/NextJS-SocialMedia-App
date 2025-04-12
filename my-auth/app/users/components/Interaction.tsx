@@ -11,7 +11,7 @@ function Interaction({ post }: { post: Post }) {
   };
 
   //Post paylaşım metodu
-  const handleShare = (id: number, content: string) => {
+  const handleShare = (id: string, content: string) => {
     const postUrl = `${window.location.origin}/post/${id}`;
 
     if (navigator.share) {
@@ -27,7 +27,7 @@ function Interaction({ post }: { post: Post }) {
     }
   };
 
-
+  //Post kaydetme metodu
   const handleSavePost =async(postId:string)=>{
     if (!postId || postId === "undefined") {
       toast.error("Gönderi ID'si bulunamadı!");
@@ -87,8 +87,8 @@ else {
               className={`flex items-center space-x-1 text-gray-500 ${item.color} transition-colors`}
               onClick={() => {
                 // if (i === 0) handleComment(post?.id);
-                // if (i === 2) handleShare(post?.id, post?.content);
-                if (i === 3) handleSavePost(post.id);
+                 if (i === 2) handleShare(post?._id, post?.content);
+                if (i === 3) handleSavePost(post._id);
 
               }}
             >
