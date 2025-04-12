@@ -11,6 +11,7 @@ import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
 import { FiCalendar, FiEye, FiMapPin, FiUsers } from 'react-icons/fi';
 import { Activity } from '../types/user';
+import Settings from './Settings';
 
 function Activities() {
 
@@ -66,33 +67,8 @@ fetchPosts();
           </div>
 
           {/* Ayarlar Butonu */}
-          <div className="relative">
-            <button
-              onClick={() => toggleSetting(index)}
-              className="p-1 rounded-full hover:bg-gray-100 text-gray-500"
-            >
-              <PiDotsThreeBold size={20} />
-            </button>
-            
-            {openSettingIndex === index && (
-              <div className="absolute right-0 top-8 mt-1 w-48 bg-white rounded-md shadow-xl z-50 border border-gray-100">
-                {[
-                  { icon: <MdDeleteOutline className="text-red-500" />, text: "Sil" },
-                  { icon: <CiEdit />, text: "Düzenle" },
-                  { icon: <TiPinOutline />, text: "Profile Sabitle" },
-                  { icon: <IoStatsChartOutline />, text: "İstatistikler" }
-                ].map((item, i) => (
-                  <button
-                    key={i}
-                    className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center space-x-2"
-                  >
-                    <span>{item.icon}</span>
-                    <span>{item.text}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+        {/* Ayarlar Butonu */}
+        <Settings index={{ index }}/>
         </div>
 
         {/* Etkinlik Görseli */}

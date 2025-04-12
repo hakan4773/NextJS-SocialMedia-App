@@ -3,13 +3,9 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { format } from "timeago.js";
 import { useAuth } from "../context/AuthContext";
-import { IoStatsChartOutline } from "react-icons/io5";
-import { TiPinOutline } from "react-icons/ti";
-import { CiEdit } from "react-icons/ci";
-import { MdDeleteOutline } from "react-icons/md";
-import { PiDotsThreeBold } from "react-icons/pi";
 import Interaction from "../users/components/Interaction";
 import { Survey } from "../types/user";
+import Settings from "./Settings";
 
 function getSurveys() {
   const { user } = useAuth();
@@ -19,11 +15,9 @@ function getSurveys() {
   const [error, setError] = useState<string | null>(null);
   const [votedSurveyId, setVotedSurveyId] = useState<string | null>(null); // Oy verilen anketin ID’si
   const [votedChoiceIndex, setVotedChoiceIndex] = useState<number | null>(null); // Oy verilen seçenek index’i
-  const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
 
-  const handleSettingsToggle = (index: any) => {
-    setOpenSettingIndex(openSettingIndex === index ? null : index);
-  };
+
+
 
   //Anketleri getirme
   const surveyFetch = async () => {
@@ -87,7 +81,7 @@ function getSurveys() {
         ""
       ) : (
         <div>
-          {surveys.map((survey, index) => {
+          {surveys.map((survey, index:number) => {
             const hasVoted = survey.choices.some((choice) =>
               choice.voters.includes(user?._id || "")
             );
@@ -114,39 +108,8 @@ function getSurveys() {
                     </div>
                   </div>
 
-                  <div className="relative ">
-                    <button
-                      onClick={() => handleSettingsToggle(index)}
-                      className="p-1 rounded-full hover:bg-gray-100 text-gray-500"
-                    >
-                      <PiDotsThreeBold size={20} />
-                    </button>
+                 <Settings index={{ index }}/>
 
-                    {openSettingIndex === index && (
-                      <div className="absolute right-0 top-8 mt-1 w-48 bg-white rounded-md shadow-xl z-50 border border-gray-100">
-                        {[
-                          {
-                            icon: <MdDeleteOutline className="text-red-500" />,
-                            text: "Sil",
-                          },
-                          { icon: <CiEdit />, text: "Düzenle" },
-                          { icon: <TiPinOutline />, text: "Profile Sabitle" },
-                          {
-                            icon: <IoStatsChartOutline />,
-                            text: "İstatistikler",
-                          },
-                        ].map((item, i) => (
-                          <button
-                            key={i}
-                            className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center space-x-2"
-                          >
-                            <span>{item.icon}</span>
-                            <span>{item.text}</span>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
                 </div>
                 <h2 className="pt-4 ml-2">{survey.question} </h2>
                 <ul className="mt-2 space-y-2 ">
