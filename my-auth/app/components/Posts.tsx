@@ -1,28 +1,23 @@
 "use client"
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { CiEdit } from "react-icons/ci";
 import { FiCheck, FiFileText } from "react-icons/fi";
-import { IoStatsChartOutline } from "react-icons/io5";
-import { MdDeleteOutline } from "react-icons/md";
-import { PiDotsThreeBold } from "react-icons/pi";
-import { TiPinOutline } from "react-icons/ti";
 import { format } from "timeago.js";
 import Interaction from "../users/components/Interaction";
 import { Post } from "../types/user";
 import Settings from "./Settings";
-export default function Posts() {
+type PostsProps = {
+  userId?: string;
+};
+export default function Posts({ userId }: PostsProps) {
 
   const [posts,setPosts]=useState<Post[] | null>(null)
   
-  const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
-  const toggleSetting = (index: any) => {
-    setOpenSettingIndex(openSettingIndex === index ? null : index);
-  };
 useEffect(()=>{
  const token= localStorage.getItem("token")
 const fetchPosts=async()=>{
-const res=await fetch("/api/posts",{
+  const url = userId ? `/api/users/${userId}` : "/api/posts";
+const res=await fetch(url,{
   headers: {
     Authorization: `Bearer ${token}`,
   },
@@ -36,7 +31,7 @@ fetchPosts();
 
  
   return (
-    <div className="">
+    <div>
     {posts && posts.length > 0 ? (
       posts?.map((post, index) => (
         <div 
@@ -71,7 +66,6 @@ fetchPosts();
               </div>
             </div>
   
-            {/* Ayarlar Butonu */}
          {/* Ayarlar Butonu */}
          <Settings index={{ index }}/>
           </div>

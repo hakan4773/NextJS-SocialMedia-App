@@ -1,30 +1,24 @@
 "use client"
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
-import { CiEdit } from 'react-icons/ci';
-import { IoStatsChartOutline } from 'react-icons/io5';
-import { MdDeleteOutline } from 'react-icons/md';
-import { PiDotsThreeBold } from 'react-icons/pi';
-import { TiPinOutline } from 'react-icons/ti';
 // import { format } from 'timeago.js';
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
-import { FiCalendar, FiEye, FiMapPin, FiUsers } from 'react-icons/fi';
+import {  FiEye, FiMapPin, FiUsers } from 'react-icons/fi';
 import { Activity } from '../types/user';
 import Settings from './Settings';
-
-function Activities() {
+type ActivityProps = {
+  userId?: string;
+};
+function Activities({userId}:ActivityProps) {
 
 const [activities, setActivities] = useState<Activity[]>([]);
-  const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
 
-  const toggleSetting = (index: any) => {
-    setOpenSettingIndex(openSettingIndex === index ? null : index);
-  };
 useEffect(()=>{
  const token= localStorage.getItem("token")
 const fetchPosts=async()=>{
-const res=await fetch("/api/activity",{
+  const url = userId ? `/api/users/${userId}` : "/api/activity";
+const res=await fetch(url,{
   headers: {
     Authorization: `Bearer ${token}`,
   },

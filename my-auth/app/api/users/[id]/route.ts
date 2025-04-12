@@ -19,9 +19,9 @@ export async function GET(
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
-    const posts = await Post.find({ user: id }).sort({ createdAt: -1 });
-    const surveys = await Survey.find({ user: id }).sort({ createdAt: -1 });
-    const activities = await Activity.find({ user: id }).sort({ createdAt: -1 });
+    const posts = await Post.find({ user: id }).sort({ createdAt: -1 }).populate("user", "name email profileImage");
+    const surveys = await Survey.find({ creator: id }).sort({ createdAt: -1 }).populate("creator", "name email profileImage");
+    const activities = await Activity.find({ creator: id }).sort({ createdAt: -1 }).populate("creator", "name email profileImage");
 
       /*Oturum sahibi */
     const decoded = verifyToken(req);

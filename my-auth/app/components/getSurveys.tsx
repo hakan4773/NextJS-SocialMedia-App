@@ -6,8 +6,10 @@ import { useAuth } from "../context/AuthContext";
 import Interaction from "../users/components/Interaction";
 import { Survey } from "../types/user";
 import Settings from "./Settings";
-
-function getSurveys() {
+type SurveyProps = {
+  userId?: string;
+};
+function getSurveys({userId}:SurveyProps) {
   const { user } = useAuth();
 
   const [surveys, setSurveys] = useState<Survey[]>([]);
@@ -23,7 +25,8 @@ function getSurveys() {
   const surveyFetch = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch("/api/surveys", {
+      const url = userId ? `/api/users/${userId}` : "/api/surveys";
+      const res = await fetch(url, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
