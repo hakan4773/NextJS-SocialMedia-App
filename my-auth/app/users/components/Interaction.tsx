@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { FiBookmark, FiHeart, FiMessageCircle, FiShare } from "react-icons/fi";
 import { Post } from "@/app/types/user";
 import { toast } from "react-toastify";
+
 function Interaction({ post }: { post: Post }) {
   const [comment, setComment] = useState<Record<number, boolean>>({});
 
