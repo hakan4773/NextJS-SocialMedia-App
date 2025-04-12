@@ -1,29 +1,43 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiBookmark, FiHeart, FiMessageCircle, FiShare } from "react-icons/fi";
 import { Post, Survey } from "@/app/types/user";
 import { toast } from "react-toastify";
+import { useAuth } from "@/app/context/AuthContext";
+import { FaBookmark } from "react-icons/fa6";
 type InteractionProps = {
   item: Post | Survey;
   type: "post" | "survey";
 };
 
 function Interaction({ item, type }: InteractionProps) {
+  const {user,setUser}=useAuth();
   const [comment, setComment] = useState<Record<number, boolean>>({});
-
+  const [isSaved, setIsSaved] = useState<boolean>(
+    Array.isArray(user?.savedPosts) && user?.savedPosts.includes(item._id)
+  );
+  const getContent=()=>{
+   return type==="post" ? (item as Post).content  :(item as Survey).question; 
+  };
   const handleComment = (id: number) => {
     setComment((prev) => ({ ...prev, [id]: !prev[id] }));
   };
-
+  useEffect(() => {
+    if (user?.savedPosts && item._id) {
+      setIsSaved(user.savedPosts.includes(item._id));
+    } else {
+      setIsSaved(false);
+    }
+  }, [user, item._id]);
   //Post paylaşım metodu
   const handleShare = (id: string) => {
-    const postUrl = `${window.location.origin}/post/${id}`;
-
+    const postUrl = `${window.location.origin}/type/${id}`;
+    const content=getContent();
     if (navigator.share) {
       navigator
         .share({
           title: "Paylaşım",
- 
+          text: content,
           url: postUrl,
         })
         .catch((error) => console.error("Paylaşım hatası", error));
@@ -50,12 +64,18 @@ try {
 body: JSON.stringify({ postId })
 });
 const data=await res.json();
-console.log(data)
-if(res.ok)
-{
-  toast.success("post kaydetme başarılı");
-  
-}
+
+if (res.ok) {
+  setUser(prev => {
+    if (!prev) return prev;
+    return {
+      ...prev,
+      savedPosts: data.savedPosts || []
+    };
+  });
+  setIsSaved(!isSaved);
+  toast.success(data.message);
+} 
 
 
 else {
@@ -63,13 +83,10 @@ else {
 }
 
 } catch (error) {
-  toast.success("post kaydetme başarısız");
+  toast.error("post kaydetme başarısız");
   
 }
   }
-
-
-
   return (
     <div>
       <div className="mt-4 pt-3 border-t border-gray-100">
@@ -82,7 +99,16 @@ else {
             },
             { icon: <FiHeart />, count: 0, color: "hover:text-red-500" },
             { icon: <FiShare />, count: 0, color: "hover:text-green-500" },
-            { icon: <FiBookmark />, count: 0, color: "hover:text-yellow-500" },
+            {
+              icon: isSaved ? (
+                <FaBookmark className="text-yellow-500" />
+              ) : (
+                <FiBookmark />
+              ),
+              count: 0,
+              color: isSaved ? "text-yellow-500" : "hover:text-yellow-500",
+            },
+
           ].map((Icon, i) => (
             <button
               key={i}

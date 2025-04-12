@@ -30,7 +30,9 @@ const token =jwt.sign({
     name:user.name,
     bio:user.bio,
     profileImage:user.profileImage,
-    email:user.email},
+    email:user.email,
+    savedPosts:user.savedPosts,},
+   
     process.env.JWT_SECRET!,
     {
         expiresIn:"24h"

@@ -9,6 +9,7 @@ export interface UserType {
   surveys:string[];
   activities:string[];
   profileImage: string;
+  savedPosts:string[];
   followers: string[];
   following: string[];
 }

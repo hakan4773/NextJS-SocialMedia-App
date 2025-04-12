@@ -20,27 +20,44 @@ export async function POST(req:NextRequest) {
       { status: 400 }
     );
   }
-  
-   const user = await Auth.findByIdAndUpdate(
+
+  const user = await Auth.findById(userID);
+
+
+
+  if (!user) {
+    return NextResponse.json(
+      { success: false, message: "Kullanıcı bulunamadı" },
+      { status: 404 }
+    );
+  }
+
+  let updateUser;
+ 
+  if(user.savedPosts.includes(postId)){
+     updateUser = await Auth.findByIdAndUpdate(
+        userID,
+            { $pull: { savedPosts: postId } }, 
+            { new: true }
+          ).select("savedPosts");
+}
+
+else {
+    updateUser = await Auth.findByIdAndUpdate(
     userID,
         { $addToSet: { savedPosts: postId } }, 
         { new: true }
       ).select("savedPosts");
   
-      if (!user) {
-        return NextResponse.json(
-          { success: false, message: "Kullanıcı bulunamadı" },
-          { status: 404 }
-        );
-      }
-  
-  
+  }
       // 4. Başarılı yanıt
       return NextResponse.json(
         {
           success: true,
-          message: "Post başarıyla kaydedildi",
-          savedPosts: user.savedPosts
+          message: user.savedPosts.includes(postId)
+          ? "Post kayıtlardan çıkarıldı"
+          : "Post başarıyla kaydedildi",
+          savedPosts: updateUser.savedPosts
         },
         { status: 200 }
       );
