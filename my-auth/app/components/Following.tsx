@@ -109,7 +109,7 @@ else {
 
               <div className="p-2 mt-2">
               <div className="flex justify-center mb-1 text-gray-500  text-sm">
-                {user?.id && follow.following.includes(user.id) ? (<p >Followed you</p>):(<p >Not Followed You</p>)} </div>
+                {user?._id && follow.following.includes(user._id) ? (<p >Followed you</p>):(<p >Not Followed You</p>)} </div>
                 <button onClick={()=>handleFollow(follow._id)} className="border border-gray-300 px-4 py-1 mx-2 text-sm rounded-full p-2 hover:bg-slate-200 cursor-pointer">
                 Unfollow
                 </button>

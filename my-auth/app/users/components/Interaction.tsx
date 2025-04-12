@@ -1,10 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import { FiBookmark, FiHeart, FiMessageCircle, FiShare } from "react-icons/fi";
-import { Post } from "@/app/types/user";
+import { Post, Survey } from "@/app/types/user";
 import { toast } from "react-toastify";
+type InteractionProps = {
+  item: Post | Survey;
+  type: "post" | "survey";
+};
 
-function Interaction({ post }: { post: Post }) {
+function Interaction({ item, type }: InteractionProps) {
   const [comment, setComment] = useState<Record<number, boolean>>({});
 
   const handleComment = (id: number) => {
@@ -12,14 +16,14 @@ function Interaction({ post }: { post: Post }) {
   };
 
   //Post paylaşım metodu
-  const handleShare = (id: string, content: string) => {
+  const handleShare = (id: string) => {
     const postUrl = `${window.location.origin}/post/${id}`;
 
     if (navigator.share) {
       navigator
         .share({
           title: "Paylaşım",
-          text: content,
+ 
           url: postUrl,
         })
         .catch((error) => console.error("Paylaşım hatası", error));
@@ -82,19 +86,19 @@ else {
             { icon: <FiHeart />, count: 0, color: "hover:text-red-500" },
             { icon: <FiShare />, count: 0, color: "hover:text-green-500" },
             { icon: <FiBookmark />, count: 0, color: "hover:text-yellow-500" },
-          ].map((item, i) => (
+          ].map((Icon, i) => (
             <button
               key={i}
-              className={`flex items-center space-x-1 text-gray-500 ${item.color} transition-colors`}
+              className={`flex items-center space-x-1 text-gray-500 ${Icon.color} transition-colors`}
               onClick={() => {
                 // if (i === 0) handleComment(post?.id);
-                 if (i === 2) handleShare(post?._id, post?.content);
-                if (i === 3) handleSavePost(post._id);
+                 if (i === 2) handleShare(item._id);
+                if (i === 3) handleSavePost(item._id);
 
               }}
             >
-              <span className="text-lg">{item.icon}</span>
-              {item.count > 0 && <span className="text-xs">{item.count}</span>}
+              <span className="text-lg">{Icon.icon}</span>
+              {Icon.count > 0 && <span className="text-xs">{Icon.count}</span>}
             </button>
           ))}
         </div>

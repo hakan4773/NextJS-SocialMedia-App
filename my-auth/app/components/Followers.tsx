@@ -51,9 +51,9 @@ toast.success(data.message);
      f._id === userId
      ? {
      ...f,
-     followers:user?.id && f.followers.includes(user?.id) 
-       ? f.followers.filter(id => id !== user.id) 
-       : user ? [...f.followers, user.id] : f.followers
+     followers:user?._id && f.followers.includes(user?._id) 
+       ? f.followers.filter(id => id !== user._id) 
+       : user ? [...f.followers, user._id] : f.followers
     }:f )));
 
 
@@ -111,7 +111,7 @@ toast.success(data.message);
 
               <div className="p-2 mt-2">
                 <button onClick={()=>handleFollow(follow._id)} className="border border-gray-300 px-4 py-1 text-sm rounded-full p-2 hover:bg-slate-200 cursor-pointer">
-                  {user?.id && follow.followers.includes(user.id)
+                  {user?._id && follow.followers.includes(user._id)
                     ? "Unfollow"
                     : "Follow"}
                 </button>

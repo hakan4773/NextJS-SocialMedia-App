@@ -133,7 +133,7 @@ const vote=async(surveyId:string,choiceIndex:number)=>{
        
           {surveys.map((survey,index) => {
             const hasVoted = survey.choices.some(choice =>
-              choice.voters.includes(user?.id || "")
+              choice.voters.includes(user?._id || "")
             );
             return (
             <div
@@ -188,7 +188,7 @@ const vote=async(surveyId:string,choiceIndex:number)=>{
               <ul className="mt-2 space-y-2 ">
                 
                 {survey.choices.map((choice,index) => {
-          const isUserVote = choice.voters.includes(user?.id || "");
+          const isUserVote = choice.voters.includes(user?._id || "");
 
                   return (
                   <li

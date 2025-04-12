@@ -132,7 +132,7 @@ fetchPosts();
           </div>
   
           {/* Etkileşim Butonları */}
-         <Interaction post={post} />
+         <Interaction item={post} type="post" />
         </div>
       ))
     ) : (
