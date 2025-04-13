@@ -14,6 +14,7 @@ duration:{
 creator:mongoose.Types.ObjectId;
 endDate:Date;
 isActive: boolean;
+createdAt:Date;
 } 
 const SurveySchema = new mongoose.Schema(
   {
@@ -29,6 +30,7 @@ const SurveySchema = new mongoose.Schema(
     },
     creator: { type: mongoose.Schema.Types.ObjectId, ref: 'Auth', required: true },
     endDate: { type: Date },
+    createdAt:{ type: Date },
    isActive: { type: Boolean, default: true },
   },
   { timestamps: true }
