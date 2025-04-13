@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { postId } = await req.json();
+    
     if (!postId) {
       return NextResponse.json(
         { success: false, message: "Post ID gereklidir" },
@@ -77,10 +78,24 @@ export async function GET(req: NextRequest) {
         { status: 404 }
       );
     }
-    const user = await Auth.findById(userID);
+    const user = await Auth.findById(userID).populate({
+      path: "savedPosts",
+      populate: {
+        path: "user",
+        select: "name email profileImage"
+      }
+    });
+    if (!user) {
+      return NextResponse.json(
+        { message: "Kullanıcı bulunamadı!" },
+        { status: 404 }
+      );
+    }
+    const savedPosts = user.savedPosts;
+
     return NextResponse.json(
       {
-        user,
+        posts: savedPosts
       },
       { status: 200 }
     );
