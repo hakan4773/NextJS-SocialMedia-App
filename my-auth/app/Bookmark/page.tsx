@@ -15,7 +15,7 @@ type SavedProps = {
 
 function Bookmark() {
   const [posts, setPosts] = useState<Post[]>([]);
-
+  const [searchTerm,setSearchTerm]=useState<string>("");
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -38,12 +38,16 @@ function Bookmark() {
     fetchData();
   }, []);
 
+const filteredPosts=posts.filter((post)=>post.content.toLowerCase().includes(searchTerm.toLowerCase()))
+
   return (
     <div className="min-h-screen flex justify-center py-24  ">
     <div className=' flex flex-col border py-2 bg-white rounded-md border-gray-300 w-full sm:max-w-md md:max-w-lg '> 
 
    <div className='relative  p-2'>
   <input
+onChange={(e) => setSearchTerm(e.target.value)}
+  value={searchTerm}
     className='border border-gray-300 rounded-full bg-gray-50 w-full pl-10 pr-4 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
     placeholder='Kaydedilenlerde Ara...'
   />
@@ -53,8 +57,8 @@ function Bookmark() {
   
 </div>
 
-      {posts && posts.length > 0 ? (
-        posts.map((post, index) => (
+      {filteredPosts && filteredPosts.length > 0 ? (
+        filteredPosts.map((post, index) => (
           <div
             key={index}
             className="p-5  bg-white border border-gray-100 shadow-sm rounded-lg hover:shadow-md transition-shadow"
