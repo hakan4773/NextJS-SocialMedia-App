@@ -61,8 +61,9 @@ onChange={(e) => setSearchTerm(e.target.value)}
         filteredPosts.map((post, index) => (
           <div
             key={index}
-            className="p-5  bg-white border border-gray-100 shadow-sm rounded-lg hover:shadow-md transition-shadow"
+            className="p-5   bg-white border border-gray-100 shadow-sm rounded-lg hover:shadow-md transition-shadow"
           >
+            <div className="flex justify-between">
             <div className="flex items-center space-x-3">
               <div className="relative">
                 <Image
@@ -82,6 +83,11 @@ onChange={(e) => setSearchTerm(e.target.value)}
                   @{post.user.email.split("@")[0]} • {format(post.createdAt)}
                 </p>
               </div>
+      
+      
+           
+            </div>
+ <Settings index={{ index }} />
             </div>
 
             <div className="mt-3">
