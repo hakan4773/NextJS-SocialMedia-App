@@ -3,6 +3,7 @@ import Auth from "@/app/models/auth";
 import connectDB from "@/app/libs/mongodb";
 import { verifyToken } from "@/app/utils/jwtUtils";
 import Post from "@/app/models/Post";
+import Survey from "@/app/models/Survey";
 
 export async function POST(req: NextRequest) {
   await connectDB();
@@ -78,21 +79,27 @@ export async function GET(req: NextRequest) {
         { status: 404 }
       );
     }
-    const user = await Auth.findById(userID).populate({
-      path: "savedPosts",
-      populate: {
-        path: "user",
-        select: "name email profileImage"
-      }
-    });
+    const user = await Auth.findById(userID)
     if (!user) {
       return NextResponse.json(
         { message: "Kullanıcı bulunamadı!" },
         { status: 404 }
       );
     }
-    const savedPosts = user.savedPosts;
+    const savedIds = user.savedPosts || [];
 
+    const posts = await Post.find({ _id: { $in: savedIds } })
+    .populate("user", "name email profileImage")
+    .lean();
+  
+  const surveys = await Survey.find({ _id: { $in: savedIds } })
+    .populate("creator", "name email profileImage")
+    .lean();
+  
+  const formattedPosts = posts.map((p) => ({ ...p, type: "post" }));
+  const formattedSurveys = surveys.map((s) => ({ ...s, type: "survey" }));
+  
+  const savedPosts = [...formattedPosts, ...formattedSurveys];
     return NextResponse.json(
       {
         posts: savedPosts
