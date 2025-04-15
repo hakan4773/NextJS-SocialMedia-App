@@ -9,13 +9,16 @@ import { SlCalender } from 'react-icons/sl'
 import { getUserDetails } from '../utils/getUsers'
 import { PiDotsThreeBold } from 'react-icons/pi'
 import { UserType } from '../types/user'
+import Followers from './Followers'
+import Following from './Following'
 function ResponsiveBar() {
     
     const [isOpen, setIsOpen] = useState(false);
     const toggleSidebar = () => setIsOpen(!isOpen);
     const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
     const [userData,setUserData]=useState<UserType |null>()
-    
+     const [isFollowersOpen, setIsFollowersOpen] = useState(false);
+      const [isFollowingOpen, setIsFollowingOpen] = useState(false);
     const toggleSetting=(index:any)=>{
       setOpenSettingIndex(openSettingIndex === index ? null: index)
     }
@@ -74,14 +77,14 @@ function ResponsiveBar() {
           <div className="  border-t py-4 bg-gray-50 ">
             <ul className="px-6 flex justify-between text-sm">
               <li className="text-center">
-                <Link href={"/followers"} className="">
+                <button onClick={()=>setIsFollowersOpen(true)} data-modal-target="default-modal" data-modal-toggle="default-modal" className='text-gray-600 cursor-pointer' type="button">
                   <span className="block font-bold text-blue-600"> 50</span> 
-                <span className="text-gray-600">Followers</span>   </Link>
+                <span className="text-gray-600">Followers</span>   </button>
               </li>
               <li className=" text-center">
-                <Link href={"/following"} className="">
+                <button onClick={()=>setIsFollowingOpen(true)} data-modal-target="default-modal" data-modal-toggle="default-modal" className='text-gray-600 cursor-pointer' type="button">
                 <span className="block font-bold text-blue-600"> 100</span>   
-                <span className="text-gray-600">Following</span>  </Link>
+                <span className="text-gray-600">Following</span>  </button>
               </li>
               <li className=" text-center">
                 <Link href={"/post"} className="">
@@ -90,6 +93,8 @@ function ResponsiveBar() {
                  </Link>
               </li>
             </ul>
+            <Followers isFollowersOpen={isFollowersOpen} setIsFollowersOpen={setIsFollowersOpen} />
+            <Following isFollowingOpen={isFollowingOpen} setIsFollowingOpen={setIsFollowingOpen} />
           </div>
 
 
