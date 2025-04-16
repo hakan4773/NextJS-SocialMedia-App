@@ -63,7 +63,7 @@ function ResponsiveBar() {
       <img
         src={userData?.profileImage}
         alt="Avatar"
-        className="w-16 h-16 rounded-full border-2 border-white shadow-lg object-cover hover:scale-105 transition-transform duration-200"
+        className="lg:w-16 lg:h-16 w-24 h-16 rounded-full border-2 border-white shadow-lg object-cover hover:scale-105 transition-transform duration-200"
       />
      
     </Link> <div className='text-white'>
