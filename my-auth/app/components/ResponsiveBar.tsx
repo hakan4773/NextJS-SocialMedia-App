@@ -91,7 +91,7 @@ function ResponsiveBar() {
                 <span className="text-gray-600">Following</span>  </button>
               </li>
               <li className=" text-center">
-                <Link href={"/post"} className="">
+                <Link href={"/profile"} className="">
                   <span className="block font-bold text-blue-600"> 10</span>
                 <span className="text-gray-600">Gönderi Sayısı</span>
                  </Link>
