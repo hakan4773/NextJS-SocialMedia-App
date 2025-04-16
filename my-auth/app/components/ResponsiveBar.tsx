@@ -77,12 +77,16 @@ function ResponsiveBar() {
           <div className="  border-t py-4 bg-gray-50 ">
             <ul className="px-6 flex justify-between text-sm">
               <li className="text-center">
-                <button onClick={()=>setIsFollowersOpen(true)} data-modal-target="default-modal" data-modal-toggle="default-modal" className='text-gray-600 cursor-pointer' type="button">
+                <button onClick={()=>setIsFollowersOpen(true)
+                                      
+                } data-modal-target="default-modal" data-modal-toggle="default-modal" className='text-gray-600 cursor-pointer' type="button">
                   <span className="block font-bold text-blue-600"> 50</span> 
                 <span className="text-gray-600">Followers</span>   </button>
               </li>
               <li className=" text-center">
-                <button onClick={()=>setIsFollowingOpen(true)} data-modal-target="default-modal" data-modal-toggle="default-modal" className='text-gray-600 cursor-pointer' type="button">
+                <button onClick={()=>setIsFollowingOpen(true)
+                 
+                } data-modal-target="default-modal" data-modal-toggle="default-modal" className='text-gray-600 cursor-pointer' type="button">
                 <span className="block font-bold text-blue-600"> 100</span>   
                 <span className="text-gray-600">Following</span>  </button>
               </li>
@@ -93,8 +97,7 @@ function ResponsiveBar() {
                  </Link>
               </li>
             </ul>
-            <Followers isFollowersOpen={isFollowersOpen} setIsFollowersOpen={setIsFollowersOpen} />
-            <Following isFollowingOpen={isFollowingOpen} setIsFollowingOpen={setIsFollowingOpen} />
+           
           </div>
 
 
@@ -127,6 +130,7 @@ function ResponsiveBar() {
         <FaArrowTrendUp className="mr-2 text-blue-500" />
         Trendler
       </h3>
+      
       <div className="pt-2">
 <input className="border border-gray-400 rounded-full flex justify-center p-2" placeholder="Ara..."></input>
 </div>
@@ -176,6 +180,8 @@ function ResponsiveBar() {
         </div>
       </div>
     )}
+                <Followers isFollowersOpen={isFollowersOpen}  setIsFollowersOpen={setIsFollowersOpen} />
+                <Following isFollowingOpen={isFollowingOpen} setIsFollowingOpen={setIsFollowingOpen} />
   </div>
 
   )
