@@ -1,41 +1,42 @@
 "use client"
 import Image from 'next/image';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CiSearch } from "react-icons/ci";
 import { FiBookmark, FiHeart, FiMessageCircle, FiShare } from 'react-icons/fi';
 import { PiDotsThreeBold } from 'react-icons/pi';
+import { Post } from '../types/user';
 
 function page() {
-    const [comment, setComment] = useState<Record<number, boolean>>({});
+    const [comment, setComment] = useState<Record<string, boolean>>({});
     const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
-    const [tags,setTags]=useState<string>("");
+    const [posts, setPosts] = useState<Post[] | null>(null);
     const [searchTerm,setSearchTerm]=useState<string>("");
   const [filter,setFilter]=useState("");
     const toggleSetting=(index:any)=>{
        setOpenSettingIndex(openSettingIndex === index ? null: index)
     }
-  const posts = [
-    {
-      id: 1,
-      user: "Ayşe Yılmaz",
-      content: "Bugün harika bir gün! ☀️",
-      image: "/orman.jpg",
-      tags: ["#Tatil", "#Güneş"],
-      createdAt: "2 saat önce",
-    },
-    {
-      id: 2,
-      user: "Ali Kaya",
-      content: "Yeni bir proje üzerinde çalışıyorum! 🚀",
-      tags: ["#Yazılım", "#Proje"],
-      createdAt: "1 gün önce",
-    },
-  ];
 
-  const handleComment=(id:number)=>{
-    setComment((prev)=>(
-{...prev,[id]:!prev[id]}
-    ))
+useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const res = await fetch("/api/users", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setPosts(data.posts);
+      } else {
+        console.error("Postlar alınamadı:", data.error);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  const handleComment=(id:string) => {
+     setComment((prev)=>(
+ {...prev,[id]:!prev[id]}
+     ))
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -43,7 +44,7 @@ function page() {
         setFilter(searchTerm);
     }
 }
-  const handleShare=(id:number,content:string)=>{
+  const handleShare=(id:string,content:string)=>{
     const postUrl=`${window.location.origin}/post/${id}`
     
     if(navigator.share){
@@ -61,7 +62,7 @@ function page() {
 
 
 
-  const filteredPosts =filter ? posts.filter((item) =>
+  const filteredPosts = filter ? posts?.filter((item) =>
       item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
   ) :posts;
   return (
@@ -91,19 +92,19 @@ function page() {
 
   <div className=" space-y-3">
     
-      {filteredPosts.map((post,index) => (
-        <div key={post.id} className="p-4   border-b border-gray-300 space-y-4 hover:bg-gray-100 cursor-pointer">  
+      {filteredPosts?.map((post,index) => (
+        <div key={post._id} className="p-4   border-b border-gray-300 space-y-4 hover:bg-gray-100 cursor-pointer">  
           
           <div className="flex items-center ">
             <Image
-              src="/3.jpg"
+              src={post?.user.profileImage}
               alt="Profile"
               width={40}
               height={40}
               className="rounded-full"
             />
             <div className="ml-3 w-full">
-              <h3 className=" font-semibold">{post.user}</h3>
+              <h3 className=" font-semibold">{post?.user.name}</h3>
               <p className="text-gray-300 text-sm">{post.createdAt}</p>
             </div> 
              <div className="relative  flex justify-end items-end ">
@@ -138,7 +139,7 @@ function page() {
  
 {/* Etkileşim Çubuğu */}
 <div className="mt-4 flex justify-between items-center ">
-        <button onClick={() => handleComment(post.id)} className="flex items-center space-x-1 hover:text-blue-400">
+        <button onClick={() => handleComment(post?._id)} className="flex items-center space-x-1 hover:text-blue-400">
           <FiMessageCircle size={20} />
           <span>Yorum</span>
 
@@ -149,7 +150,7 @@ function page() {
           <FiHeart  size={20} />
           <span>{0}</span>
         </button>
-        <button onClick={() => handleShare(post.id, post.content)} className="flex items-center space-x-1 hover:text-green-400 cursor-pointer">
+        <button onClick={() => handleShare(post._id, post.content)} className="flex items-center space-x-1 hover:text-green-400 cursor-pointer">
           <FiShare  size={20} />
           <span>Paylaş</span>
         </button>
@@ -158,7 +159,7 @@ function page() {
           <span>Kaydet</span>
         </button>
       </div>
-      {comment[post.id] && (
+      {comment[post._id] && (
           <div className="flex mt-2 space-x-2"> 
             <input
              className="border rounded-xl bg-gray-200 w-full  p-2"
