@@ -8,6 +8,9 @@ import { PiDotsThreeBold } from 'react-icons/pi';
 function page() {
     const [comment, setComment] = useState<Record<number, boolean>>({});
     const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
+    const [tags,setTags]=useState<string>("");
+    const [searchTerm,setSearchTerm]=useState<string>("");
+  const [filter,setFilter]=useState("");
     const toggleSetting=(index:any)=>{
        setOpenSettingIndex(openSettingIndex === index ? null: index)
     }
@@ -34,6 +37,12 @@ function page() {
 {...prev,[id]:!prev[id]}
     ))
   }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+        setFilter(searchTerm);
+    }
+}
   const handleShare=(id:number,content:string)=>{
     const postUrl=`${window.location.origin}/post/${id}`
     
@@ -49,6 +58,12 @@ function page() {
       alert("paylaşım desteklenmiyor")
     }
   }
+
+
+
+  const filteredPosts =filter ? posts.filter((item) =>
+      item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+  ) :posts;
   return (
     <div className='min-h-screen flex justify-center py-24  '>
       <div className=' flex flex-col border py-2 bg-white rounded-md border-gray-300 w-full sm:max-w-md md:max-w-lg '> 
@@ -56,7 +71,10 @@ function page() {
   <input
     className='border border-gray-300 rounded-full bg-gray-50 w-full pl-10 pr-4 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
     placeholder='Ara...'
-  />
+    value={searchTerm}
+    onChange={(e)=>setSearchTerm(e.target.value)}
+    onKeyDown={handleKeyDown}
+  />  
 
   <CiSearch className='absolute top-1/2 transform -translate-y-1/2 left-4 text-gray-400' size={20} />
 
@@ -73,7 +91,7 @@ function page() {
 
   <div className=" space-y-3">
     
-      {posts.map((post,index) => (
+      {filteredPosts.map((post,index) => (
         <div key={post.id} className="p-4   border-b border-gray-300 space-y-4 hover:bg-gray-100 cursor-pointer">  
           
           <div className="flex items-center ">
