@@ -5,6 +5,7 @@ import { CiSearch } from "react-icons/ci";
 import { FiBookmark, FiHeart, FiMessageCircle, FiShare } from 'react-icons/fi';
 import { PiDotsThreeBold } from 'react-icons/pi';
 import { Post } from '../types/user';
+import { format } from 'timeago.js';
 
 function page() {
     const [comment, setComment] = useState<Record<string, boolean>>({});
@@ -105,7 +106,7 @@ useEffect(() => {
             />
             <div className="ml-3 w-full">
               <h3 className=" font-semibold">{post?.user.name}</h3>
-              <p className="text-gray-300 text-sm">{post.createdAt}</p>
+              <p className="text-gray-300 text-sm"><span>{format(post?.createdAt)}</span></p>
             </div> 
              <div className="relative  flex justify-end items-end ">
                 <button onClick={() => toggleSetting(index)} className="cursor-pointer" ><PiDotsThreeBold  size={25}/></button>
