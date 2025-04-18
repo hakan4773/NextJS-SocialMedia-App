@@ -6,6 +6,8 @@ import { FiBookmark, FiHeart, FiMessageCircle, FiShare } from 'react-icons/fi';
 import { PiDotsThreeBold } from 'react-icons/pi';
 import { Post } from '../types/user';
 import { format } from 'timeago.js';
+import Link from 'next/link';
+import { FaArrowTrendUp } from 'react-icons/fa6';
 
 function page() {
     const [comment, setComment] = useState<Record<string, boolean>>({});
@@ -62,13 +64,20 @@ useEffect(() => {
   }
 
 
+  const trends = [
+    { tag: "#Tatil", count: 150,categories:"Tatil" },
+    { tag: "#Yemek", count: 100 ,categories:"Yemek"},
+    { tag: "#Beşiktaş", count: 80 ,categories:"Spor"},
+  ];
+
 
   const filteredPosts = filter ? posts?.filter((item) =>
       item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
   ) :posts;
   return (
-    <div className='min-h-screen flex justify-center py-24  '>
-      <div className=' flex flex-col border py-2 bg-white rounded-md border-gray-300 w-full sm:max-w-md md:max-w-lg '> 
+    <div className='min-h-screen flex justify-center py-24  p-4 space-x-6'>
+     <div className='hidden md:block w-1/4 px-4'></div>
+      <div className='w-full md:w-1/2 flex flex-col justify-center  max-w-[500px] border py-2 bg-white rounded-md border-gray-300  '> 
       <div className='relative  p-2'>
   <input
     className='border border-gray-300 rounded-full bg-gray-50 w-full pl-10 pr-4 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
@@ -176,6 +185,36 @@ useEffect(() => {
     </div>
 
       </div>
+
+      <div className="w-1/4 p-4 h-full hidden md:block bg-white rounded-lg shadow-md">
+        <h3 className="text-lg font-semibold flex"><FaArrowTrendUp  className="mr-2" />Trendler</h3>
+        <ul className="mt-2  text-xl">
+          {trends.map((trend,index) => (
+            
+            <div key={trend.tag} className="hover:bg-gray-50 " >
+            <div className="relative  flex justify-end items-end ">
+                <button onClick={() => toggleSetting(index)} className="cursor-pointer" ><PiDotsThreeBold /></button>
+
+                {openSettingIndex === index && ( <div className="absolute right-0 top-full mt-2 p-2 w-52 text-sm bg-white rounded-lg shadow-lg z-50"> 
+                    <div className="max-h-96 overflow-y-auto"> 
+                    <p  className="relative p-2 hover:bg-gray-50 cursor-pointer">Bunu önerme</p> 
+                    <p  className="relative p-2 hover:bg-gray-50 cursor-pointer">Spam</p> 
+
+                    </div> </div> )}
+            </div>
+
+            <li className="text-blue-400 text-sm  p-2 flex justify-between ">
+             <Link href="/tweets" className="mb-2"><b >{trend.tag}</b> • {trend.count} paylaşım </Link> 
+            <p className="text-gray-400">{trend.categories}</p>
+            </li>
+            
+            </div>
+          ))}
+{/* Yükleme */}
+          <div className="flex justify-center text-sm p-2  hover:bg-slate-200 "><button className="cursor-pointer">Daha Fazla Göster</button></div>
+        </ul>
+      </div>
+
     </div>
   )
 }
