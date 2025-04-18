@@ -46,6 +46,9 @@ useEffect(() => {
     if (e.key === "Enter") {
         setFilter(searchTerm);
     }
+    if (filter) {
+      setFilter("");
+  }
 }
   const handleShare=(id:string,content:string)=>{
     const postUrl=`${window.location.origin}/post/${id}`
