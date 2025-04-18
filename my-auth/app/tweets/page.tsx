@@ -2,7 +2,6 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import { CiSearch } from "react-icons/ci";
-import { FiBookmark, FiHeart, FiMessageCircle, FiShare } from 'react-icons/fi';
 import { PiDotsThreeBold } from 'react-icons/pi';
 import { Post } from '../types/user';
 import { format } from 'timeago.js';
@@ -10,6 +9,8 @@ import Link from 'next/link';
 import { FaArrowTrendUp } from 'react-icons/fa6';
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useRouter } from 'next/navigation';
+import Interaction from '../users/components/Interaction';
+import Settings from '../components/Settings';
 
 function page() {
   const router=useRouter();
@@ -115,31 +116,43 @@ useEffect(() => {
       {filteredPosts?.map((post,index) => (
         <div key={post._id} className="p-4   border-b border-gray-300 space-y-4 hover:bg-gray-100 cursor-pointer">  
           
-          <div className="flex items-center ">
-            <Image
-              src={post?.user.profileImage}
-              alt="Profile"
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
-            <div className="ml-3 w-full">
-              <h3 className=" font-semibold">{post?.user.name}</h3>
-              <p className="text-gray-300 text-sm"><span>{format(post?.createdAt)}</span></p>
-            </div> 
-             <div className="relative  flex justify-end items-end ">
-                <button onClick={() => toggleSetting(index)} className="cursor-pointer" ><PiDotsThreeBold  size={25}/></button>
-
-                {openSettingIndex === index && ( <div className="absolute right-0 top-full mt-2 p-2 w-52 text-sm bg-white rounded-lg shadow-lg z-50"> 
-                    <div className="max-h-96 overflow-y-auto"> 
-                    <p  className="relative p-2 hover:bg-gray-50 cursor-pointer">Bunu önerme</p> 
-                    <p  className="relative p-2 hover:bg-gray-50 cursor-pointer">Spam</p> 
-
-                    </div> </div> )}
-            </div>
-          </div>
+            <div className="flex justify-between items-start">
+                      <div className="flex items-center space-x-3">
+                        <div className="relative">
+                          <Image
+                            src={post.user.profileImage}
+                            alt="Profile"
+                            width={44}
+                            height={44}
+                            className="rounded-full border-2 border-blue-100"
+                          />
+                         
+                        </div>
+                        <div>
+                          <div className="flex items-center space-x-2">
+                            <h3 className="font-semibold text-gray-800">{post.user.name}</h3>
+                            <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">Takip Ediyor</span>
+                          </div>
+                          <div className="flex items-center space-x-2 text-xs text-gray-500">
+                            <span>{"@"+post.user.email.split('@')[0]}</span>
+                            <span>•</span>
+                            <span>{format(post?.createdAt)}</span>
+                          </div>
+                        </div>
+                      </div>
+            
+                   {/* Ayarlar Butonu */}
+                   {/* <Settings index={{ index }}/> */}
+                    </div>
 
           <p className="mt-2 ">{post.content}</p>
+          <div className=" flex space-x-2">
+            {post.tags.map((tag) => (
+              <span key={tag} className="text-blue-400 text-sm">
+                {tag}
+              </span>
+            ))}
+          </div>
           {post.image && (
             <Image
               src={post.image}
@@ -149,46 +162,11 @@ useEffect(() => {
               className="mt-2 rounded-lg w-full object-cover"
             />
           )}
-          <div className=" flex space-x-2">
-            {post.tags.map((tag) => (
-              <span key={tag} className="text-blue-400 text-sm">
-                {tag}
-              </span>
-            ))}
-          </div>
+         
  
 {/* Etkileşim Çubuğu */}
-<div className="mt-4 flex justify-between items-center ">
-        <button onClick={() => handleComment(post?._id)} className="flex items-center space-x-1 hover:text-blue-400">
-          <FiMessageCircle size={20} />
-          <span>Yorum</span>
 
-        
-        </button>
-      
-        <button  className="flex items-center space-x-1 hover:text-red-400">
-          <FiHeart  size={20} />
-          <span>{0}</span>
-        </button>
-        <button onClick={() => handleShare(post._id, post.content)} className="flex items-center space-x-1 hover:text-green-400 cursor-pointer">
-          <FiShare  size={20} />
-          <span>Paylaş</span>
-        </button>
-        <button  className="flex items-center space-x-1 hover:text-yellow-400">
-          <FiBookmark size={20}  />
-          <span>Kaydet</span>
-        </button>
-      </div>
-      {comment[post._id] && (
-          <div className="flex mt-2 space-x-2"> 
-            <input
-             className="border rounded-xl bg-gray-200 w-full  p-2"
-            placeholder="Yorum yaz..."
-       />
-            <button type="submit" className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 cursor-pointer">Gönder</button>
-           </div>
-
-          )} 
+   <Interaction item={post} type="post" />
         </div>
 
       ))}
