@@ -8,8 +8,11 @@ import { Post } from '../types/user';
 import { format } from 'timeago.js';
 import Link from 'next/link';
 import { FaArrowTrendUp } from 'react-icons/fa6';
+import { IoIosArrowRoundBack } from "react-icons/io";
+import { useRouter } from 'next/navigation';
 
 function page() {
+  const router=useRouter();
     const [comment, setComment] = useState<Record<string, boolean>>({});
     const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
     const [posts, setPosts] = useState<Post[] | null>(null);
@@ -81,16 +84,20 @@ useEffect(() => {
     <div className='min-h-screen flex justify-center py-24  p-4 space-x-6'>
      <div className='hidden md:block w-1/4 px-4'></div>
       <div className='w-full md:w-1/2 flex flex-col justify-center  max-w-[500px] border py-2 bg-white rounded-md border-gray-300  '> 
-      <div className='relative  p-2'>
+     
+            <div className='relative  p-2 flex '>
+         <div className='flex justify-center items-center rounded-full hover:bg-gray-100 p-2 cursor-pointer' >
+          <IoIosArrowRoundBack size={25} onClick={()=>router.back()}/>   </div>
+             
   <input
-    className='border border-gray-300 rounded-full bg-gray-50 w-full pl-10 pr-4 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+    className='border border-gray-300 rounded-full bg-gray-50 w-full mx-4 pl-10 pr-4 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
     placeholder='Ara...'
     value={searchTerm}
     onChange={(e)=>setSearchTerm(e.target.value)}
     onKeyDown={handleKeyDown}
   />  
 
-  <CiSearch className='absolute top-1/2 transform -translate-y-1/2 left-4 text-gray-400' size={20} />
+  <CiSearch className='absolute top-1/2 transform -translate-y-1/2 left-20  text-gray-400' size={20} />
 
   
 </div>
