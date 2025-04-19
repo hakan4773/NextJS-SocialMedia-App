@@ -11,7 +11,7 @@ export async function GET() {
       if (!users) {
         return NextResponse.json({ message: "Kullanıcı bulunamadı" });
       }
-      const posts=await Post.find().populate("user","name profileImage email");
+      const posts=await Post.find().populate("user","_id name profileImage email");
 
    return NextResponse.json({users,posts})
 

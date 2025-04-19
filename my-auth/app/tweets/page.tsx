@@ -11,9 +11,11 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { useRouter } from 'next/navigation';
 import Interaction from '../users/components/Interaction';
 import Settings from '../components/Settings';
+import { useAuth } from '../context/AuthContext';
 
 function page() {
   const router=useRouter();
+  const {user}=useAuth();
     const [comment, setComment] = useState<Record<string, boolean>>({});
     const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
     const [posts, setPosts] = useState<Post[] | null>(null);
@@ -76,6 +78,8 @@ useEffect(() => {
     { tag: "#Yemek", count: 100 ,categories:"Yemek"},
     { tag: "#Beşiktaş", count: 80 ,categories:"Spor"},
   ];
+console.log(user)
+console.log(posts)
 
 
   const filteredPosts = filter ? posts?.filter((item) =>
@@ -142,7 +146,7 @@ useEffect(() => {
                       </div>
             
                    {/* Ayarlar Butonu */}
-                   {/* <Settings index={{ index }}/> */}
+                   <Settings index={{ index }} isOwner={post.user._id === user?._id}/>
                     </div>
 
           <p className="mt-2 ">{post.content}</p>

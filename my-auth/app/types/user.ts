@@ -22,7 +22,7 @@ export interface UserType {
     createdAt: string;
     comments: string[];
     likes: number;
-    user: { name: string; profileImage: string; email: string };
+    user: { _id: string; name: string; profileImage: string; email: string };
   }
  export interface Choice {
     text: string;
