@@ -78,8 +78,9 @@ useEffect(() => {
     { tag: "#Yemek", count: 100 ,categories:"Yemek"},
     { tag: "#Beşiktaş", count: 80 ,categories:"Spor"},
   ];
-console.log(user)
+console.log(user?._id)
 console.log(posts)
+console.log(user)
 
 
   const filteredPosts = filter ? posts?.filter((item) =>
@@ -146,7 +147,7 @@ console.log(posts)
                       </div>
             
                    {/* Ayarlar Butonu */}
-                   <Settings index={{ index }} isOwner={post.user._id === user?._id}/>
+                   <Settings index={{ index }} isOwner={post.user._id.toString() === user?._id?.toString()}/>
                     </div>
 
           <p className="mt-2 ">{post.content}</p>

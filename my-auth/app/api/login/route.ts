@@ -26,7 +26,7 @@ if(!isMatch){
 return NextResponse.json({message: "wrong password"},{status:400});
 }
 const token =jwt.sign({
-    id:user._id,
+    _id:user._id,
     name:user.name,
     bio:user.bio,
     profileImage:user.profileImage,
