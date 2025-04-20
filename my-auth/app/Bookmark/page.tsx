@@ -7,10 +7,12 @@ import Settings from "../components/Settings";
 import { format } from "timeago.js";
 import { FiCheck, FiFileText } from "react-icons/fi";
 import { CiSearch } from "react-icons/ci";
+import { useAuth } from "../context/AuthContext";
 
 type SavedItem = Post | Survey;
 
 function Bookmark() {
+  const {user}=useAuth();
   const [posts, setPosts] = useState<SavedItem[]>([]);
   const [searchTerm,setSearchTerm]=useState<string>("");
   useEffect(() => {
@@ -90,7 +92,8 @@ function Bookmark() {
                       </p>
                     </div>
                   </div>
-                  <Settings index={{ index }} />
+
+                  <Settings index={{ index }} isOwner={(item as Post).user._id.toString() === user?._id?.toString()} />
                 </div>
 
                 <div className="mt-3">
@@ -149,7 +152,7 @@ function Bookmark() {
                       </p>
                     </div>
                   </div>
-                  <Settings index={{ index }} />
+                  <Settings index={{ index }} isOwner={(item as Survey).creator._id.toString() === user?._id?.toString()} />
                 </div>
 
                 <h2 className="pt-4 ml-2">{(item as Survey).question}</h2>
