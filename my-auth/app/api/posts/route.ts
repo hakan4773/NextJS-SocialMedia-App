@@ -38,10 +38,10 @@ fs.mkdirSync(uploadDir,{recursive:true})
      imagePath = `/image/${image.name}`;
   }
 
-        const newPost = new Post({ content,tags, image:image ? imagePath : null,  user: decoded.id }); 
+        const newPost = new Post({ content,tags, image:image ? imagePath : null,  user: decoded._id }); 
         await newPost.save();
         await Auth.findByIdAndUpdate(
-          decoded.id,
+          decoded._id,
           { $push: { posts: newPost._id } }, // Yeni postun ID’sini ekle
           { new: true }
         );
@@ -60,7 +60,7 @@ export async function GET(req:NextRequest) {
   if (!decoded) {
       return NextResponse.json({ message: "Invalid token" }, { status: 401 });
   }
-  const posts = await Post.find({ user: decoded.id }).sort({ createdAt: -1 }).populate("user", "name email profileImage");
+  const posts = await Post.find({ user: decoded._id }).sort({ createdAt: -1 }).populate("user", "name email profileImage");
 
   if (!posts || posts.length === 0) {
     return NextResponse.json({ message: "Hiç post bulunamadı!",}, { status: 404 });

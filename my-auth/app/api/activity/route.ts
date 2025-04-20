@@ -25,10 +25,10 @@ const decoded=verifyToken(req);
       startDate: new Date(startDate), 
       activityDate: activityDate || { hours: 0, minutes: 0 },
       createdAt,
-      creator: decoded.id,
+      creator: decoded._id,
     });
      await  Auth.findByIdAndUpdate(
-                  decoded.id,
+                  decoded._id,
                   { $push: { activities: activity._id } },
                   { new: true }
                 );
@@ -48,7 +48,7 @@ export async function GET(req:NextRequest) {
   }
   try {
     await connectDB();
-    const activities = await Activity.find({ creator: decoded.id }).sort({ createdAt: -1 }).populate("creator", "name  profileImage");
+    const activities = await Activity.find({ creator: decoded._id }).sort({ createdAt: -1 }).populate("creator", "name  profileImage");
 
     return NextResponse.json({ activities }, { status: 200 });
   } catch (error:any) {

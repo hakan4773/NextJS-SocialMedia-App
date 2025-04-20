@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   await connectDB();
   try {
     const decoded = verifyToken(req);
-    const userID = decoded?.id;
+    const userID = decoded?._id;
     if (!userID) {
       return NextResponse.json(
         { message: "kullanıcı bulunamadı!" },
@@ -72,7 +72,7 @@ export async function GET(req: NextRequest) {
   await connectDB();
   try {
     const decoded = verifyToken(req);
-    const userID = decoded?.id;
+    const userID = decoded?._id;
     if (!userID) {
       return NextResponse.json(
         { message: "kullanıcı bulunamadı!" },

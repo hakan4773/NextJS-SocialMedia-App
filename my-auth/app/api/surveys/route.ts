@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     await connectDB();
   try {
     const decoded = verifyToken(req);   
-     const user = decoded?.id;
+     const user = decoded?._id;
      if (!decoded || !user) {
         return NextResponse.json({ error: "Yetkilendirme başarısız" }, { status: 401 });
       }
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       endDate
     });
       await Auth.findByIdAndUpdate(
-              decoded.id,
+              decoded._id,
               { $push: { surveys: survey._id } },
               { new: true }
             );
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
     await connectDB();
     try {
       const decoded = verifyToken(req);
-      const user = decoded?.id;
+      const user = decoded?._id;
       if (!decoded) {
         return NextResponse.json({ error: "Yetkilendirme başarısız" }, { status: 401 });
       }

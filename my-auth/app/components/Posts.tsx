@@ -6,11 +6,12 @@ import { format } from "timeago.js";
 import Interaction from "../users/components/Interaction";
 import { Post } from "../types/user";
 import Settings from "./Settings";
+import { useAuth } from "../context/AuthContext";
 type PostsProps = {
   userId?: string;
 };
 export default function Posts({ userId }: PostsProps) {
-
+const {user}=useAuth();
   const [posts,setPosts]=useState<Post[] | null>(null)
   
 useEffect(()=>{
@@ -67,7 +68,7 @@ fetchPosts();
             </div>
   
          {/* Ayarlar Butonu */}
-         <Settings index={{ index }}/>
+         <Settings index={{ index }} isOwner={post.user._id.toString() === user?._id?.toString()}/>
           </div>
   
           {/* Post İçeriği */}

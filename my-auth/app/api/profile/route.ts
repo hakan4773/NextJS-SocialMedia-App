@@ -12,7 +12,7 @@ export async function PUT(req: NextRequest) {
   try {
     const formData = await req.formData();
     const decoded = verifyToken(req);
-    const userId=decoded?.id
+    const userId=decoded?._id
     const name = formData.get("name") as string;
     const bio = formData.get("bio") as string;
     const oldPassword = formData.get("oldPassword") as string;
@@ -93,7 +93,7 @@ export async function GET(req:NextRequest) {
   await connectDB();
   try { 
     const decoded=verifyToken(req);
-    const user = await Auth.findById(decoded?.id);
+    const user = await Auth.findById(decoded?._id);
   if (!user ) {
     return NextResponse.json({ message: "kullanıcı bulunamadı!" }, { status: 404 });
 }

@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Invalid token" }, { status: 401 });
     }
     
-    const followerId = decoded.id;
+    const followerId = decoded._id;
     const { followingId } = await req.json();
 
     const followerUser = await Auth.findById(followerId);
@@ -61,7 +61,7 @@ export async function GET(req: NextRequest) {
     if (!decoded) {
       return NextResponse.json({ message: "Invalid token" }, { status: 401 });
     }
-const userID=decoded.id;
+const userID=decoded._id;
 const followeActions=await Auth.findById(userID).populate('followers following');
 
 return NextResponse.json({followers:followeActions.followers,following:followeActions.following},{status:200});

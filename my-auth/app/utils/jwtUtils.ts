@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
 
 interface DecodedToken {
-  id: string;
+  _id: string;
   iat: number;
   exp: number;
 }

@@ -25,7 +25,7 @@ export async function GET(
 
       /*Oturum sahibi */
     const decoded = verifyToken(req);
-    const loggedInUserId = decoded?.id;
+    const loggedInUserId = decoded?._id;
     if (!loggedInUserId) {
       return NextResponse.json({ message: "User is not authenticated" }, { status: 401 });
     }

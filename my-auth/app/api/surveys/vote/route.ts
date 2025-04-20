@@ -14,10 +14,10 @@ export async function POST(req: NextRequest) {
     await connectDB();
   try {
     const decoded = verifyToken(req);
-     if (!decoded || !decoded.id) {
+     if (!decoded || !decoded._id) {
         return NextResponse.json({ error: "Yetkilendirme başarısız" }, { status: 401 });
       }
-    const user = decoded?.id;
+    const user = decoded?._id;
 
     const { surveyId, choiceIndex }:VoteRequest = await req.json();
     if (!surveyId || choiceIndex === undefined) {
