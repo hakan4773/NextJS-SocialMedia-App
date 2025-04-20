@@ -111,7 +111,7 @@ function getSurveys({userId}:SurveyProps) {
                     </div>
                   </div>
 
-                 <Settings index={{ index }}/>
+                 <Settings index={{ index }} isOwner={survey.creator._id.toString() === user?._id?.toString()}/>
 
                 </div>
                 <h2 className="pt-4 ml-2">{survey.question} </h2>

@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
       if (!decoded) {
         return NextResponse.json({ error: "Yetkilendirme başarısız" }, { status: 401 });
       }
-     const surveys = await Survey.find({ creator: user,isActive: true }).sort({ createdAt: -1 }).populate('creator', 'name profileImage'); ;
+     const surveys = await Survey.find({ creator: user,isActive: true }).sort({ createdAt: -1 }).populate('creator', '_id name profileImage'); ;
      if (!surveys.length) {
       return NextResponse.json({ message: 'Aktif anket bulunamadı', surveys: [] },{status:400});
     }

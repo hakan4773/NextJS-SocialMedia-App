@@ -39,6 +39,7 @@ export  interface Survey{
         minutes:number;
     }
     creator:{
+      _id: string;
       name:string,
       profileImage:string
     };
