@@ -7,11 +7,12 @@ import { tr } from 'date-fns/locale'
 import {  FiEye, FiMapPin, FiUsers } from 'react-icons/fi';
 import { Activity } from '../types/user';
 import Settings from './Settings';
+import { useAuth } from '../context/AuthContext';
 type ActivityProps = {
   userId?: string;
 };
 function Activities({userId}:ActivityProps) {
-
+const {user} =useAuth();
 const [activities, setActivities] = useState<Activity[]>([]);
 
 useEffect(()=>{
@@ -62,7 +63,7 @@ fetchPosts();
 
           {/* Ayarlar Butonu */}
         {/* Ayarlar Butonu */}
-        <Settings index={{ index }}/>
+        <Settings index={{ index }}  isOwner={post.creator._id.toString() === user?._id?.toString()}/>
         </div>
 
         {/* Etkinlik Görseli */}

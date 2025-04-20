@@ -48,7 +48,7 @@ export async function GET(req:NextRequest) {
   }
   try {
     await connectDB();
-    const activities = await Activity.find({ creator: decoded._id }).sort({ createdAt: -1 }).populate("creator", "name  profileImage");
+    const activities = await Activity.find({ creator: decoded._id }).sort({ createdAt: -1 }).populate("creator", "_id name  profileImage");
 
     return NextResponse.json({ activities }, { status: 200 });
   } catch (error:any) {
