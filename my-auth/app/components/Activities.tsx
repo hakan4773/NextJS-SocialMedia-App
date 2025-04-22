@@ -1,7 +1,7 @@
 "use client"
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
-// import { format } from 'timeago.js';
+import { format as timeagoFormat } from 'timeago.js';
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
 import {  FiEye, FiMapPin, FiUsers } from 'react-icons/fi';
@@ -54,11 +54,16 @@ fetchPosts();
               />
             </div>
             <div>
-              <h3 className="font-medium text-gray-800">{post.creator.name}</h3>
-              <p className="text-xs text-gray-500">
-                {format(new Date(post.createdAt), "dd.MM.yyyy HH:mm")}
-              </p>
-            </div>
+                         <div className="flex items-center space-x-2">
+                           <h3 className="font-semibold text-gray-800">{post.creator.name}</h3>
+                           <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">Takip Ediyor</span>
+                         </div>
+                         <div className="flex items-center space-x-2 text-xs text-gray-500">
+                           <span>{"@"+post.creator.email.split('@')[0]}</span>
+                           <span>•</span>
+                          <span>{timeagoFormat(post?.createdAt)}</span>
+                         </div>
+                       </div>
           </div>
 
           {/* Ayarlar Butonu */}
