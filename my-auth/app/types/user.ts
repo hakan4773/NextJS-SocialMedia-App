@@ -41,6 +41,7 @@ export  interface Survey{
     creator:{
       _id: string;
       name:string,
+      email:string;
       profileImage:string
     };
     endDate:Date;
@@ -53,6 +54,7 @@ export  interface Survey{
       description: string;
       creator: {
         _id:string;
+        email:string;
         profileImage: string;
         name: string;
       };

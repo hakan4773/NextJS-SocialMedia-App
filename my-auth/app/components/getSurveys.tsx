@@ -77,7 +77,7 @@ function getSurveys({userId}:SurveyProps) {
 
   if (loading) return <div>Yükleniyor...</div>;
   // if (error) return <div className="text-red-500">{error}</div>;
-
+console.log(surveys)
   return (
     <div>
       {surveys.length === 0 ? (
@@ -95,20 +95,29 @@ function getSurveys({userId}:SurveyProps) {
               >
                 <div className="flex justify-between items-start">
                   {/* Üst Bilgi - Kullanıcı Bilgileri */}
-                  <div className="flex items-center ">
+                  <div className="flex items-center space-x-3">
+                  <div className="relative">
                     <Image
                                     src={survey.creator.profileImage}
                                     alt="Profile"
                                     width={44}
                                     height={44}
                                     className="rounded-full border-2 border-blue-100"
-                                  />
-                    <div className="ml-3 ">
-                      <h3 className="  text-lg">{survey.creator?.name}</h3>
-                      <p className="text-gray-400 text-sm">
-                        {format(survey?.createdAt)}
-                      </p>
-                    </div>
+                                  /> </div >
+                    <div>
+
+
+
+                                 <div className="flex items-center space-x-2">
+                                   <h3 className="font-semibold text-gray-800">{survey.creator.name}</h3>
+                                   <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">Takip Ediyor</span>
+                                 </div>
+                                 <div className="flex items-center space-x-2 text-xs text-gray-500">
+                                   <span>{"@"+survey.creator.email.split('@')[0]}</span>
+                                   <span>•</span>
+                                   <span>{format(survey?.createdAt)}</span>
+                                 </div>
+                               </div>
                   </div>
 
                  <Settings index={{ index }} isOwner={survey.creator._id.toString() === user?._id?.toString()}/>
