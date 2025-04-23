@@ -1,13 +1,48 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import LeftBar from "./components/LeftBar";
 import RightBar from "./components/RightBar";
 import Posts from "./components/Posts";
 import PostCreation from "./components/PostCreation";
 import GetSurveys from "./components/getSurveys";
 import Activities from "./components/Activities";
+import axios from "axios"
 export default function Home() {
+  const [mergedContent, setMergedContent] = useState<{ [key: string]: any }[]>([]);
+useEffect(()=>{
+const fetchAll=async()=>{
+  const token=localStorage.getItem("token");
+  const [postRes,surveyRes,activityRes]=await Promise.all([
+    axios.get("/api/posts",{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }),
+    axios.get("/api/surveys",{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }),
+    axios.get("/api/activity",{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }),
 
+  ]);
+
+  const merged=[
+    ...postRes.data.posts.map((item: { [key: string]: any }) => ({ ...item, type: "post" })),
+    ...surveyRes.data.surveys.map((item: { [key: string]: any }) => ({ ...item, type: "survey" })),
+    ...activityRes.data.activities.map((item: { [key: string]: any }) => ({ ...item, type: "activities" })),
+  ]
+merged.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+setMergedContent(merged);
+
+}
+
+fetchAll();
+},[])
   
   return (
     <div className=" min-h-screen bg-slate-100  py-24 p-4  flex justify-center  ">
@@ -19,10 +54,11 @@ export default function Home() {
       <div className="w-full md:w-1/2 flex flex-col justify-center  max-w-[500px] ">
        <PostCreation />
         
-      
-        <Activities />
-        <GetSurveys />
-        <Posts isMyProfile={false} />
+       {mergedContent.map((item,index) => {
+          if (item.type === "post") return <Posts key={`post-${index}`}  isMyProfile={false} />;
+          if (item.type === "survey") return <GetSurveys key={`survey-${index}`}  />;
+          if (item.type === "activity") return <Activities key={`activity-${index}`}  />;
+        })}
       </div>
 
       {/* Sağ kısım */}
