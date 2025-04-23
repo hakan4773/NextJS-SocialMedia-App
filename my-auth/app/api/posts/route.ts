@@ -64,12 +64,11 @@ export async function GET(req:NextRequest) {
 
   const userIds = [decoded._id, ...userBody.following];
   const posts = await Post.find({ user: { $in: userIds } }).sort({ createdAt: -1 }).populate("user", "name email profileImage");
-  // const Myposts = await Post.find({ user: decoded._id }).sort({ createdAt: -1 }).populate("user", "name email profileImage");
- //Profil post kısmını düzelt
+  const Myposts = await Post.find({ user: decoded._id }).sort({ createdAt: -1 }).populate("user", "name email profileImage");
   if (!posts || posts.length === 0) {
     return NextResponse.json({ message: "Hiç post bulunamadı!",}, { status: 404 });
 }
-return NextResponse.json({ posts},{status:201})
+return NextResponse.json({ posts,Myposts},{status:201})
 
   } catch (error:any) {
     return NextResponse.json({error:"Bir hata oluştu.",details:error.message},{status:500})

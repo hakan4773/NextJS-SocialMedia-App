@@ -9,8 +9,9 @@ import Settings from "./Settings";
 import { useAuth } from "../context/AuthContext";
 type PostsProps = {
   userId?: string;
+  isMyProfile:boolean;
 };
-export default function Posts({ userId }: PostsProps) {
+export default function Posts({ userId,isMyProfile }: PostsProps) {
 const {user}=useAuth();
   const [posts,setPosts]=useState<Post[] | null>(null)
   
@@ -24,7 +25,7 @@ const res=await fetch(url,{
   },
 })
 const data = await res.json();
-setPosts(data.posts);
+isMyProfile ? setPosts(data.Myposts): setPosts(data.posts);
 }
 fetchPosts();
 },[])

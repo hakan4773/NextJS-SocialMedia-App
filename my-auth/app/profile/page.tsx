@@ -15,7 +15,8 @@ export default function ProfilePage() {
 const [userData, setUserData] = useState<UserType | null>();
   const [isFollowersOpen, setIsFollowersOpen] = useState(false);
   const [isFollowingOpen, setIsFollowingOpen] = useState(false);
- const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('posts')
+const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('posts');
+const isMyProfile = true; 
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -187,7 +188,7 @@ const [userData, setUserData] = useState<UserType | null>();
                      >Etkinlikler</button></li> 
           </ul>
 {activeTab==="posts" &&
-  <Posts />
+  <Posts isMyProfile={isMyProfile}/>
 }
 {activeTab==="surveys"  &&
          <GetSurveys />
