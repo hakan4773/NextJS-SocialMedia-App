@@ -11,7 +11,7 @@ type PostsProps = {
   userId?: string;
   isMyProfile:boolean;
 };
-export default function Posts({ userId,isMyProfile }: PostsProps) {
+export default function Posts({ userId, isMyProfile }: PostsProps) {
 const {user}=useAuth();
   const [posts,setPosts]=useState<Post[] | null>(null)
   
@@ -29,7 +29,6 @@ isMyProfile ? setPosts(data.Myposts): setPosts(data.posts);
 }
 fetchPosts();
 },[])
-
 
  
   return (

@@ -8,6 +8,7 @@ import GetSurveys from "./components/getSurveys";
 import Activities from "./components/Activities";
 export default function Home() {
 
+  
   return (
     <div className=" min-h-screen bg-slate-100  py-24 p-4  flex justify-center  ">
       {/* Sol kısım */}
@@ -16,12 +17,12 @@ export default function Home() {
       </div>
       {/* orta kısım (içerik kısmı) */}
       <div className="w-full md:w-1/2 flex flex-col justify-center  max-w-[500px] ">
-<PostCreation />
+       <PostCreation />
         
       
         <Activities />
         <GetSurveys />
-        <Posts />
+        <Posts isMyProfile={false} />
       </div>
 
       {/* Sağ kısım */}

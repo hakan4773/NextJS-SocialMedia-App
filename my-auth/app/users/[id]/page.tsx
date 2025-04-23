@@ -230,7 +230,7 @@ export default function ProfilePage({
   <li><button className={`${activeTab==="surveys" ? "border-blue-500 text-blue-600":"border-transparent text-gray-800"}`} onClick={() => setActiveTab('surveys')}>Anketler</button></li>
   <li><button className={`${activeTab==="activities" ? "border-blue-500 text-blue-600":"border-transparent text-gray-800"}`} onClick={() => setActiveTab('activities')}>Etkinlikler</button></li>
 </ul>
-{activeTab==="posts" &&  <Posts userId={userData?._id}/>}
+{activeTab==="posts" &&  <Posts isMyProfile={false} userId={userData?._id}/>}
 {activeTab==="surveys" && <GetSurveys userId={userData?._id}/>}
 {activeTab==="activities" && <Activities userId={userData?._id}/>}       
         </div>
