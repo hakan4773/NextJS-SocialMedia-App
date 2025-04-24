@@ -80,19 +80,21 @@ function ResponsiveBar() {
                 <button onClick={()=>setIsFollowersOpen(true)
                                       
                 } data-modal-target="default-modal" data-modal-toggle="default-modal" className='text-gray-600 cursor-pointer' type="button">
-                  <span className="block font-bold text-blue-600"> 50</span> 
+                  <span className="block font-bold text-blue-600">   {userData?.followers?.length || 0}</span> 
                 <span className="text-gray-600">Followers</span>   </button>
               </li>
               <li className=" text-center">
                 <button onClick={()=>setIsFollowingOpen(true)
                  
                 } data-modal-target="default-modal" data-modal-toggle="default-modal" className='text-gray-600 cursor-pointer' type="button">
-                <span className="block font-bold text-blue-600"> 100</span>   
+                <span className="block font-bold text-blue-600">   {userData?.following?.length || 0}</span>   
                 <span className="text-gray-600">Following</span>  </button>
               </li>
               <li className=" text-center">
                 <Link href={"/profile"} className="">
-                  <span className="block font-bold text-blue-600"> 10</span>
+                  <span className="block font-bold text-blue-600">  {(userData?.posts?.length || 0) + 
+           (userData?.surveys?.length || 0) + 
+           (userData?.activities?.length || 0)}</span>
                 <span className="text-gray-600">Gönderi Sayısı</span>
                  </Link>
               </li>
@@ -111,7 +113,7 @@ function ResponsiveBar() {
               </li>
               <li className=" ">
             
-                <Link href={"/etkinlik"} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                <Link href={"/Bookmark"} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                      <SlCalender size={20} className="text-blue-500" />
                      <span className='font-medium'>Etkinliklerim</span>
                 </Link>
