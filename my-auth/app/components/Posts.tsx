@@ -82,7 +82,7 @@ fetchPosts();
                     key={tag} 
                     className="text-blue-500 text-xs bg-blue-50 px-2 py-1 rounded-full hover:bg-blue-100 cursor-pointer"
                   >
-                    #{tag}
+                    {tag}
                   </span>
                 ))}
               </div>
