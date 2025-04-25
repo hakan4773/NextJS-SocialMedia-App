@@ -5,6 +5,7 @@ Bu proje, kullanıcıların postlar ve anketler oluşturabileceği, paylaşabile
 ## Özellikler
 
 - **Post Oluşturma ve Paylaşma**: Kullanıcılar metin, etiket ve görsel içeren postlar oluşturabilir.
+- **Takip Sistemi**: Kullanıcılar başka kullanıcıları takip edebilir ve paylaşımlarını görebilir.
 - **Anket Sistemi**: Kullanıcılar çoktan seçmeli anketler oluşturabilir ve diğer kullanıcılar bu anketlere oy verebilir.
 - **Kaydetme (Bookmark)**: Kullanıcılar hem postları hem anketleri kaydedip daha sonra görüntüleyebilir.
 - **Arama**: Kaydedilen içeriklerde metin bazlı arama yapma imkanı.
@@ -34,5 +35,5 @@ Bu projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izley
 
 1. **Depoyu Klonlayın**:
    ```bash
-   git clone https://github.com/kullanici-adi/proje-adi.git
-   cd proje-adi
+   git clone https://github.com/hakan4773/NextJS-SocialMedia-App.git
+   cd NextJS-SocialMedia-App
