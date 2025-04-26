@@ -15,6 +15,7 @@ export default function ProfilePage() {
 const [userData, setUserData] = useState<UserType | null>();
   const [isFollowersOpen, setIsFollowersOpen] = useState(false);
   const [isFollowingOpen, setIsFollowingOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('posts');
 const isMyProfile = true; 
 
@@ -71,22 +72,36 @@ const isMyProfile = true;
           <p className="text-gray-600 text-sm md:text-base">{userData?.email}</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-2">
-          <Link
-            href="/profile/edit"
-            className="flex items-center justify-center space-x-2 text-white bg-red-500 px-3 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm md:text-base"
-          >
-            <CiEdit size={18} />
-            <span>Güncelle</span>
-          </Link>
-          <button 
-            className="flex items-center justify-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors text-sm md:text-base"
-            aria-label="Ayarlar"
-          >
-            <FiSettings size={18} />
-            <span>Ayarlar</span>
-          </button>
-        </div>
+        <div className="flex flex-col sm:flex-row gap-2 relative">
+  <Link
+    href="/profile/edit"
+    className="flex items-center justify-center space-x-2 text-white bg-red-500 px-3 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm md:text-base"
+  >
+    <CiEdit size={18} />
+    <span>Güncelle</span>
+  </Link>
+
+  <div className="relative">
+    <button
+      onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+      className="flex items-center justify-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors text-sm md:text-base"
+      aria-label="Ayarlar"
+    >
+      <FiSettings size={18} />
+      <span>Ayarlar</span>
+    </button>
+
+    {isSettingsOpen && (
+      <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-md shadow-lg z-20">
+        <ul className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+          <li className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Hesap Ayarları</li>
+          <li className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Gizlilik Ayarları</li>
+          <li className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Çıkış Yap</li>
+        </ul>
+      </div>
+    )}
+  </div>
+</div>
       </div>
 
       {/* Bio ve Açıklama */}

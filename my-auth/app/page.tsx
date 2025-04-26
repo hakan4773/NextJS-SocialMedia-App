@@ -51,9 +51,9 @@ fetchAll();
         <LeftBar />
       </div>
       {/* orta kısım (içerik kısmı) */}
-      <div className="w-full md:w-1/2 flex flex-col justify-center  max-w-[s00px] ">
+      <div className="w-full md:w-1/2 flex flex-col justify-center  max-w-[500px] ">
        <PostCreation />
-        
+        {/* buraya bak */}
        {mergedContent.map((item,index) => {
           if (item.type === "post") return <Posts key={`post-${index}`}  isMyProfile={false} />;
           if (item.type === "survey") return <GetSurveys key={`survey-${index}`}  />;
