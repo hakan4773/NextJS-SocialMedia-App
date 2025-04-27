@@ -3,7 +3,7 @@
 Bu proje, kullanıcıların postlar ve anketler oluşturabileceği, paylaşabileceği ve kaydedebileceği bir sosyal medya platformudur. Kullanıcılar, diğer kullanıcıların içeriklerini görüntüleyebilir, anketlere oy verebilir ve beğendikleri içerikleri kaydederek daha sonra erişebilir.
 
 ## Özellikler
--**Login olma ve Register oluşturma**:Kullanıcılar öncellikle sisteme kayıt yaptırmalıdır ardından kayıt bilgileriyle login olabilirler.
+- **Login olma ve Register oluşturma**:Kullanıcılar öncellikle sisteme kayıt yaptırmalıdır ardından kayıt bilgileriyle login olabilirler.
 - **Post Oluşturma ve Paylaşma**: Kullanıcılar metin, etiket ve görsel içeren postlar oluşturabilir.
 - **Takip Sistemi**: Kullanıcılar başka kullanıcıları takip edebilir ve paylaşımlarını görebilir.
 - **Anket Sistemi**: Kullanıcılar çoktan seçmeli anketler oluşturabilir ve diğer kullanıcılar bu anketlere oy verebilir.
