@@ -84,7 +84,7 @@ const isMyProfile = true;
   <div className="relative">
     <button
       onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-      className="flex items-center justify-center space-x-2 bg-gray-100 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors text-sm md:text-base"
+      className="flex items-center justify-center space-x-2 w-full bg-gray-100 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors text-sm md:text-base"
       aria-label="Ayarlar"
     >
       <FiSettings size={18} />
@@ -105,7 +105,7 @@ const isMyProfile = true;
       </div>
 
       {/* Bio ve Açıklama */}
-      <div className="mt-3 space-y-2">
+      <div className="mt-3 space-y-2 text-center md:text-left">
         {userData?.bio && (
           <p className="text-gray-700 text-sm md:text-base break-words">
             {userData.bio}
