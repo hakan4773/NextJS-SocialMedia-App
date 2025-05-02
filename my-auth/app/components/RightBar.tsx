@@ -35,12 +35,13 @@ useEffect(()=>{
   fetchTags();
 },[])
   
-const allTags: string[] = trends.map(trend => trend.tags).flat();
-const tagFrequency: { [key: string]: number } = {};
-allTags.forEach(tag=>{
-  const cleanTag = tag.trim();
-tagFrequency[cleanTag]=(tagFrequency[cleanTag] || 0) + 1;
-})
+const allTags: string[] = trends.map((trend) => trend.tags).flat();
+  const tagFrequency: { [key: string]: number } = {};
+  allTags.forEach((tag) => {
+    const cleanTag = tag.trim();
+    tagFrequency[cleanTag] = (tagFrequency[cleanTag] || 0) + 1;
+  });
+  const sortedTags = Object.entries(tagFrequency).sort((a, b) => b[1] - a[1]);
 
   return (
     <div className="space-y-4">
@@ -62,7 +63,7 @@ tagFrequency[cleanTag]=(tagFrequency[cleanTag] || 0) + 1;
       <div className="p-4 bg-white rounded-lg shadow-md">
         <h3 className="text-lg font-semibold flex"><FaArrowTrendUp  className="mr-2" />Trendler</h3>
         <ul className="mt-2  text-xl">
-          {allTags.map(([tag,count],index) => (
+          {sortedTags.map(([tag,count],index) => (
             
             <div key={index} className="hover:bg-gray-50 " >
             <div className="relative  flex justify-end items-end ">
