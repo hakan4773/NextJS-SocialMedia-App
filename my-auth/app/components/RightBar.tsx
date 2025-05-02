@@ -2,10 +2,12 @@ import { FiBell } from "react-icons/fi";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import Link from "next/link";
 import { PiDotsThreeBold } from "react-icons/pi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Post } from "../types/user";
 
 export default function RightBar() {
     const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
+    const [trends, setTrends] = useState<Post[]>([]);
  const toggleSetting=(index:any)=>{
     setOpenSettingIndex(openSettingIndex === index ? null: index)
  }
@@ -14,14 +16,31 @@ export default function RightBar() {
     { id: 2, message: "Ali Kaya seni takip etti", time: "1 saat önce" },
     { id: 3, message: "Yeni bir yorum aldın", time: "2 saat önce" },
   ];
+useEffect(()=>{
 
-  const trends = [
-    { tag: "#Tatil", count: 150,categories:"Tatil" },
-    { tag: "#Yemek", count: 100 ,categories:"Yemek"},
-    { tag: "#Beşiktaş", count: 80 ,categories:"Spor"},
-  ];
-
-
+  const fetchTags=async()=>{
+    const res=await fetch('/api/posts',{
+      method:'GET',
+      headers:{
+        Authorization:`Bearer ${localStorage.getItem('token')}`,
+      },
+   } )
+    const data=await res.json()
+    if(res.ok){
+      setTrends(data.posts)
+    }else{
+      console.error('Tag verisi alınamadı:',data.error)
+    }
+  }
+  fetchTags();
+},[])
+  
+const allTags: string[] = trends.map(trend => trend.tags).flat();
+const tagFrequency: { [key: string]: number } = {};
+allTags.forEach(tag=>{
+  const cleanTag = tag.trim();
+tagFrequency[cleanTag]=(tagFrequency[cleanTag] || 0) + 1;
+})
 
   return (
     <div className="space-y-4">
@@ -43,9 +62,9 @@ export default function RightBar() {
       <div className="p-4 bg-white rounded-lg shadow-md">
         <h3 className="text-lg font-semibold flex"><FaArrowTrendUp  className="mr-2" />Trendler</h3>
         <ul className="mt-2  text-xl">
-          {trends.map((trend,index) => (
+          {allTags.map(([tag,count],index) => (
             
-            <div key={trend.tag} className="hover:bg-gray-50 " >
+            <div key={index} className="hover:bg-gray-50 " >
             <div className="relative  flex justify-end items-end ">
                 <button onClick={() => toggleSetting(index)} className="cursor-pointer" ><PiDotsThreeBold /></button>
 
@@ -58,8 +77,11 @@ export default function RightBar() {
             </div>
 
             <li className="text-blue-400 text-sm  p-2 flex justify-between ">
-             <Link href="/tweets" className="mb-2"><b >{trend.tag}</b> • {trend.count} paylaşım </Link> 
-            <p className="text-gray-400">{trend.categories}</p>
+            <Link href={`/tag/${tag.replace("#", "")}`}>
+  {tag} <span className="text-gray-400 ml-1">• {count} paylaşım</span>
+</Link>
+
+            {/* <p className="text-gray-400">{trend.categories}</p> */}
             </li>
             
             </div>
