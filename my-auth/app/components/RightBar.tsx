@@ -38,7 +38,7 @@ useEffect(()=>{
 const allTags: string[] = trends.map((trend) => trend.tags).flat();
   const tagFrequency: { [key: string]: number } = {};
   allTags.forEach((tag) => {
-    const cleanTag = tag.trim();
+    const cleanTag = tag.trim().toLowerCase();
     tagFrequency[cleanTag] = (tagFrequency[cleanTag] || 0) + 1;
   });
   const sortedTags = Object.entries(tagFrequency).sort((a, b) => b[1] - a[1]);
@@ -63,7 +63,7 @@ const allTags: string[] = trends.map((trend) => trend.tags).flat();
       <div className="p-4 bg-white rounded-lg shadow-md">
         <h3 className="text-lg font-semibold flex"><FaArrowTrendUp  className="mr-2" />Trendler</h3>
         <ul className="mt-2  text-xl">
-          {sortedTags.map(([tag,count],index) => (
+          {sortedTags.slice(0,3).map(([tag,count],index) => (
             
             <div key={index} className="hover:bg-gray-50 " >
             <div className="relative  flex justify-end items-end ">
@@ -79,7 +79,7 @@ const allTags: string[] = trends.map((trend) => trend.tags).flat();
 
             <li className="text-blue-400 text-sm  p-2 flex justify-between ">
             <Link href={`/tag/${tag.replace("#", "")}`}>
-  {tag} <span className="text-gray-400 ml-1">• {count} paylaşım</span>
+  {tag.toUpperCase()} <span className="text-gray-400 ml-1">• {count} paylaşım</span>
 </Link>
 
             {/* <p className="text-gray-400">{trend.categories}</p> */}
@@ -88,7 +88,8 @@ const allTags: string[] = trends.map((trend) => trend.tags).flat();
             </div>
           ))}
 {/* Yükleme */}
-          <div className="flex justify-center text-sm p-2  hover:bg-slate-200 "><button className="cursor-pointer">Daha Fazla Göster</button></div>
+          <div className="flex justify-center text-sm p-2  hover:bg-slate-200 ">
+            <Link href={"/tweets"} className="cursor-pointer">Daha Fazla Göster</Link></div>
         </ul>
       </div>
     </div>
