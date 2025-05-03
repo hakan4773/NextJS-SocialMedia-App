@@ -2,11 +2,8 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import { CiSearch } from "react-icons/ci";
-import { PiDotsThreeBold } from 'react-icons/pi';
 import { Post } from '../types/user';
 import { format } from 'timeago.js';
-import Link from 'next/link';
-import { FaArrowTrendUp } from 'react-icons/fa6';
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useRouter } from 'next/navigation';
 import Interaction from '../users/components/Interaction';
