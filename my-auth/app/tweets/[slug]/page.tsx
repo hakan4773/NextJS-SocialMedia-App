@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Interaction from '@/app/users/components/Interaction';
 import { format } from 'timeago.js';
 import { useAuth } from '@/app/context/AuthContext';
+import Link from 'next/link';
 
 function page() {
     const { slug } = useParams();
@@ -82,9 +83,9 @@ console.log(posts)
   <p className="mt-2 ">{post.content}</p>
   <div className=" flex space-x-2">
     {post.tags.map((tag) => (
-      <span key={tag} className="text-blue-400 text-sm">
+      <Link href={`/tweets/${tag.replace("#","")}`} key={tag} className="text-blue-400 text-sm">
         {tag}
-      </span>
+      </Link>
     ))}
   </div>
   {post.image && (
