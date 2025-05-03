@@ -17,11 +17,10 @@ import Trends from '../components/Trends';
 function page() {
   const router=useRouter();
   const {user}=useAuth();
-    const [comment, setComment] = useState<Record<string, boolean>>({});
     const [posts, setPosts] = useState<Post[] | null>(null);
     const [searchTerm,setSearchTerm]=useState<string>("");
   const [filter,setFilter]=useState("");
-  
+  const [loading,setLoading]=useState(true);
 useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
@@ -32,18 +31,13 @@ useEffect(() => {
       const data = await res.json();
       if (res.ok) {
         setPosts(data.posts);
+        setLoading(false);
       } else {
         console.error("Postlar alınamadı:", data.error);
       }
     };
     fetchProfile();
   }, []);
-
-  const handleComment=(id:string) => {
-     setComment((prev)=>(
- {...prev,[id]:!prev[id]}
-     ))
-  }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -53,26 +47,15 @@ useEffect(() => {
       setFilter("");
   }
 }
-  const handleShare=(id:string,content:string)=>{
-    const postUrl=`${window.location.origin}/post/${id}`
-    
-    if(navigator.share){
-    navigator.share({
-    title:"Paylaşım",
-    text:content,
-    url:postUrl
-    }).catch((error)=>console.error("Paylaşım hatası",error))
-    
-    }
-    else {
-      alert("paylaşım desteklenmiyor")
-    }
-  }
-
 
   const filteredPosts = filter ? posts?.filter((item) =>
       item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
   ) :posts;
+
+
+  if (loading) {
+    return <div className="p-4 bg-white rounded-lg shadow-md h-full">Yükleniyor...</div>;
+  }
   return (
     <div className='min-h-screen flex justify-center py-24  p-4 space-x-6'>
      <div className='hidden md:block w-1/4 px-4'></div>
@@ -166,8 +149,10 @@ useEffect(() => {
 
       </div>
 {/*Trends */}
+<div className="w-1/4 p-4 h-full hidden md:block  ">
        <Trends />
      
+</div>
 
     </div>
   )

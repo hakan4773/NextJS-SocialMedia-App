@@ -7,6 +7,7 @@ import { Post } from "../types/user";
 function Trends() {
     const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
     const [trends, setTrends] = useState<Post[]>([]);
+    const [loading, setLoading] = useState(true);
  const toggleSetting=(index:any)=>{
     setOpenSettingIndex(openSettingIndex === index ? null: index)
  }
@@ -22,6 +23,7 @@ function Trends() {
       const data=await res.json()
       if(res.ok){
         setTrends(data.posts)
+        setLoading(false);
       }else{
         console.error('Tag verisi alınamadı:',data.error)
       }
@@ -35,6 +37,11 @@ function Trends() {
       tagFrequency[cleanTag] = (tagFrequency[cleanTag] || 0) + 1;
     });
     const sortedTags = Object.entries(tagFrequency).sort((a, b) => b[1] - a[1]);
+
+    if (loading) {
+        return <div className="p-4 bg-white rounded-lg shadow-md h-full">Yükleniyor...</div>;
+    }
+
 
   return (
 
