@@ -11,6 +11,7 @@ import { PiDotsThreeBold } from 'react-icons/pi'
 import { UserType } from '../types/user'
 import Followers from './Followers'
 import Following from './Following'
+import Trends from './Trends'
 function ResponsiveBar() {
     
     const [isOpen, setIsOpen] = useState(false);
@@ -127,52 +128,11 @@ function ResponsiveBar() {
               </li>
             </ul>
       
-            <div className="mx-6 mb-6 bg-gray-50 rounded-xl p-4">
-      <h3 className="text-lg font-semibold flex items-center text-gray-800">
-        <FaArrowTrendUp className="mr-2 text-blue-500" />
-        Trendler
-      </h3>
-      
-      <div className="pt-2">
-<input className="border border-gray-400 rounded-full flex justify-center p-2" placeholder="Ara..."></input>
-</div>
-      <ul className="mt-4 space-y-3">
-        {trends.map((trend, index) => (
-          <div key={trend.tag} className="relative group">
-            <div className="absolute right-2 top-2">
-              <button 
-                onClick={() => toggleSetting(index)}
-                className="p-1 rounded-full hover:bg-gray-200 transition-colors"
-              >
-                <PiDotsThreeBold className="text-gray-500" />
-              </button>
+            <div className="mb-6    p-4">
 
-              {openSettingIndex === index && (
-                <div className="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-100 overflow-hidden">
-                  <button className=" px-4 py-2 text-sm text-left hover:bg-gray-50 transition-colors">
-                    Bunu önerme
-                  </button>
-                  <button className=" px-4 py-2 text-sm text-left hover:bg-gray-50 transition-colors">
-                    Spam
-                  </button>
-                </div>
-              )}
-            </div>
+      <Trends />
 
-            <Link href="/tweets" className="block p-3 rounded-lg hover:bg-white transition-colors">
-              <div className="text-sm text-blue-500 font-semibold">{trend.tag}</div>
-              <div className="flex justify-between items-center mt-1">
-                <span className="text-xs text-gray-500">{trend.count} paylaşım</span>
-                <span className="text-xs text-gray-400">{trend.categories}</span>
-              </div>
-            </Link>
-          </div>
-        ))}
-
-        <button className="w-full py-2 text-sm text-blue-500 hover:text-blue-600 font-medium transition-colors">
-          Daha Fazla Göster
-        </button>
-      </ul>
+   
     </div>
       
       
