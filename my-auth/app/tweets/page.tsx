@@ -12,19 +12,16 @@ import { useRouter } from 'next/navigation';
 import Interaction from '../users/components/Interaction';
 import Settings from '../components/Settings';
 import { useAuth } from '../context/AuthContext';
+import Trends from '../components/Trends';
 
 function page() {
   const router=useRouter();
   const {user}=useAuth();
     const [comment, setComment] = useState<Record<string, boolean>>({});
-    const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
     const [posts, setPosts] = useState<Post[] | null>(null);
     const [searchTerm,setSearchTerm]=useState<string>("");
   const [filter,setFilter]=useState("");
-    const toggleSetting=(index:any)=>{
-       setOpenSettingIndex(openSettingIndex === index ? null: index)
-    }
-
+  
 useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
@@ -71,16 +68,6 @@ useEffect(() => {
       alert("paylaşım desteklenmiyor")
     }
   }
-
-
-  const trends = [
-    { tag: "#Tatil", count: 150,categories:"Tatil" },
-    { tag: "#Yemek", count: 100 ,categories:"Yemek"},
-    { tag: "#Beşiktaş", count: 80 ,categories:"Spor"},
-  ];
-console.log(user?._id)
-console.log(posts)
-console.log(user)
 
 
   const filteredPosts = filter ? posts?.filter((item) =>
@@ -178,35 +165,9 @@ console.log(user)
     </div>
 
       </div>
-
-      <div className="w-1/4 p-4 h-full hidden md:block bg-white rounded-lg shadow-md">
-        <h3 className="text-lg font-semibold flex"><FaArrowTrendUp  className="mr-2" />Trendler</h3>
-        <ul className="mt-2  text-xl">
-          {trends.map((trend,index) => (
-            
-            <div key={trend.tag} className="hover:bg-gray-50 " >
-            <div className="relative  flex justify-end items-end ">
-                <button onClick={() => toggleSetting(index)} className="cursor-pointer" ><PiDotsThreeBold /></button>
-
-                {openSettingIndex === index && ( <div className="absolute right-0 top-full mt-2 p-2 w-52 text-sm bg-white rounded-lg shadow-lg z-50"> 
-                    <div className="max-h-96 overflow-y-auto"> 
-                    <p  className="relative p-2 hover:bg-gray-50 cursor-pointer">Bunu önerme</p> 
-                    <p  className="relative p-2 hover:bg-gray-50 cursor-pointer">Spam</p> 
-
-                    </div> </div> )}
-            </div>
-
-            <li className="text-blue-400 text-sm  p-2 flex justify-between ">
-             <Link href="/tweets" className="mb-2"><b >{trend.tag}</b> • {trend.count} paylaşım </Link> 
-            <p className="text-gray-400">{trend.categories}</p>
-            </li>
-            
-            </div>
-          ))}
-{/* Yükleme */}
-          <div className="flex justify-center text-sm p-2  hover:bg-slate-200 "><button className="cursor-pointer">Daha Fazla Göster</button></div>
-        </ul>
-      </div>
+{/*Trends */}
+       <Trends />
+     
 
     </div>
   )
