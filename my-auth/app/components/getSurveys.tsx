@@ -8,11 +8,12 @@ import { Survey } from "../types/user";
 import Settings from "./Settings";
 type SurveyProps = {
   userId?: string;
+  item?: Survey;
 };
-function getSurveys({userId}:SurveyProps) {
+function getSurveys({userId,item}:SurveyProps) {
   const { user } = useAuth();
 
-  const [surveys, setSurveys] = useState<Survey[]>([]);
+  const [surveys, setSurveys] = useState<Survey[]>(item ? [item] : []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [votedSurveyId, setVotedSurveyId] = useState<string | null>(null); // Oy verilen anketin ID’si

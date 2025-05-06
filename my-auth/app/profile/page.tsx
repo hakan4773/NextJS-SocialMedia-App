@@ -9,15 +9,15 @@ import GetSurveys from "../components/getSurveys";
 import Activities from "../components/Activities";
 import Followers from "../components/Followers";
 import Following from "../components/Following";
-import { UserType } from "../types/user";
+import { Post, UserType } from "../types/user";
 
 export default function ProfilePage() {
 const [userData, setUserData] = useState<UserType | null>();
+const [posts, setPosts] = useState<Post[] | null>(null);
   const [isFollowersOpen, setIsFollowersOpen] = useState(false);
   const [isFollowingOpen, setIsFollowingOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('posts');
-const isMyProfile = true; 
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -29,6 +29,7 @@ const isMyProfile = true;
       const data = await res.json();
       if (res.ok) {
         setUserData(data.user);
+        setPosts(data.posts);
       } else {
         console.error("Profil verisi alınamadı:", data.error);
       }
@@ -203,7 +204,7 @@ const isMyProfile = true;
                      >Etkinlikler</button></li> 
           </ul>
 {activeTab==="posts" &&
-  <Posts isMyProfile={isMyProfile}/>
+   posts && <Posts item={posts}/>
 }
 {activeTab==="surveys"  &&
          <GetSurveys />

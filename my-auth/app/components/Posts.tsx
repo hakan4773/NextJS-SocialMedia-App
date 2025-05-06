@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import { FiCheck, FiFileText } from "react-icons/fi";
 import { format } from "timeago.js";
 import Interaction from "../users/components/Interaction";
@@ -8,29 +8,12 @@ import { Post } from "../types/user";
 import Settings from "./Settings";
 import { useAuth } from "../context/AuthContext";
 type PostsProps = {
-  userId?: string;
-  isMyProfile:boolean;
+    
+  item: Post[];
 };
-export default function Posts({ userId, isMyProfile }: PostsProps) {
+export default function Posts({ item }: PostsProps) {
 const {user}=useAuth();
-  const [posts,setPosts]=useState<Post[] | null>(null)
-  
-useEffect(()=>{
- const token= localStorage.getItem("token")
-const fetchPosts=async()=>{
-  const url = userId ? `/api/users/${userId}` : "/api/posts";
-const res=await fetch(url,{
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-})
-const data = await res.json();
-isMyProfile ? setPosts(data.Myposts): setPosts(data.posts);
-}
-fetchPosts();
-},[])
-
- 
+  const [posts,setPosts]=useState<Post[] | null>(item )
   return (
     <div>
     {posts && posts.length > 0 ? (

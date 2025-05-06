@@ -17,8 +17,9 @@ import { UserType } from "@/app/types/user";
 import { Post } from "@/app/types/user";
 import { Survey } from "@/app/types/user";
 import { Activity } from "@/app/types/user";
-import Posts from "@/app/components/Posts";
+import Posts from "@/app/profile/Contents/Posts";
 import Activities from "@/app/components/Activities";
+import Surveys from "@/app/profile/Contents/Surveys";
 export default function ProfilePage({
   params,
 }: {
@@ -230,8 +231,8 @@ export default function ProfilePage({
   <li><button className={`${activeTab==="surveys" ? "border-blue-500 text-blue-600":"border-transparent text-gray-800"}`} onClick={() => setActiveTab('surveys')}>Anketler</button></li>
   <li><button className={`${activeTab==="activities" ? "border-blue-500 text-blue-600":"border-transparent text-gray-800"}`} onClick={() => setActiveTab('activities')}>Etkinlikler</button></li>
 </ul>
-{activeTab==="posts" &&  <Posts isMyProfile={false} userId={userData?._id}/>}
-{activeTab==="surveys" && <GetSurveys userId={userData?._id}/>}
+{activeTab==="posts" &&  <Posts  userId={userData?._id}/>}
+{activeTab==="surveys" && <Surveys userId={userData?._id}/>}
 {activeTab==="activities" && <Activities userId={userData?._id}/>}       
         </div>
       </div>

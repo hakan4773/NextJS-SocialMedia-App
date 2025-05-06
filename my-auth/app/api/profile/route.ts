@@ -6,6 +6,7 @@ import { verifyToken } from "@/app/utils/jwtUtils";
 import fs from "fs";
 import path from "path";
 import { writeFile } from "fs/promises";
+import Post from "@/app/models/Post";
 export async function PUT(req: NextRequest) {
   await connectDB();
 
@@ -94,10 +95,12 @@ export async function GET(req:NextRequest) {
   try { 
     const decoded=verifyToken(req);
     const user = await Auth.findById(decoded?._id);
+    const posts = await Post.findById(decoded?._id);
+
   if (!user ) {
     return NextResponse.json({ message: "kullanıcı bulunamadı!" }, { status: 404 });
 }
-return NextResponse.json({ user }, { status: 200 });
+return NextResponse.json({ user,posts }, { status: 200 });
 
   } catch (error:any) {
     return NextResponse.json({error:"Bir hata oluştu.",details:error.message},{status:500})
