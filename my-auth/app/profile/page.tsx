@@ -12,8 +12,8 @@ import Following from "../components/Following";
 import { Post, UserType } from "../types/user";
 
 export default function ProfilePage() {
-const [userData, setUserData] = useState<UserType | null>();
-const [posts, setPosts] = useState<Post[] | null>(null);
+const [userData, setUserData] = useState<UserType | null>(null);
+const [posts, setPosts] = useState<Post[]>([]);
   const [isFollowersOpen, setIsFollowersOpen] = useState(false);
   const [isFollowingOpen, setIsFollowingOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -29,7 +29,7 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
       const data = await res.json();
       if (res.ok) {
         setUserData(data.user);
-        setPosts(data.posts);
+        setPosts(data.posts || []);
       } else {
         console.error("Profil verisi alınamadı:", data.error);
       }
@@ -37,6 +37,7 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
     fetchProfile();
   }, []);
 
+  console.log(posts)
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-700 via-purple-600 to-pink-400  py-24">
       <div className="max-w-4xl mx-auto px-4">
@@ -203,9 +204,14 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
                        <button onClick={()=>setActiveTab("activities")} className={`${activeTab==="activities" ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-800'}`} 
                      >Etkinlikler</button></li> 
           </ul>
-{activeTab==="posts" &&
-   posts && <Posts item={posts}/>
-}
+
+{activeTab === "posts" && (
+  <>
+    {posts?.map((item: Post, index: number) => (
+      <Posts key={index} item={item} />
+    ))}
+  </>
+)}
 {activeTab==="surveys"  &&
          <GetSurveys />
 

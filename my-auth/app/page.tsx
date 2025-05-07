@@ -7,9 +7,10 @@ import PostCreation from "./components/PostCreation";
 import GetSurveys from "./components/getSurveys";
 import Activities from "./components/Activities";
 import axios from "axios"
-import { Post, Survey } from "./types/user";
+import { Activity, Post, Survey } from "./types/user";
 export default function Home() {
-  const [mergedContent, setMergedContent] = useState<{ [key: string]: any }[]>([]);
+  type MergedItem = (Post | Survey | Activity) & { type: "post" | "survey" | "activity" };
+  const [mergedContent, setMergedContent] = useState<MergedItem[]>([]);
 useEffect(()=>{
 const fetchAll=async()=>{
   const token=localStorage.getItem("token");
@@ -56,7 +57,7 @@ fetchAll();
        <PostCreation />
         {/* buraya bak */}
        {mergedContent.map((item,index) => {
-          if (item.type === "post") return (<Posts key={`post-${index}`}  item={item as Post[]} />);
+          if (item.type === "post") return (<Posts key={`post-${index}`}  item={item as Post} />);
           if (item.type === "survey") return <GetSurveys key={`survey-${index}`}  item={item as Survey}  />;
           if (item.type === "activity") return <Activities key={`activity-${index}`}  />;
         })}

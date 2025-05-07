@@ -95,12 +95,12 @@ export async function GET(req:NextRequest) {
   try { 
     const decoded=verifyToken(req);
     const user = await Auth.findById(decoded?._id);
-    const posts = await Post.findById(decoded?._id);
-
+    const posts = await Post.find({ user: decoded?._id }).populate('user', '_id name profileImage email');;
+        console.log(posts);
   if (!user ) {
     return NextResponse.json({ message: "kullanıcı bulunamadı!" }, { status: 404 });
 }
-return NextResponse.json({ user,posts }, { status: 200 });
+return NextResponse.json({ user, posts: posts || []  }, { status: 200 });
 
   } catch (error:any) {
     return NextResponse.json({error:"Bir hata oluştu.",details:error.message},{status:500})
