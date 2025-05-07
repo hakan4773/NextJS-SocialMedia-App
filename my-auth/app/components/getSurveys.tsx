@@ -7,49 +7,17 @@ import Interaction from "../users/components/Interaction";
 import { Survey } from "../types/user";
 import Settings from "./Settings";
 type SurveyProps = {
-  userId?: string;
-  item?: Survey;
+  item: Survey;
 };
-function getSurveys({userId,item}:SurveyProps) {
+function getSurveys({item}:SurveyProps) {
   const { user } = useAuth();
+  const [surveys, setSurveys] = useState<Survey[]>(item ? [item] : []); 
 
-  const [surveys, setSurveys] = useState<Survey[]>(item ? [item] : []);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [votedSurveyId, setVotedSurveyId] = useState<string | null>(null); // Oy verilen anketin ID’si
   const [votedChoiceIndex, setVotedChoiceIndex] = useState<number | null>(null); // Oy verilen seçenek index’i
 
-
-
-
-  //Anketleri getirme
-  const surveyFetch = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const url = userId ? `/api/users/${userId}` : "/api/surveys";
-      const res = await fetch(url, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setSurveys(data.surveys);
-      } else {
-        setError(data.message || "Anketler yüklenemedi");
-      }
-    } catch (error) {
-      setError("Anketleri getirme hatası");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    surveyFetch();
-  }, []);
 
   //Anketlere oy verme
   const vote = async (surveyId: string, choiceIndex: number) => {
@@ -67,7 +35,6 @@ function getSurveys({userId,item}:SurveyProps) {
       if (res.ok) {
         setVotedSurveyId(surveyId);
         setVotedChoiceIndex(choiceIndex);
-        surveyFetch();
       } else {
         alert(data.error || "Oylama başarısız");
       }

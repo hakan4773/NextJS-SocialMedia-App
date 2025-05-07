@@ -7,6 +7,7 @@ import fs from "fs";
 import path from "path";
 import { writeFile } from "fs/promises";
 import Post from "@/app/models/Post";
+import Survey from "@/app/models/Survey";
 export async function PUT(req: NextRequest) {
   await connectDB();
 
@@ -95,12 +96,13 @@ export async function GET(req:NextRequest) {
   try { 
     const decoded=verifyToken(req);
     const user = await Auth.findById(decoded?._id);
-    const posts = await Post.find({ user: decoded?._id }).populate('user', '_id name profileImage email');;
-        console.log(posts);
+    const posts = await Post.find({ user: decoded?._id }).populate('user', '_id name profileImage email');
+    const surveys = await Survey.find({ creator: decoded?._id }).populate('creator', '_id name profileImage email');
+  
   if (!user ) {
     return NextResponse.json({ message: "kullanıcı bulunamadı!" }, { status: 404 });
 }
-return NextResponse.json({ user, posts: posts || []  }, { status: 200 });
+return NextResponse.json({ user, posts: posts || [] ,surveys }, { status: 200 });
 
   } catch (error:any) {
     return NextResponse.json({error:"Bir hata oluştu.",details:error.message},{status:500})

@@ -9,11 +9,13 @@ import GetSurveys from "../components/getSurveys";
 import Activities from "../components/Activities";
 import Followers from "../components/Followers";
 import Following from "../components/Following";
-import { Post, UserType } from "../types/user";
+import { Post, Survey, UserType } from "../types/user";
+import { set } from "mongoose";
 
 export default function ProfilePage() {
 const [userData, setUserData] = useState<UserType | null>(null);
 const [posts, setPosts] = useState<Post[]>([]);
+const [surveys,setSurveys]=useState<Survey[]>([])
   const [isFollowersOpen, setIsFollowersOpen] = useState(false);
   const [isFollowingOpen, setIsFollowingOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -30,6 +32,7 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
       if (res.ok) {
         setUserData(data.user);
         setPosts(data.posts || []);
+        setSurveys(data.surveys || [])
       } else {
         console.error("Profil verisi alınamadı:", data.error);
       }
@@ -212,9 +215,13 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
     ))}
   </>
 )}
-{activeTab==="surveys"  &&
-         <GetSurveys />
-
+{activeTab==="surveys"  && (
+       <>
+       {surveys?.map((item: Survey, index: number) => (
+         <GetSurveys key={index} item={item} />
+       ))}
+     </>
+)
 }
 {activeTab==="activities"  &&
          <Activities />
