@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CiEdit } from 'react-icons/ci'
 import { IoStatsChartOutline } from 'react-icons/io5'
 import { MdDeleteOutline } from 'react-icons/md'
@@ -7,16 +7,35 @@ import { PiDotsThreeBold } from 'react-icons/pi'
 import { TiPinOutline } from 'react-icons/ti'
 
 interface SettingsProps {
-  index: { index: number };
+  index:{ index: string | number} ;
   isOwner: boolean; 
 }
 
-function Settings({ index: { index }, isOwner }: SettingsProps) {
-    const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
+function Settings({ index:{index}, isOwner }: SettingsProps) {
+    const [openSettingIndex, setOpenSettingIndex] = useState<number | string |null>(null);
+  //Menüyü açma işlevi için tıklama olayını dinleme
+    const handleSettingsToggle = (index: string | number) => {
+      setOpenSettingIndex(openSettingIndex === index ? null: index)
+    };
 
-    const handleSettingsToggle = (index: number) => {
-        setOpenSettingIndex(openSettingIndex === index ? null : index);
+//Menüyü kapatma işlevi için dışarı tıklama olayını dinleme
+      useEffect(() => {
+          const handleOutsideClick = (event: MouseEvent) => {
+        const target = event.target as HTMLElement;
+        if (!target.closest('.settings-button') && !target.closest('.settings-menu')) {
+          setOpenSettingIndex(null);
+        }
       };
+
+
+      document.addEventListener('mousedown', handleOutsideClick);
+      return () => {
+        document.removeEventListener("mousedown", handleOutsideClick);
+      };
+    },[] )
+
+    
+      
       const ownerOptions = [
         { icon: <MdDeleteOutline className="text-red-500" />, text: "Sil" },
         { icon: <CiEdit />, text: "Düzenle" },
@@ -32,20 +51,19 @@ function Settings({ index: { index }, isOwner }: SettingsProps) {
       const options = isOwner ? ownerOptions : otherUserOptions;
 
 
-      console.log("isOwner?", isOwner);
 
   return (
    
-       <div className="relative ">
+       <div className="relative " >
                     <button
                       onClick={() => handleSettingsToggle(index)}
-                      className="p-1 rounded-full hover:bg-gray-100 text-gray-500"
+                      className="p-1 rounded-full hover:bg-gray-100 text-gray-500 settings-button"
                     >
                       <PiDotsThreeBold size={20} />
                     </button>
 
-                    {openSettingIndex === index && (
-                    <div className="absolute right-0 top-8 mt-1 w-48 bg-white rounded-md shadow-xl z-50 border border-gray-100">
+                    {openSettingIndex === index && ( 
+                    <div className="absolute right-0 top-8 mt-1 w-48 bg-white rounded-md shadow-xl z-50 border border-gray-100 settings-menu"   >
                     {options.map((item, i) => (
                       <button
                         key={i}

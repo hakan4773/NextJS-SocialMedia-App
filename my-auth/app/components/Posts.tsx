@@ -33,7 +33,7 @@ const {user}=useAuth();
               <div>
                 <div className="flex items-center space-x-2">
                   <h3 className="font-semibold text-gray-800">{item.user.name}</h3>
-                  <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">Takip Ediyor</span>
+                  {Array.isArray(user?.followers) && user.followers.includes(item._id) ? <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">Takip Ediyor</span> : ""}
                 </div>
                 <div className="flex items-center space-x-2 text-xs text-gray-500">
                   <span>{"@"+item.user.email.split('@')[0]}</span>
@@ -44,7 +44,7 @@ const {user}=useAuth();
             </div>
   
          {/* Ayarlar Butonu */}
-         <Settings index={{ index: 0 }} isOwner={item.user._id.toString() === user?._id?.toString()}/>
+         <Settings index={{index:item._id }} isOwner={item.user._id.toString() === user?._id?.toString()}/>
           </div>
   
           {/* Post İçeriği */}
