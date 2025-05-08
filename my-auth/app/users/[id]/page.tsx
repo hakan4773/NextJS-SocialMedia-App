@@ -10,7 +10,6 @@ import {
 import { CiEdit } from "react-icons/ci";
 import { use, useEffect, useState } from "react";
 import { SlUserFollow } from "react-icons/sl";
-import GetSurveys from "@/app/components/getSurveys";
 import Followers from "@/app/components/Followers";
 import Following from "@/app/components/Following";
 import { UserType } from "@/app/types/user";
@@ -18,7 +17,7 @@ import { Post } from "@/app/types/user";
 import { Survey } from "@/app/types/user";
 import { Activity } from "@/app/types/user";
 import Posts from "@/app/profile/Contents/Posts";
-import Activities from "@/app/components/Activities";
+import Activities from "@/app/profile/Contents/Activities";
 import Surveys from "@/app/profile/Contents/Surveys";
 export default function ProfilePage({
   params,
@@ -32,8 +31,6 @@ export default function ProfilePage({
   const [activities,setActivities]=useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFollowing, setIsFollowing] =useState(false);
- const [votedSurveyId, setVotedSurveyId] = useState<string | null>(null); // Oy verilen anketin ID’si
-  const [votedChoiceIndex, setVotedChoiceIndex] = useState<number | null>(null); // Oy verilen seçenek index’i
  const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('posts')
  const [isFollowersOpen, setIsFollowersOpen] = useState(false);
   const [isFollowingOpen, setIsFollowingOpen] = useState(false);

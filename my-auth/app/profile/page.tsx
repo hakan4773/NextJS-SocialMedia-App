@@ -9,13 +9,13 @@ import GetSurveys from "../components/getSurveys";
 import Activities from "../components/Activities";
 import Followers from "../components/Followers";
 import Following from "../components/Following";
-import { Post, Survey, UserType } from "../types/user";
-import { set } from "mongoose";
+import { Activity, Post, Survey, UserType } from "../types/user";
 
 export default function ProfilePage() {
 const [userData, setUserData] = useState<UserType | null>(null);
 const [posts, setPosts] = useState<Post[]>([]);
 const [surveys,setSurveys]=useState<Survey[]>([])
+const [activities,setActivities]=useState<Activity[]>([]);
   const [isFollowersOpen, setIsFollowersOpen] = useState(false);
   const [isFollowingOpen, setIsFollowingOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -33,6 +33,7 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
         setUserData(data.user);
         setPosts(data.posts || []);
         setSurveys(data.surveys || [])
+        setActivities(data.activities || []);
       } else {
         console.error("Profil verisi alınamadı:", data.error);
       }
@@ -224,7 +225,11 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
 )
 }
 {activeTab==="activities"  &&
-         <Activities />
+  <>
+  {activities?.map((item: Activity, index: number) => (
+    <Activities key={index} item={item} />
+  ))}
+</>
 
 }  
         </div>

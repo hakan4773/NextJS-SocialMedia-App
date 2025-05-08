@@ -5,16 +5,30 @@ import { format as timeagoFormat } from 'timeago.js';
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
 import {  FiEye, FiMapPin, FiUsers } from 'react-icons/fi';
-import { Activity } from '../types/user';
-import Settings from './Settings';
-import { useAuth } from '../context/AuthContext';
+import { Activity } from '../../types/user';
+import Settings from '../../components/Settings';
+import { useAuth } from '../../context/AuthContext';
 type ActivityProps = {
-  item:Activity;
+  userId?: string;
 };
-function Activities({item}:ActivityProps) {
+function Activities({userId}:ActivityProps) {
 const {user} =useAuth();
-const [activities, setActivities] = useState<Activity[]>(item ? [item] : []);
+const [activities, setActivities] = useState<Activity[]>([]);
 
+useEffect(()=>{
+ const token= localStorage.getItem("token")
+const fetchPosts=async()=>{
+  const url = `/api/users/${userId}`;
+const res=await fetch(url,{
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+})
+const data = await res.json();
+setActivities(data.activities);
+}
+fetchPosts();
+},[])
 
 
 

@@ -36,7 +36,7 @@ const fetchAll=async()=>{
   const merged=[
     ...postRes.data.posts.map((item: { [key: string]: any }) => ({ ...item, type: "post" })),
     ...surveyRes.data.surveys.map((item: { [key: string]: any }) => ({ ...item, type: "survey" })),
-    ...activityRes.data.activities.map((item: { [key: string]: any }) => ({ ...item, type: "activities" })),
+    ...activityRes.data.activities.map((item: { [key: string]: any }) => ({ ...item, type: "activity" })),
   ]
 merged.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 setMergedContent(merged);
@@ -59,7 +59,7 @@ fetchAll();
        {mergedContent.map((item,index) => {
           if (item.type === "post") return (<Posts key={`post-${index}`}  item={item as Post} />);
           if (item.type === "survey") return <GetSurveys key={`survey-${index}`}  item={item as Survey}  />;
-          if (item.type === "activity") return <Activities key={`activity-${index}`}  />;
+          if (item.type === "activity") return <Activities key={`activity-${index}`} item={item as Activity}   />;
         })}
       </div>
 
