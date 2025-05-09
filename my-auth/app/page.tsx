@@ -13,6 +13,7 @@ export default function Home() {
   const [mergedContent, setMergedContent] = useState<MergedItem[]>([]);
 useEffect(()=>{
 const fetchAll=async()=>{
+  try {
   const token=localStorage.getItem("token");
   const [postRes,surveyRes,activityRes]=await Promise.all([
     axios.get("/api/posts",{
@@ -40,12 +41,15 @@ const fetchAll=async()=>{
   ]
 merged.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 setMergedContent(merged);
-
+}
+catch (err: any) {
+  console.error("İçerikler alınamadı:", err);
 }
 
 fetchAll();
-},[])
-  
+}},[])
+
+
   return (
     <div className=" min-h-screen bg-slate-100  py-24 p-4  flex justify-center  ">
       {/* Sol kısım */}
@@ -56,11 +60,16 @@ fetchAll();
       <div className="w-full md:w-1/2 flex flex-col justify-center  max-w-[500px] ">
        <PostCreation />
         {/* buraya bak */}
-       {mergedContent.map((item,index) => {
-          if (item.type === "post") return (<Posts key={`post-${index}`}  item={item as Post} />);
-          if (item.type === "survey") return <GetSurveys key={`survey-${index}`}  item={item as Survey}  />;
-          if (item.type === "activity") return <Activities key={`activity-${index}`} item={item as Activity}   />;
-        })}
+        {mergedContent.length === 0 ? (
+  <div className="text-center text-gray-500 mt-10">Henüz hiç içerik yok.</div>
+) : (
+  mergedContent.map((item, index) => {
+    if (item.type === "post") return <Posts key={`post-${index}`} item={item as Post} />;
+    if (item.type === "survey") return <GetSurveys key={`survey-${index}`} item={item as Survey} />;
+    if (item.type === "activity") return <Activities key={`activity-${index}`} item={item as Activity} />;
+    return null;
+  })
+)}
       </div>
 
       {/* Sağ kısım */}

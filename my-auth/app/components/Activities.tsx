@@ -42,7 +42,8 @@ const [activities, setActivities] = useState<Activity[]>(item ? [item] : []);
             <div>
                          <div className="flex items-center space-x-2">
                            <h3 className="font-semibold text-gray-800">{post.creator.name}</h3>
-                           <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">Takip Ediyor</span>
+                           {Array.isArray(user?.followers) && user.followers.includes(post.creator._id) ? <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">Takip Ediyor</span> : ""}
+
                          </div>
                          <div className="flex items-center space-x-2 text-xs text-gray-500">
                            <span>{"@"+post.creator.email.split('@')[0]}</span>
