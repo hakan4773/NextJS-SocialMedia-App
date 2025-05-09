@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import Interaction from "../users/components/Interaction";
 import { Survey } from "../types/user";
 import Settings from "./Settings";
+import Link from "next/link";
 type SurveyProps = {
   item: Survey;
 };
@@ -61,8 +62,11 @@ console.log(surveys)
                 key={survey._id}
                 className="border  p-4 border-gray-200 bg-white  hover:bg-gray-50  cursor-pointer "
               >
+
                 <div className="flex justify-between items-start">
                   {/* Üst Bilgi - Kullanıcı Bilgileri */}
+                             <Link href={`/users/${item.creator._id}`}>
+                  
                   <div className="flex items-center space-x-3">
                   <div className="relative">
                     <Image
@@ -87,6 +91,7 @@ console.log(surveys)
                                  </div>
                                </div>
                   </div>
+  </Link>
 
                  <Settings index={{ index }} isOwner={survey.creator._id.toString() === user?._id?.toString()}/>
 

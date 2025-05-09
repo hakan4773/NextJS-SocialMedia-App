@@ -12,6 +12,7 @@ export default function Home() {
   type MergedItem = (Post | Survey | Activity) & { type: "post" | "survey" | "activity" };
   const [mergedContent, setMergedContent] = useState<MergedItem[]>([]);
 useEffect(()=>{
+
 const fetchAll=async()=>{
   try {
   const token=localStorage.getItem("token");
@@ -46,8 +47,10 @@ catch (err: any) {
   console.error("İçerikler alınamadı:", err);
 }
 
+
+}
 fetchAll();
-}},[])
+},[])
 
 
   return (

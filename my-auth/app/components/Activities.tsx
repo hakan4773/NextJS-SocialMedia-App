@@ -8,6 +8,7 @@ import {  FiEye, FiMapPin, FiUsers } from 'react-icons/fi';
 import { Activity } from '../types/user';
 import Settings from './Settings';
 import { useAuth } from '../context/AuthContext';
+import Link from 'next/link';
 type ActivityProps = {
   item:Activity;
 };
@@ -29,6 +30,7 @@ const [activities, setActivities] = useState<Activity[]>(item ? [item] : []);
       >
         {/* Üst Bilgi - Kullanıcı Bilgileri */}
         <div className="flex justify-between items-start mb-3">
+        <Link href={`/users/${item.creator._id}`}>
           <div className="flex items-center space-x-3">
             <div className="relative">
               <Image
@@ -53,7 +55,7 @@ const [activities, setActivities] = useState<Activity[]>(item ? [item] : []);
                        </div>
           </div>
 
-          {/* Ayarlar Butonu */}
+  </Link>
         {/* Ayarlar Butonu */}
         <Settings index={{ index }}  isOwner={post.creator._id.toString() === user?._id?.toString()}/>
         </div>

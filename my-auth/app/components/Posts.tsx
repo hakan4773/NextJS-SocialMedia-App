@@ -6,27 +6,32 @@ import Interaction from "../users/components/Interaction";
 import { Post } from "../types/user";
 import Settings from "./Settings";
 import { useAuth } from "../context/AuthContext";
+import Link from "next/link";
 type PostsProps = {
   item  : Post;
 };
 export default function Posts({ item }: PostsProps) {
 const {user}=useAuth();
+
   return (
         <div 
           className="p-5 hover:bg-gray-50  cursor-pointer  bg-white shadow-sm hover:shadow-md transition-shadow duration-400 border border-gray-100"
         >
-          {/* Üst Bilgi - Kullanıcı Bilgileri */}
-          <div className="flex justify-between items-start">
+          {/* Üst Bilgi - Kullanıcı Bilgileri */} 
+           
+          <div className="flex justify-between items-start">   
+           <Link href={`/users/${item.user._id}`}>
             <div className="flex items-center space-x-3">
               <div className="relative">
+            
                 <Image
                   src={item.user.profileImage}
                   alt="Profile"
                   width={44}
                   height={44}
-                  className="rounded-full border-2 border-blue-100"
+                  className="rounded-full border-2 border-blue-100 object-cover  w-11 h-11"
                 />
-                <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1">
+                <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1 ">
                   <FiCheck className="text-white text-xs" />
                 </div>
               </div>
@@ -42,7 +47,7 @@ const {user}=useAuth();
                 </div>
               </div>
             </div>
-  
+  </Link>
          {/* Ayarlar Butonu */}
          <Settings index={{index:item._id }} isOwner={item.user._id.toString() === user?._id?.toString()}/>
           </div>
