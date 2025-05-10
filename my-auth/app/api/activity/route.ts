@@ -42,15 +42,20 @@ const decoded=verifyToken(req);
 }
 
 export async function GET(req:NextRequest) {
-  const decoded=verifyToken(req);
+await connectDB();  
+
+  try {
+    const decoded=verifyToken(req);
   if (!decoded) {
     return NextResponse.json({ message: "Invalid token" }, { status: 401 });
   }
-  try {
-    await connectDB();
-    const activities = await Activity.find({ creator: decoded._id }).sort({ createdAt: -1 }).populate("creator", "_id name email profileImage");
+    const userBody=await Auth.findById( decoded._id).select("following");
+    const userIds = [decoded._id, ...userBody.following];
 
-    return NextResponse.json({ activities }, { status: 200 });
+    const activities = await Activity.find({ creator: { $in: userIds } }).sort({ createdAt: -1 }).populate("creator", "_id name email profileImage");
+  const Myactivity = await Activity.find({ creator: decoded._id }).sort({ createdAt: -1 }).populate("creator", "name email profileImage");
+
+    return NextResponse.json({ activities,Myactivity }, { status: 200 });
   } catch (error:any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }

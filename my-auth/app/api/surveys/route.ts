@@ -56,16 +56,20 @@ export async function GET(req: NextRequest) {
     await connectDB();
     try {
       const decoded = verifyToken(req);
-      const user = decoded?._id;
       if (!decoded) {
         return NextResponse.json({ error: "Yetkilendirme başarısız" }, { status: 401 });
-      }
-     const surveys = await Survey.find({ creator: user,isActive: true }).sort({ createdAt: -1 }).populate('creator', '_id name email profileImage'); ;
-     if (!surveys.length) {
+      }  
+           const userBody=await Auth.findById(decoded._id).select("following");
+           const userIds = [decoded._id, ...userBody.following];
+
+     const surveys = await Survey.find({ creator: { $in: userIds } }).sort({ createdAt: -1 }).populate('creator', '_id name email profileImage'); ;
+      const Mysurveys = await Survey.find({ creator: decoded._id }).sort({ createdAt: -1 }).populate("creator", "_id name email profileImage");
+     
+     if (!surveys || surveys.length === 0) {
       return NextResponse.json({ message: 'Aktif anket bulunamadı', surveys: [] },{status:400});
     }
 
-     return NextResponse.json({surveys},{status:200})
+     return NextResponse.json({surveys,Mysurveys},{status:200})
     }
     catch(error:any){
         return NextResponse.json({ error: error.message }, { status: 500 });
