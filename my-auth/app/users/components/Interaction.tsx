@@ -11,13 +11,22 @@ type InteractionProps = {
 };
 
 function Interaction({ item, type }: InteractionProps) {
-  const {user,setUser}=useAuth();
+  const { user, setUser } = useAuth();
   const [comment, setComment] = useState<Record<number, boolean>>({});
   const [isSaved, setIsSaved] = useState<boolean>(
     Array.isArray(user?.savedPosts) && user?.savedPosts.includes(item._id)
   );
-  const getContent=()=>{
-   return type==="post" ? (item as Post).content  :(item as Survey).question; 
+  const [likes, setLikes] = useState<string[]>(
+    type === "post" && "likes" in item && Array.isArray(item.likes)
+      ? item.likes
+      : []
+  );
+  const [hasLiked, setHasLiked] = useState<boolean>(
+    user ? likes.includes(user._id) : false
+  );
+
+  const getContent = () => {
+    return type === "post" ? (item as Post).content : (item as Survey).question;
   };
   const handleComment = (id: number) => {
     setComment((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -28,11 +37,16 @@ function Interaction({ item, type }: InteractionProps) {
     } else {
       setIsSaved(false);
     }
+
+
+    if (user?._id && Array.isArray(likes)) {
+      setHasLiked(likes.includes(user._id));
+    }
   }, [user, item._id]);
   //Post paylaşım metodu
   const handleShare = (id: string) => {
     const postUrl = `${window.location.origin}/type/${id}`;
-    const content=getContent();
+    const content = getContent();
     if (navigator.share) {
       navigator
         .share({
@@ -47,46 +61,69 @@ function Interaction({ item, type }: InteractionProps) {
   };
 
   //Post kaydetme metodu
-  const handleSavePost =async(postId:string)=>{
+  const handleSavePost = async (postId: string) => {
     if (!postId || postId === "undefined") {
       toast.error("Gönderi ID'si bulunamadı!");
       return;
     }
     const token = localStorage.getItem("token");
-try {
-  const res=await fetch("/api/posts/saved",{
-  method:"POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  },
- 
-body: JSON.stringify({ postId })
-});
-const data=await res.json();
+    try {
+      const res = await fetch("/api/posts/saved", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
 
-if (res.ok) {
-  setUser(prev => {
-    if (!prev) return prev;
-    return {
-      ...prev,
-      savedPosts: data.savedPosts || []
-    };
-  });
-  setIsSaved(!isSaved);
-  toast.success(data.message);
-} 
+        body: JSON.stringify({ postId }),
+      });
+      const data = await res.json();
 
+      if (res.ok) {
+        setUser((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            savedPosts: data.savedPosts || [],
+          };
+        });
+        setIsSaved(!isSaved);
+        toast.success(data.message);
+      } else {
+        toast.error(data.message || "Bir hata oluştu");
+      }
+    } catch (error) {
+      toast.error("post kaydetme başarısız");
+    }
+  };
 
-else {
-  toast.error(data.message || "Bir hata oluştu");
-}
-
-} catch (error) {
-  toast.error("post kaydetme başarısız");
-  
-}
-  }
+  //Post beğenme metodu
+  const handleLike = async (postId: string) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Giriş yapmalısınız!");
+      return;
+    }
+    try {
+      const res = await fetch("/api/posts/likes", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ postId }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setLikes(data.likes);
+        setHasLiked(!hasLiked);
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      toast.error("Beğeni işlemi başarısız");
+    }
+  };
   return (
     <div>
       <div className="mt-4 pt-3 border-t border-gray-100">
@@ -97,7 +134,15 @@ else {
               count: 0,
               color: "hover:text-blue-500",
             },
-            { icon: <FiHeart />, count: 0, color: "hover:text-red-500" },
+            { icon:hasLiked ? (
+              <FiHeart className="text-red-500" />
+            ) : (
+              <FiHeart />
+            ), 
+            count: likes.length,
+              color: hasLiked ? "text-red-500" : "hover:text-red-500",
+             },
+
             { icon: <FiShare />, count: 0, color: "hover:text-green-500" },
             {
               icon: isSaved ? (
@@ -108,16 +153,15 @@ else {
               count: 0,
               color: isSaved ? "text-yellow-500" : "hover:text-yellow-500",
             },
-
           ].map((Icon, i) => (
             <button
               key={i}
               className={`flex items-center space-x-1 text-gray-500 ${Icon.color} transition-colors`}
               onClick={() => {
                 // if (i === 0) handleComment(post?.id);
-                 if (i === 2) handleShare(item._id);
+                if (i === 1) handleLike(item._id);
+                if (i === 2) handleShare(item._id);
                 if (i === 3) handleSavePost(item._id);
-
               }}
             >
               <span className="text-lg">{Icon.icon}</span>

@@ -21,7 +21,7 @@ export interface UserType {
     image?: string;
     createdAt: string;
     comments: string[];
-    likes: number;
+    likes: string[];
     user: { _id: string; name: string; profileImage: string; email: string };
   }
  export interface Choice {
