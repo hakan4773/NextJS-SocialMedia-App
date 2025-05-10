@@ -41,7 +41,6 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
     fetchProfile();
   }, []);
 
-  console.log(posts)
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-700 via-purple-600 to-pink-400  py-24">
       <div className="max-w-4xl mx-auto px-4">

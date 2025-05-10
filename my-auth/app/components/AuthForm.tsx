@@ -34,7 +34,6 @@ const {
 }=useForm<RegisterFormData | LoginFormData>({
 resolver:zodResolver(type==="register" ? registerSchema:loginSchema)
 })
-console.log(errors)
   return (
 
     <form  onSubmit={handleSubmit(onSubmit)} 

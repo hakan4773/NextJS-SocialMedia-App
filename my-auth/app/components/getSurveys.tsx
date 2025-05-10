@@ -46,7 +46,6 @@ function getSurveys({item}:SurveyProps) {
 
   if (loading) return <div>Yükleniyor...</div>;
   // if (error) return <div className="text-red-500">{error}</div>;
-console.log(surveys)
   return (
     <div>
       {surveys.length === 0 ? (

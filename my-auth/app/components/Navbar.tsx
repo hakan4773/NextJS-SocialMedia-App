@@ -41,7 +41,6 @@ else {
   const results = users.filter((user) =>
     user.name.toLowerCase().includes(search.toLowerCase())
   );
-  console.log(results)
   setFilteredUser(results);
 }
 

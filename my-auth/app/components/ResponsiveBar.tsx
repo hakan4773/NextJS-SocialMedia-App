@@ -2,12 +2,10 @@
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { FaBookmark } from 'react-icons/fa'
-import { FaArrowTrendUp } from 'react-icons/fa6'
 import { IoMenu } from 'react-icons/io5'
 import { MdFavoriteBorder } from 'react-icons/md'
 import { SlCalender } from 'react-icons/sl'
 import { getUserDetails } from '../utils/getUsers'
-import { PiDotsThreeBold } from 'react-icons/pi'
 import { UserType } from '../types/user'
 import Followers from './Followers'
 import Following from './Following'
@@ -16,13 +14,10 @@ function ResponsiveBar() {
     
     const [isOpen, setIsOpen] = useState(false);
     const toggleSidebar = () => setIsOpen(!isOpen);
-    const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
     const [userData,setUserData]=useState<UserType |null>()
      const [isFollowersOpen, setIsFollowersOpen] = useState(false);
       const [isFollowingOpen, setIsFollowingOpen] = useState(false);
-    const toggleSetting=(index:any)=>{
-      setOpenSettingIndex(openSettingIndex === index ? null: index)
-    }
+   
      useEffect(()=>{
      
      const fetchData=async()=>{
@@ -32,12 +27,6 @@ function ResponsiveBar() {
      fetchData();
      
      },[])
-      const trends = [
-        { tag: "#Tatil", count: 150,categories:"Tatil" },
-        { tag: "#Yemek", count: 100 ,categories:"Yemek"},
-        { tag: "#Beşiktaş", count: 80 ,categories:"Spor"},
-      ];
-    
   return (
     <div className="relative md:hidden block ">
     <button className="fixed top-2 left-4 z-50  text-white p-3 cursor-pointer ">
