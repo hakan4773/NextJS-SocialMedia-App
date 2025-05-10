@@ -73,7 +73,7 @@ function getSurveys({item}:SurveyProps) {
                                     alt="Profile"
                                     width={44}
                                     height={44}
-                                    className="rounded-full border-2 border-blue-100"
+                                    className="rounded-full border-2 border-blue-100 w-11 h-11 object-cover"
                                   /> </div >
                     <div>
 
