@@ -12,7 +12,8 @@ type InteractionProps = {
 
 function Interaction({ item, type }: InteractionProps) {
   const { user, setUser } = useAuth();
-  const [comment, setComment] = useState<Record<number, boolean>>({});
+  const [comment, setComment] = useState<Record<string, boolean>>({});
+  const [message, setMessage] = useState<string>("");
   const [isSaved, setIsSaved] = useState<boolean>(
     Array.isArray(user?.savedPosts) && user?.savedPosts.includes(item._id)
   );
@@ -28,7 +29,7 @@ function Interaction({ item, type }: InteractionProps) {
   const getContent = () => {
     return type === "post" ? (item as Post).content : (item as Survey).question;
   };
-  const handleComment = (id: number) => {
+  const handleComment = (id: string) => {
     setComment((prev) => ({ ...prev, [id]: !prev[id] }));
   };
   useEffect(() => {
@@ -43,6 +44,34 @@ function Interaction({ item, type }: InteractionProps) {
       setHasLiked(likes.includes(user._id));
     }
   }, [user, item._id]);
+
+  //Yorum ekleme metodu
+  const handleCommentSubmit = async (postId: string, content: string) => {
+    if (!content) {
+      toast.error("Yorum boş olamaz!");
+      return;
+    }
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch("/api/posts/comments", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ postId, content }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message);
+        setMessage(""); 
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Yorum ekleme başarısız");
+    }
+  };
+
   //Post paylaşım metodu
   const handleShare = (id: string) => {
     const postUrl = `${window.location.origin}/type/${id}`;
@@ -160,7 +189,7 @@ function Interaction({ item, type }: InteractionProps) {
               key={i}
               className={`flex items-center space-x-1 text-gray-500 ${Icon.color} transition-colors`}
               onClick={() => {
-                // if (i === 0) handleComment(post?.id);
+                if (i === 0) handleComment(item?._id);
                 if (i === 1) handleLike(item._id);
                 if (i === 2) handleShare(item._id);
                 if (i === 3) handleSavePost(item._id);
@@ -174,22 +203,25 @@ function Interaction({ item, type }: InteractionProps) {
       </div>
 
       {/* Yorum Bölümü */}
-      {/* {comment[post.id] && (
+      {comment[item._id] && (
         <div className="mt-3 pt-3 border-t border-gray-100">
           <div className="flex space-x-2">
             <input
               className="flex-1 border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
               placeholder="Yorum yaz..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
             />
             <button
               type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors text-sm font-medium"
-            >
+              onClick={()=>handleCommentSubmit(item._id, message)}
+           >
               Gönder
             </button>
           </div>
         </div>
-      )} */}
+      )}
     </div>
   );
 }

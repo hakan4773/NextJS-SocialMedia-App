@@ -1,0 +1,34 @@
+import connectDB from "@/app/libs/mongodb";
+import Comments from "@/app/models/Comments";
+import Post from "@/app/models/Post";
+import { verifyToken } from "@/app/utils/jwtUtils";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function POST(req: NextRequest) {
+await connectDB();
+try {  
+    const { postId, content } = await req.json();
+    const decoded=verifyToken(req);
+    const userId = decoded?._id;
+    
+    if (!userId) {
+        return NextResponse.json({ message: "Geçersiz token" }, { status: 401 });
+    }
+        const post = await Post.findById(postId);
+    
+        if (!post) {
+        return NextResponse.json({ message: "Post bulunamadı" }, { status: 404 });
+        }
+        const newComment = await Comments.create({
+            user: userId,
+            post: postId,
+            content,
+          });
+          post.comments.push(newComment._id);
+          await post.save();
+    
+        return NextResponse.json({ message: "Yorum eklendi", post }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ message: "Yorum eklenirken hata oluştu",error }, { status: 500 });
+    }
+}

@@ -13,6 +13,7 @@ duration:{
 }
 creator:mongoose.Types.ObjectId;
 likes: mongoose.Types.ObjectId[];
+comments: mongoose.Types.ObjectId[];
 endDate:Date;
 isActive: boolean;
 createdAt:Date;
@@ -31,6 +32,7 @@ const SurveySchema = new mongoose.Schema(
     },
     creator: { type: mongoose.Schema.Types.ObjectId, ref: 'Auth', required: true },
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Auth" }],
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
     endDate: { type: Date },
     createdAt:{ type: Date },
    isActive: { type: Boolean, default: true },
