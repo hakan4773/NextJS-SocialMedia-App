@@ -17,7 +17,7 @@ function Interaction({ item, type }: InteractionProps) {
     Array.isArray(user?.savedPosts) && user?.savedPosts.includes(item._id)
   );
   const [likes, setLikes] = useState<string[]>(
-    type === "post" && "likes" in item && Array.isArray(item.likes)
+     "likes" in item && Array.isArray(item.likes)
       ? item.likes
       : []
   );
@@ -98,19 +98,21 @@ function Interaction({ item, type }: InteractionProps) {
   };
 
   //Post beğenme metodu
-  const handleLike = async (postId: string) => {
+  const handleLike = async (itemId: string) => {
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("Giriş yapmalısınız!");
       return;
     }
     try {
-      const res = await fetch("/api/posts/likes", {
+
+      const endpoint= type === "post" ? "/api/posts/likes" : "/api/surveys/likes";
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ postId }),
+        body: JSON.stringify({ postId:itemId }),
       });
       const data = await res.json();
       if (res.ok) {

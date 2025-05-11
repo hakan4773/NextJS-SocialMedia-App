@@ -44,6 +44,7 @@ export  interface Survey{
       email:string;
       profileImage:string
     };
+    likes: string[];
     endDate:Date;
     isActive: boolean;
     createdAt:Date;
