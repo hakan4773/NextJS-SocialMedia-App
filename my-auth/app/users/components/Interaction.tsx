@@ -53,7 +53,9 @@ function Interaction({ item, type }: InteractionProps) {
     }
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch("/api/posts/comments", {
+
+      const endpoint = type === "post" ? "/api/posts/comments" : "/api/surveys/comments";
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
