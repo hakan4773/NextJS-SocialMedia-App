@@ -5,6 +5,7 @@ import { IoStatsChartOutline } from 'react-icons/io5'
 import { MdDeleteOutline } from 'react-icons/md'
 import { PiDotsThreeBold } from 'react-icons/pi'
 import { TiPinOutline } from 'react-icons/ti'
+import { toast } from 'react-toastify'
 
 interface SettingsProps {
   index:{ index: string | number} ;
@@ -26,14 +27,37 @@ function Settings({ index:{index}, isOwner }: SettingsProps) {
           setOpenSettingIndex(null);
         }
       };
-
-
       document.addEventListener('mousedown', handleOutsideClick);
       return () => {
         document.removeEventListener("mousedown", handleOutsideClick);
       };
     },[] )
+//post silme işlevi
+    const handleRemove=async(postId:string |number)=>{
+      const confirmDelete = window.confirm("Bu postu silmek istediğinize emin misiniz?");
+      if (!confirmDelete) {
+        return;
+      }
+      const token=localStorage.getItem("token");
+      if(!token){
+        return
+      }
+      const res=await fetch("/api/posts",{
+       method:"DELETE",
+       headers:{
+        "Authorization":`Bearer ${token}`
+       }, 
+       body:JSON.stringify({postId:postId})
+      })
+      if(res.ok){
+        toast.success("Post başarıyla silindi");
+      }
+      else {
+        toast.success("Post  silinemedi")
 
+      }
+      
+    }
     
       
       const ownerOptions = [
@@ -68,7 +92,12 @@ function Settings({ index:{index}, isOwner }: SettingsProps) {
                       <button
                         key={i}
                         className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center space-x-2"
-                      >
+                     onClick={()=>{
+                       if (item.text === "Sil") {
+                       handleRemove(index); 
+      }
+                     }}
+                     >
                         <span>{item.icon}</span>
                         <span>{item.text}</span>
                       </button>

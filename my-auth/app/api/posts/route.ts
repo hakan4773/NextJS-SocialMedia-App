@@ -6,7 +6,7 @@ import path from "path";
 import fs, { existsSync } from 'fs';
 import { writeFile } from "fs/promises";
 import Auth from "@/app/models/auth";
-
+import Comment from "../../models/Comments";
 export async function POST(req: NextRequest) {
     await connectDB();
      try{
@@ -75,4 +75,43 @@ return NextResponse.json({ posts,Myposts},{status:201})
   }
 
 
+}
+export async function DELETE(req: NextRequest) {
+    await connectDB();
+    try {
+      const { postId } = await req.json();
+        const decoded = verifyToken(req);
+        if (!decoded) {
+            return NextResponse.json({ message: "Invalid token" }, { status: 401 });
+        }
+        const post = await Post.findById(postId);
+        if (!post) {
+            return NextResponse.json({ message: "Post not found" }, { status: 404 });
+        }
+        if (post.user.toString() !== decoded._id) {
+            return NextResponse.json({ message: "You are not authorized to delete this post" }, { status: 403 });
+        }
+        // Resim dosyasını sil
+  if (post.image) {
+  const imagePath = path.join(process.cwd(), "public", post.image);
+  console.log("Silinmek istenen resim:", imagePath);
+
+  if (existsSync(imagePath)) {
+    console.log("Dosya bulundu.");
+    fs.unlinkSync(imagePath);
+    console.log("Dosya silindi.");
+  } else {
+    console.log("Dosya bulunamadı.");
+  }
+}
+
+                // 2. yorumları sil 
+await Comment.deleteMany({ post: postId });
+    // 3.postu sil 
+        await Post.findByIdAndDelete(postId);
+            
+        return NextResponse.json({ message: "Post deleted successfully" }, { status: 200 });
+} catch (error:any) {
+        return NextResponse.json({ message: "Post deletion failed", error:error.message }, { status: 500 });
+    }
 }
