@@ -32,3 +32,28 @@ try {
         return NextResponse.json({ message: "Yorum eklenirken hata oluştu",error }, { status: 500 });
     }
 }
+export async function GET(req: NextRequest) {
+    await connectDB();
+    try {
+    const { searchParams } = new URL(req.url);
+    const postId = searchParams.get("postId");
+            const decoded=verifyToken(req);
+        const userId = decoded?._id;
+        
+        if (!userId) {
+            return NextResponse.json({ message: "Geçersiz token" }, { status: 401 });
+        }
+        const post = await Post.findById(postId).populate({
+  path: "comments",
+  populate: { path: "user", select: "name profileImage"  } 
+});
+    
+        if (!post) {
+            return NextResponse.json({ message: "Post bulunamadı" }, { status: 404 });
+        }
+    
+        return NextResponse.json({ message: "Yorumlar alındı", comments:post.comments }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ message: "Yorumlar alınırken hata oluştu", error }, { status: 500 });
+    }
+}

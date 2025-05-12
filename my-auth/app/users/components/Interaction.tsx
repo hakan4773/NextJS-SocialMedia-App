@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { FiBookmark, FiHeart, FiMessageCircle, FiShare } from "react-icons/fi";
-import { Post, Survey } from "@/app/types/user";
+import { CommentType, Post, Survey } from "@/app/types/user";
 import { toast } from "react-toastify";
 import { useAuth } from "@/app/context/AuthContext";
 import { FaBookmark } from "react-icons/fa6";
@@ -13,6 +13,7 @@ type InteractionProps = {
 function Interaction({ item, type }: InteractionProps) {
   const { user, setUser } = useAuth();
   const [comment, setComment] = useState<Record<string, boolean>>({});
+  const [commentList, setCommentList] = useState<CommentType[]>([]);
   const [message, setMessage] = useState<string>("");
   const [isSaved, setIsSaved] = useState<boolean>(
     Array.isArray(user?.savedPosts) && user?.savedPosts.includes(item._id)
@@ -43,7 +44,34 @@ function Interaction({ item, type }: InteractionProps) {
     if (user?._id && Array.isArray(likes)) {
       setHasLiked(likes.includes(user._id));
     }
-  }, [user, item._id]);
+async function GetComment() {
+  const token = localStorage.getItem("token");
+    if (!token) { 
+      toast.error("Giriş yapmalısınız!");
+      return;
+    } 
+
+      try {
+    const endpoint =type === "post" ? `/api/posts/comments?postId=${item._id}` : `/api/surveys/comments?postId=${item._id}`;
+   const res =await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    const data = await res.json();
+        if (res.ok) {
+          setCommentList(data.comments);
+        } else {
+          toast.error(data.message);
+        }
+      
+      } catch(error:any) {
+        toast.error("Yorumları yükleme başarısız");
+      };
+  }
+   GetComment();
+}, []);
 
   //Yorum ekleme metodu
   const handleCommentSubmit = async (postId: string, content: string) => {
@@ -205,25 +233,87 @@ function Interaction({ item, type }: InteractionProps) {
       </div>
 
       {/* Yorum Bölümü */}
-      {comment[item._id] && (
-        <div className="mt-3 pt-3 border-t border-gray-100">
-          <div className="flex space-x-2">
-            <input
-              className="flex-1 border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100"
-              placeholder="Yorum yaz..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
+        {comment[item._id] && (
+  <div className="mt-5 pt-5 border-t border-gray-100">
+    {/* Yorum Yazma Alanı */}
+    <div className="flex items-start gap-3 mb-6">
+      <div className="flex-shrink-0">
+        <img 
+          src={user?.profileImage || "/default-avatar.jpg"} 
+          alt={user?.name}
+          className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
+        />
+      </div>
+      <div className="flex-1 space-y-3">
+        <div className="relative">
+          <input
+            className="w-full border-0 bg-gray-50 rounded-xl px-4 py-3 pr-16 text-sm focus:ring-2 focus:ring-blue-100 focus:bg-white transition-all"
+            placeholder="Bir yorum yazın..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleCommentSubmit(item._id, message)}
+          />
+          <button
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-blue-500 text-white p-1.5 rounded-full hover:bg-blue-600 transition-colors"
+            onClick={() => handleCommentSubmit(item._id, message)}
+            disabled={!message.trim()}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
+            </svg>
+          </button>
+        </div>
+        {message && (
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <span>Hakaret veya rahatsız edici yorumlar yapmayınız</span>
+          </div>
+        )}
+      </div>
+    </div>
+
+    {/* Yorum Listesi */}
+    <div className="space-y-4">
+      {commentList.map((comment) => (
+        <div
+          key={comment._id}
+          className="flex gap-3 group"
+        >
+          <div className="flex-shrink-0">
+            <img 
+              src={comment.user.profileImage|| "/default-avatar.jpg"} 
+              alt={comment.user.name}
+              className="w-8 h-8 rounded-full object-cover border border-gray-200"
             />
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors text-sm font-medium"
-              onClick={()=>handleCommentSubmit(item._id, message)}
-           >
-              Gönder
-            </button>
+          </div>
+          <div className="flex-1">
+            <div className="bg-gray-50 group-hover:bg-gray-100 px-4 py-3 rounded-2xl rounded-tl-none transition-colors">
+              <div className="flex items-baseline gap-2 mb-1">
+                <p className="font-medium text-sm text-gray-900">
+                  {comment.user.name}
+                </p>
+                <span className="text-xs text-gray-400">
+                  {new Date(comment.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </div>
+              <p className="text-gray-700 text-sm">{comment.content}</p>
+            </div>
+            <div className="flex items-center gap-4 mt-1 px-1">
+              <button className="text-xs text-gray-500 hover:text-gray-700">
+                Beğen
+              </button>
+              <button className="text-xs text-gray-500 hover:text-gray-700">
+                Yanıtla
+              </button>
+              <span className="text-xs text-gray-400">
+                {new Date(comment.createdAt).toLocaleDateString()}
+              </span>
+            </div>
           </div>
         </div>
-      )}
+      ))}
+    </div>
+  </div>
+)}
     </div>
   );
 }

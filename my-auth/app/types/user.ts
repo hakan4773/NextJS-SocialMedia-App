@@ -45,6 +45,7 @@ export  interface Survey{
       profileImage:string
     };
     likes: string[];
+    comments: string[];
     endDate:Date;
     isActive: boolean;
     createdAt:Date;
@@ -77,4 +78,13 @@ export  interface Survey{
     following:string[],
     bio:string
   }
- 
+ export type CommentType = {
+  _id: string;
+  content: string;
+  createdAt: string;
+  user: {
+    _id: string;
+    name: string;
+    profileImage: string;
+  };
+};
