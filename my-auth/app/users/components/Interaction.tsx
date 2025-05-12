@@ -32,19 +32,10 @@ function Interaction({ item, type }: InteractionProps) {
   };
   const handleComment = (id: string) => {
     setComment((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
-  useEffect(() => {
-    if (user?.savedPosts && item._id) {
-      setIsSaved(user.savedPosts.includes(item._id));
-    } else {
-      setIsSaved(false);
-    }
-
-
-    if (user?._id && Array.isArray(likes)) {
-      setHasLiked(likes.includes(user._id));
-    }
+  }; 
+  //Yorumları listeleme metodu
 async function GetComment() {
+
   const token = localStorage.getItem("token");
     if (!token) { 
       toast.error("Giriş yapmalısınız!");
@@ -70,6 +61,21 @@ async function GetComment() {
         toast.error("Yorumları yükleme başarısız");
       };
   }
+
+  useEffect(() => {
+    if (user?.savedPosts && item._id) {
+      setIsSaved(user.savedPosts.includes(item._id));
+    } else {
+      setIsSaved(false);
+    }
+
+
+    if (user?._id && Array.isArray(likes)) {
+      setHasLiked(likes.includes(user._id));
+    }
+
+   
+
    GetComment();
 }, []);
 
@@ -92,6 +98,7 @@ async function GetComment() {
       });
       const data = await res.json();
       if (res.ok) {
+         GetComment();
         toast.success(data.message);
         setMessage(""); 
       } else {
@@ -278,10 +285,11 @@ async function GetComment() {
           key={comment._id}
           className="flex gap-3 group"
         >
+
           <div className="flex-shrink-0">
             <img 
-              src={comment.user.profileImage|| "/default-avatar.jpg"} 
-              alt={comment.user.name}
+              src={comment.user?.profileImage|| "/default-avatar.jpg"} 
+              alt={comment.user?.name}
               className="w-8 h-8 rounded-full object-cover border border-gray-200"
             />
           </div>
@@ -309,6 +317,8 @@ async function GetComment() {
               </span>
             </div>
           </div>
+
+          
         </div>
       ))}
     </div>
