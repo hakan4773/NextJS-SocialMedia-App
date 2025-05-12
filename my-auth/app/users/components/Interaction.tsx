@@ -81,7 +81,7 @@ async function GetComment() {
 
   //Yorum ekleme metodu
   const handleCommentSubmit = async (postId: string, content: string) => {
-    if (!content) {
+    if (!content.trim()) {
       toast.error("Yorum boş olamaz!");
       return;
     }

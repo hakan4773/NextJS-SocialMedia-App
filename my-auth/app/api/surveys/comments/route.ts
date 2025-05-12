@@ -43,6 +43,10 @@ export async function GET(req: NextRequest) {
         if (!userId) {
             return NextResponse.json({ message: "Geçersiz token" }, { status: 401 });
         }
+        if (!content) {
+                return NextResponse.json({ message: "Mesaj boş olamaz" }, { status: 401 });
+            }
+               
         const survey = await Survey.findById(postId).populate({
   path: "comments",
   populate: { path: "user", select: "name profileImage"  } 

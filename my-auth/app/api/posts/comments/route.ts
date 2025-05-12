@@ -14,6 +14,9 @@ try {
     if (!userId) {
         return NextResponse.json({ message: "Geçersiz token" }, { status: 401 });
     }
+    if (!content) {
+        return NextResponse.json({ message: "Mesaj boş olamaz" }, { status: 401 });
+    }
         const post = await Post.findById(postId);
     
         if (!post) {
