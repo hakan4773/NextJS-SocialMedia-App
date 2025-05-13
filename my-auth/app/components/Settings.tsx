@@ -44,7 +44,11 @@ function Settings({ postId, isOwner,type }: SettingsProps) {
       if(!token){
         return
       }
-      const endpoint = type === "post" ? "/api/posts" : "/api/surveys";
+     const endpoint = type === "post"
+  ? "/api/posts"
+  : type === "survey"
+    ? "/api/surveys"
+    : "/api/activity";
       const res=await fetch(endpoint,{
        method:"DELETE",
        headers:{
