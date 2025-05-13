@@ -8,11 +8,12 @@ import { TiPinOutline } from 'react-icons/ti'
 import { toast } from 'react-toastify'
 
 interface SettingsProps {
-  index:{ index: string | number} ;
+  postId:string | number; 
   isOwner: boolean; 
+  type: "post" | "survey" |"activities";
 }
 
-function Settings({ index:{index}, isOwner }: SettingsProps) {
+function Settings({ postId, isOwner,type }: SettingsProps) {
     const [openSettingIndex, setOpenSettingIndex] = useState<number | string |null>(null);
   //Menüyü açma işlevi için tıklama olayını dinleme
     const handleSettingsToggle = (index: string | number) => {
@@ -32,6 +33,7 @@ function Settings({ index:{index}, isOwner }: SettingsProps) {
         document.removeEventListener("mousedown", handleOutsideClick);
       };
     },[] )
+
 //post silme işlevi
     const handleRemove=async(postId:string |number)=>{
       const confirmDelete = window.confirm("Bu postu silmek istediğinize emin misiniz?");
@@ -42,7 +44,8 @@ function Settings({ index:{index}, isOwner }: SettingsProps) {
       if(!token){
         return
       }
-      const res=await fetch("/api/posts",{
+      const endpoint = type === "post" ? "/api/posts" : "/api/surveys";
+      const res=await fetch(endpoint,{
        method:"DELETE",
        headers:{
         "Authorization":`Bearer ${token}`
@@ -54,12 +57,8 @@ function Settings({ index:{index}, isOwner }: SettingsProps) {
       }
       else {
         toast.success("Post  silinemedi")
-
       }
-      
     }
-    
-      
       const ownerOptions = [
         { icon: <MdDeleteOutline className="text-red-500" />, text: "Sil" },
         { icon: <CiEdit />, text: "Düzenle" },
@@ -74,19 +73,17 @@ function Settings({ index:{index}, isOwner }: SettingsProps) {
       ];
       const options = isOwner ? ownerOptions : otherUserOptions;
 
-
-
   return (
    
        <div className="relative " >
                     <button
-                      onClick={() => handleSettingsToggle(index)}
+                      onClick={() => handleSettingsToggle(postId)}
                       className="p-1 rounded-full hover:bg-gray-100 text-gray-500 settings-button"
                     >
                       <PiDotsThreeBold size={20} />
                     </button>
 
-                    {openSettingIndex === index && ( 
+                    {openSettingIndex === postId && ( 
                     <div className="absolute right-0 top-8 mt-1 w-48 bg-white rounded-md shadow-xl z-50 border border-gray-100 settings-menu"   >
                     {options.map((item, i) => (
                       <button
@@ -94,7 +91,7 @@ function Settings({ index:{index}, isOwner }: SettingsProps) {
                         className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center space-x-2"
                      onClick={()=>{
                        if (item.text === "Sil") {
-                       handleRemove(index); 
+                       handleRemove(postId); 
       }
                      }}
                      >

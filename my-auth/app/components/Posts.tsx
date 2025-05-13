@@ -49,7 +49,7 @@ const {user}=useAuth();
             </div>
   </Link>
          {/* Ayarlar Butonu */}
-         <Settings index={{index:item._id }} isOwner={item.user._id.toString() === user?._id?.toString()}/>
+         <Settings postId={item._id} type="post" isOwner={item.user._id.toString() === user?._id?.toString()}/>
           </div>
   
           {/* Post İçeriği */}

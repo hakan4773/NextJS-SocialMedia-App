@@ -66,7 +66,7 @@ const Posts = ({ userId}: PostsProps) => {
               </div>
     
            {/* Ayarlar Butonu */}
-           <Settings index={{ index }} isOwner={post.user._id.toString() === user?._id?.toString()}/>
+           <Settings postId={ post._id} type={"post"} isOwner={post.user._id.toString() === user?._id?.toString()}/>
             </div>
     
             {/* Post İçeriği */}

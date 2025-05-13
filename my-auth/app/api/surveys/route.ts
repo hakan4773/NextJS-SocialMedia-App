@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import Survey from "@/app/models/Survey";
 import { verifyToken } from "@/app/utils/jwtUtils";
 import Auth from "@/app/models/auth";
+import path from "path";
+import fs, { existsSync } from 'fs';
+import Comment from "../../models/Comments";
 
 export async function POST(req: NextRequest) {
     await connectDB();
@@ -73,5 +76,40 @@ export async function GET(req: NextRequest) {
     }
     catch(error:any){
         return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}
+export async function DELETE(req: NextRequest) {
+    await connectDB();
+    try {
+      const { postId } = await req.json();
+        const decoded = verifyToken(req);
+        if (!decoded) {
+            return NextResponse.json({ message: "Invalid token" }, { status: 401 });
+        }
+        const survey = await Survey.findById(postId);
+        if (!survey) {
+            return NextResponse.json({ message: "survey not found" }, { status: 404 });
+        }
+        if (survey.creator.toString() !== decoded._id) {
+            return NextResponse.json({ message: "You are not authorized to delete this survey" }, { status: 403 });
+        }
+        // Resim dosyasını sil
+  if (survey.image) {
+  const imagePath = path.join(process.cwd(), "public", survey.image);
+  if (existsSync(imagePath)) {
+    fs.unlinkSync(imagePath);
+  } else {
+    console.log("Dosya bulunamadı.");
+  }
+}
+
+                // 2. yorumları sil 
+await Comment.deleteMany({ survey: postId });
+    // 3.postu sil 
+        await Survey.findByIdAndDelete(postId);
+            
+        return NextResponse.json({ message: "Survey deleted successfully" }, { status: 200 });
+} catch (error:any) {
+        return NextResponse.json({ message: "Survey deletion failed", error:error.message }, { status: 500 });
     }
 }

@@ -68,7 +68,7 @@ fetchPosts();
 
           {/* Ayarlar Butonu */}
         {/* Ayarlar Butonu */}
-        <Settings index={{ index }}  isOwner={post.creator._id.toString() === user?._id?.toString()}/>
+        <Settings type={"activities"} postId={post._id}  isOwner={post.creator._id.toString() === user?._id?.toString()}/>
         </div>
 
         {/* Etkinlik Görseli */}

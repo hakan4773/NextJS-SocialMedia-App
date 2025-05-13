@@ -51,6 +51,7 @@ export  interface Survey{
     createdAt:Date;
   }
  export interface Activity{
+    _id:string;
     activityName: string;
       activityType: string;
       description: string;

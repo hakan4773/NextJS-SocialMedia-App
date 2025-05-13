@@ -57,7 +57,7 @@ const [activities, setActivities] = useState<Activity[]>(item ? [item] : []);
 
   </Link>
         {/* Ayarlar Butonu */}
-        <Settings index={{ index }}  isOwner={post.creator._id.toString() === user?._id?.toString()}/>
+        <Settings postId={post._id} type={"activities"}  isOwner={post.creator._id.toString() === user?._id?.toString()}/>
         </div>
 
         {/* Etkinlik Görseli */}
