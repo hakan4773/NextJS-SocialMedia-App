@@ -31,7 +31,8 @@ const token =jwt.sign({
     bio:user.bio,
     profileImage:user.profileImage,
     email:user.email,
-    savedPosts:user.savedPosts,},
+    savedPosts:user.savedPosts,
+    savedActivity:user.savedActivity,},
    
     process.env.JWT_SECRET!,
     {

@@ -10,6 +10,7 @@ export interface UserType {
   activities:string[];
   profileImage: string;
   savedPosts:string[];
+  savedActivity:string[];
   followers: string[];
   following: string[];
 }

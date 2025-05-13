@@ -11,6 +11,7 @@ import mongoose from 'mongoose';
   surveys: mongoose.Types.ObjectId[];
   activities: mongoose.Types.ObjectId[];
   savedPosts: mongoose.Types.ObjectId[];
+  savedActivity: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
  } 
@@ -27,8 +28,7 @@ const AuthSchema = new mongoose.Schema({
     surveys: [{ type: mongoose.Schema.Types.ObjectId, ref: "Survey" }],
     activities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity" }],
     savedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
-
-
+    savedActivity: [{ type: mongoose.Schema.Types.ObjectId, ref: "Activity" }],
     createdAt:{type:Date,default:Date.now}
 });
 

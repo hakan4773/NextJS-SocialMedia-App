@@ -4,22 +4,51 @@ import React, { useEffect, useState } from 'react'
 import { format as timeagoFormat } from 'timeago.js';
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
-import {  FiEye, FiMapPin, FiUsers } from 'react-icons/fi';
+import { FiMapPin, FiSave, FiUsers } from 'react-icons/fi';
 import { Activity } from '../types/user';
 import Settings from './Settings';
 import { useAuth } from '../context/AuthContext';
 import Link from 'next/link';
+import { toast } from 'react-toastify';
 type ActivityProps = {
   item:Activity;
 };
 function Activities({item}:ActivityProps) {
-const {user} =useAuth();
+const {user,setUser} =useAuth();
 const [activities, setActivities] = useState<Activity[]>(item ? [item] : []);
+const [savedActivities, setSavedActivities] = useState<boolean>(
+   Array.isArray(user?.savedActivity) && user?.savedActivity.includes(item._id));
 
 
 
 
-
+const fetchSavedActivities = async (postId: string) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return;
+  }
+  const res = await fetch("/api/activity/saved", {
+    method: "POST",
+    headers: {   
+     Authorization: `Bearer ${token}`,
+},
+    body: JSON.stringify({ postId}),
+})
+  if (res.ok) {
+    const data = await res.json();
+    setSavedActivities(!savedActivities);
+setUser((prevUser) => {
+  if (!prevUser) return prevUser;
+  return {
+    ...prevUser,
+    savedActivity: data.savedActivity || []
+  };
+});
+    toast.success("Etkinlik başarıyla kaydedildi");
+  } else {
+    console.error("Failed to fetch saved activities");
+  }
+}
   return (
 <div className="space-y-6">
   {activities && activities.length > 0 ? (
@@ -102,9 +131,15 @@ const [activities, setActivities] = useState<Activity[]>(item ? [item] : []);
               <span>{20} katılımcı</span>
             </div>
             
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors flex items-center">
-              <FiEye className="mr-2" />
-              Etkinliği Görüntüle
+            <button 
+            className={savedActivities ? `bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full text-sm font-medium 
+              transition-colors flex items-center` :
+              `bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-medium 
+              transition-colors flex items-center` }
+            onClick={()=>fetchSavedActivities(post._id)}
+            >
+              <FiSave className="mr-2" />
+             {savedActivities ?  "Kayıtlısınız":"Etkinliğe Kaydol"  } 
             </button>
           </div>
         </div>
