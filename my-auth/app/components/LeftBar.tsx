@@ -67,7 +67,7 @@ Followers
 <div className='w-full bg-white rounded-md shadow-md '>
 <ul className='p-4  space-y-3 text-sm'>
     <li className='flex  space-x-4 hover:bg-gray-50 p-2 '><FaBookmark size={20} className='text-blue-500'/><Link href={"/Bookmark"} className='transition-colors'>Kaydedilenler </Link></li>
-    <li className='flex  space-x-4 hover:bg-gray-50  p-2  '><SlCalender size={20} className='text-blue-500' /><Link href={"/etkinlik"} className='transition-colors'>Etkinliklerim </Link></li>
+    <li className='flex  space-x-4 hover:bg-gray-50  p-2  '><SlCalender size={20} className='text-blue-500' /><Link href={"/Bookmark/Activities"} className='transition-colors'>Etkinliklerim </Link></li>
     <li className='flex  space-x-4 hover:bg-gray-50  p-2 '><MdFavoriteBorder size={20} className='text-blue-500' /><Link href={"/interest"} className='transition-colors'>İlgi Alanlarım </Link></li>
 
 

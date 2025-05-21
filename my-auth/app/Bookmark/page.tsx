@@ -93,7 +93,7 @@ function Bookmark() {
                     </div>
                   </div>
 
-                  <Settings index={{ index }} isOwner={(item as Post).user._id.toString() === user?._id?.toString()} />
+                  <Settings postId={(item as Post)._id} isOwner={(item as Post).user._id.toString() === user?._id?.toString()} type="post" />
                 </div>
 
                 <div className="mt-3">
@@ -152,7 +152,7 @@ function Bookmark() {
                       </p>
                     </div>
                   </div>
-                  <Settings index={{ index }} isOwner={(item as Survey).creator._id.toString() === user?._id?.toString()} />
+                  <Settings postId={(item as Survey)._id} isOwner={(item as Survey).creator._id.toString() === user?._id?.toString()} type="survey"/>
                 </div>
 
                 <h2 className="pt-4 ml-2">{(item as Survey).question}</h2>

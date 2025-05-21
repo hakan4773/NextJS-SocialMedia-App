@@ -22,8 +22,6 @@ const { postId } = await req.json();
                     { status: 404 }
                   );
                 }
-console.log("USER", user);
-
         let updateUser;
         const isAlreadySaved = user && user.savedActivity.includes(postId);
         if(isAlreadySaved){
@@ -60,3 +58,41 @@ console.log("USER", user);
       } 
     }
 
+    export async function GET(req:NextRequest) {
+        await connectDB();
+        try {
+            const decoded=verifyToken(req);
+            const userID = decoded?._id;
+            if (!userID) {
+              return NextResponse.json(
+                { message: "kullanıcı bulunamadı!" },
+                { status: 404 }
+              );
+            }
+             const user = await Auth.findById(userID).populate({
+        path: 'savedActivity',
+        populate: {
+          path: 'creator',
+          select: 'name email profileImage'
+        }
+      });
+                if (!user) {
+                  return NextResponse.json(
+                    { success: false, message: "Kullanıcı bulunamadı" },
+                    { status: 404 }
+                  );
+                }
+
+               return NextResponse.json(
+                    { success: true,savedActivities: user.savedActivity 
+},  
+                    { status: 200 }
+                  );
+        } catch (error:any) {
+            console.error("Error in getting activity:", error);
+            return NextResponse.json(
+              { success: false, message: "Etkinlik Getirilemedi" ,error: error.message},
+              { status: 500 }
+            );
+          }
+        }

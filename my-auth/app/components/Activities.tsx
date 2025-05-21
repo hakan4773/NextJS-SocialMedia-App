@@ -44,11 +44,14 @@ setUser((prevUser) => {
     savedActivity: data.savedActivity || []
   };
 });
-    toast.success("Etkinlik başarıyla kaydedildi");
+    toast.success(data.message);
   } else {
     console.error("Failed to fetch saved activities");
   }
 }
+
+
+
   return (
 <div className="space-y-6">
   {activities && activities.length > 0 ? (
