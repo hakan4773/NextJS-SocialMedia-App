@@ -18,8 +18,7 @@ const {user,setUser} =useAuth();
 const [activities, setActivities] = useState<Activity[]>(item ? [item] : []);
 const [savedActivities, setSavedActivities] = useState<boolean>(
    Array.isArray(user?.savedActivity) && user?.savedActivity.includes(item._id));
-
-
+ const [saveCount, setSaveCount] = useState<number>(0);
 
 
 const fetchSavedActivities = async (postId: string) => {
@@ -37,11 +36,15 @@ const fetchSavedActivities = async (postId: string) => {
   if (res.ok) {
     const data = await res.json();
     setSavedActivities(!savedActivities);
+
+    const userCount = data.subscribeUsers?.length || 0;
+    setSaveCount(userCount);
 setUser((prevUser) => {
   if (!prevUser) return prevUser;
   return {
     ...prevUser,
-    savedActivity: data.savedActivity || []
+    savedActivity: data.savedActivity || [],
+    subscribeUsers: data.subscribeUsers || [],
   };
 });
     toast.success(data.message);
@@ -49,8 +52,7 @@ setUser((prevUser) => {
     console.error("Failed to fetch saved activities");
   }
 }
-
-
+console.log("subscribe: " ,+ item.subscribeUsers.length)
 
   return (
 <div className="space-y-6">
@@ -131,7 +133,7 @@ setUser((prevUser) => {
           <div className="flex justify-between items-center pt-2">
             <div className="flex items-center text-sm text-gray-500">
               <FiUsers className="mr-1" />
-              <span>{20} katılımcı</span>
+              <span>{saveCount} katılımcı</span>
             </div>
             
             <button 

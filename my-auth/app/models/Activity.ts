@@ -1,4 +1,3 @@
-import { create } from "domain";
 import mongoose, { Document } from "mongoose";
 
 export interface ActivityProps extends Document {
@@ -10,6 +9,7 @@ export interface ActivityProps extends Document {
     hours: number;
     minutes: number;
   };
+  subscribeUsers: mongoose.Types.ObjectId[];
   startDate: Date;
   isActive: boolean;
   createdAt:Date;
@@ -23,6 +23,8 @@ const ActivitySchema=new mongoose.Schema({
       hours: { type: Number, min: 0, max: 23, default: 0 },
       minutes: { type: Number, min: 0, max: 59, default: 0 },
     },
+    subscribeUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Auth' }],
+
     startDate: { type: Date, required: true },
         isActive: { type: Boolean, default: true },
         createdAt:{type:Date,default:Date.now}

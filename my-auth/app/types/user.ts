@@ -66,6 +66,7 @@ export  interface Survey{
         hours: number;
         minutes: number;
       };
+      subscribeUsers: string[];
       startDate: Date;
       isActive: boolean;
       createdAt:Date;

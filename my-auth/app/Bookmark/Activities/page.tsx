@@ -89,8 +89,8 @@ const [activities, setActivities] = useState<Activity[]>([]);
 
            <div className="space-y-2">
           <h3 className="font-bold text-lg text-gray-900">{item?.activityName}</h3>
-          
-          <div className="flex items-center text-sm text-gray-600">
+          <div className="flex  items-center text-sm text-gray-600">
+
             <FiMapPin className="mr-2 text-gray-400" />
             <span>Etkinlik Yeri: <b className="text-gray-800">{item.activityType}</b></span>
           </div>
@@ -106,16 +106,7 @@ const [activities, setActivities] = useState<Activity[]>([]);
                         <span>{20} katılımcı</span>
                       </div>
                       
-                      <button 
-                      className={activities ? `bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full text-sm font-medium 
-                        transition-colors flex items-center` :
-                        `bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-medium 
-                        transition-colors flex items-center` }
-        
-                      >
-                        <FiSave className="mr-2" />
-                       {activities ?  "Kayıtlısınız":"Etkinliğe Kaydol"  } 
-                      </button>
+              
                     </div>
 
             </div>
