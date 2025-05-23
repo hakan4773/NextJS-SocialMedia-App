@@ -57,14 +57,7 @@ export default function Navbar() {
   }, 300);
 };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
-        <p className="text-gray-500 mt-4">Yükleniyor...</p>
-      </div>
-    );
-  }
+
 
   return (
     <header className="bg-gradient-to-r from-indigo-500 to-purple-600 shadow-md fixed top-0 w-full z-50">

@@ -11,10 +11,12 @@ import { Activity, Post, Survey } from "./types/user";
 export default function Home() {
   type MergedItem = (Post | Survey | Activity) & { type: "post" | "survey" | "activity" };
   const [mergedContent, setMergedContent] = useState<MergedItem[]>([]);
+  const [loading, setLoading] = useState(true);
 useEffect(()=>{
 
 const fetchAll=async()=>{
   try {
+  setLoading(true);
   const token=localStorage.getItem("token");
   const [postRes,surveyRes,activityRes]=await Promise.all([
     axios.get("/api/posts",{
@@ -31,7 +33,9 @@ const fetchAll=async()=>{
       headers: {
         Authorization: `Bearer ${token}`,
       },
+
     }),
+
 
   ]);
 
@@ -46,13 +50,23 @@ setMergedContent(merged);
 catch (err: any) {
   console.error("İçerikler alınamadı:", err);
 }
+finally {
+  setLoading(false);
+}
 
 
 }
 fetchAll();
 },[])
 
-
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+        <p className="text-gray-500 mt-4">Yükleniyor...</p>
+      </div>
+    );
+  }
   return (
     <div className=" min-h-screen bg-slate-100  py-24 p-4  flex justify-center  ">
       {/* Sol kısım */}
