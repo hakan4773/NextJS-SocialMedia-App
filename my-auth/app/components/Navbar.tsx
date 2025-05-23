@@ -50,12 +50,12 @@ export default function Navbar() {
     }
   }, [search, users]);
 
-  const handleBlur = (e: any) => {
-    if (!e.relatedTarget || !e.relatedTarget.closest(".filter-container")) {
-      setSearch("");
-      setFilteredUser([]);
-    }
-  };
+  const handleBlur = () => {
+  setTimeout(() => {
+    setSearch("");
+    setFilteredUser([]);
+  }, 300);
+};
 
   if (loading) {
     return (
