@@ -15,7 +15,7 @@ function page() {
     const [searchTerm,setSearchTerm]=useState<string>("");
   const [filter,setFilter]=useState("");
   const [openSettingIndex, setOpenSettingIndex] = useState<number | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
  const toggleSetting=(index:any)=>{
     setOpenSettingIndex(openSettingIndex === index ? null: index)
  }
@@ -23,6 +23,7 @@ function page() {
 
 useEffect(() => {
     const fetchProfile = async () => {
+      setLoading(true);
       const token = localStorage.getItem("token");
       if (!token) return;
       const res = await fetch("/api/users", {
@@ -61,8 +62,13 @@ useEffect(() => {
     const sortedTags = Object.entries(tagFrequency).sort((a, b) => b[1] - a[1]);
 
 
-  if (loading) {
-    return <div className="p-4 bg-white rounded-lg shadow-md h-full">Yükleniyor...</div>;
+   if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+        <p className="text-gray-500 mt-4">Yükleniyor...</p>
+      </div>
+    );
   }
   return (
     <div className="min-h-screen flex justify-center items-start bg-gray-50 py-24 px-4">

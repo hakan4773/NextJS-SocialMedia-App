@@ -14,11 +14,12 @@ function page() {
     console.log(slug)
     const { user } = useAuth();
     const [posts, setPosts] = React.useState([]);
-
+    const [loading, setLoading] = React.useState(false);
     useEffect(() => {
         if (!slug) return;
     
         const fetchPostsByTag = async () => {
+          setLoading(true)
           try {
             const res = await fetch("/api/posts", {
               method: "GET",
@@ -32,6 +33,7 @@ function page() {
                 post.tags.includes(`#${slug}`)
               );
               setPosts(postsWithTag);
+              setLoading(false);
             } else {
               console.error("Postlar alınamadı:", data.error);
             }
@@ -42,9 +44,16 @@ function page() {
         } 
     fetchPostsByTag();
     },[])
+ if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+        <p className="text-gray-500 mt-4">Yükleniyor...</p>
+      </div>
+    );
+  }
 
-console.log(posts)
-  return (
+return (
 <div className="flex justify-center py-24">
   <div className="w-full max-w-2xl">
 
@@ -77,7 +86,7 @@ console.log(posts)
               </div>
     
            {/* Ayarlar Butonu */}
-           <Settings index={{ index }} isOwner={post.user._id.toString() === user?._id?.toString()}/>
+           <Settings postId={post._id} type='post'  isOwner={post.user._id.toString() === user?._id?.toString()}/>
             </div>
 
   <p className="mt-2 ">{post.content}</p>
