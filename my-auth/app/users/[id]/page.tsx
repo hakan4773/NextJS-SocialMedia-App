@@ -29,7 +29,7 @@ export default function ProfilePage({
   const [posts, setPosts] = useState<Post[]>([]);
   const [surveys,setSurveys]=useState<Survey[]>([]);
   const [activities,setActivities]=useState<Activity[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isFollowing, setIsFollowing] =useState(false);
  const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('posts')
  const [isFollowersOpen, setIsFollowersOpen] = useState(false);
@@ -38,6 +38,7 @@ export default function ProfilePage({
   {/*Kullanıcı bilgisini alma */}
   useEffect(() => {
     const fetchProfile = async () => {
+      setLoading(true);
       if (!id) {
         console.error("No ID provided in the URL.");
         setLoading(false);
@@ -65,6 +66,7 @@ export default function ProfilePage({
   }, [id]);
 
 
+
   {/*Kullanıcı takip etme */}
   const handleFollow = async () => {
     const token = localStorage.getItem("token");
@@ -87,7 +89,14 @@ export default function ProfilePage({
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+        <p className="text-gray-500 mt-4">Yükleniyor...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-700 via-purple-600 to-pink-400  py-24">
