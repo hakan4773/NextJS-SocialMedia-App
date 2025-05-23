@@ -20,9 +20,10 @@ const [activities,setActivities]=useState<Activity[]>([]);
   const [isFollowingOpen, setIsFollowingOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('posts');
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchProfile = async () => {
+      setLoading(true);
       const token = localStorage.getItem("token");
       if (!token) return;
       const res = await fetch("/api/profile", {
@@ -34,6 +35,7 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
         setPosts(data.posts || []);
         setSurveys(data.surveys || [])
         setActivities(data.activities || []);
+        setLoading(false);
       } else {
         console.error("Profil verisi alınamadı:", data.error);
       }
