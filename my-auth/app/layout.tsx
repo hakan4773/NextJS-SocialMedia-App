@@ -13,18 +13,19 @@ export default function RootLayout({
   
   return (
     <html lang="en">
-      <Suspense fallback={<Loading />}>
       <body>
       
          <AuthProvider> 
+      <Suspense fallback={<Loading />}>
           
         <Navbar />
         <ToastContainer  position="top-right"  />
         {children}
+      </Suspense>
+
          </AuthProvider>
        
       </body>
-      </Suspense>
     </html>
   );
 }

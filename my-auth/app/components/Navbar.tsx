@@ -14,46 +14,57 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [notification, setNotification] = useState(false);
   const { user, logout } = useAuth();
-   const [users,setUsers]=useState<UserType[]>([])
-   const [search, setSearch] = useState("");
-   const [filteredUsers,setFilteredUser]=useState<UserType[]>([])
+  const [users, setUsers] = useState<UserType[]>([]);
+  const [search, setSearch] = useState("");
+  const [filteredUsers, setFilteredUser] = useState<UserType[]>([]);
+  const [loading, setLoading] = useState(false);
+
   //Tüm kullanıcıları getir
-   useEffect(() => {
+  useEffect(() => {
     const fetchUsers = async () => {
+          setLoading(true);
       try {
         const res = await fetch("/api/users");
         const data = await res.json();
-        if (res.ok) setUsers(data.users);
+        if (res.ok)
+           setUsers(data.users);
       } catch (error) {
         console.error("Kullanıcılar yüklenirken hata oluştu:", error);
       }
+       finally {
+      setLoading(false);
+    }
     };
     fetchUsers();
   }, []);
-console.log(users)
+  console.log(users);
   //Aramaya göre filtreleme
-useEffect(()=>{
-if(!search){
-  setFilteredUser([])
-}
+  useEffect(() => {
+    if (!search) {
+      setFilteredUser([]);
+    } else {
+      const results = users.filter((user) =>
+        user.name.toLowerCase().includes(search.toLowerCase())
+      );
+      setFilteredUser(results);
+    }
+  }, [search, users]);
 
-else {
-  const results = users.filter((user) =>
-    user.name.toLowerCase().includes(search.toLowerCase())
-  );
-  setFilteredUser(results);
-}
+  const handleBlur = (e: any) => {
+    if (!e.relatedTarget || !e.relatedTarget.closest(".filter-container")) {
+      setSearch("");
+      setFilteredUser([]);
+    }
+  };
 
-
-},[search,users])
-
-
-const handleBlur = (e:any) => {
-  if (!e.relatedTarget || !e.relatedTarget.closest(".filter-container")) {
-    setSearch("");
-    setFilteredUser([]);
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+        <p className="text-gray-500 mt-4">Yükleniyor...</p>
+      </div>
+    );
   }
-};
 
   return (
     <header className="bg-gradient-to-r from-indigo-500 to-purple-600 shadow-md fixed top-0 w-full z-50">
@@ -81,18 +92,14 @@ const handleBlur = (e:any) => {
               <FiSearch className="text-gray-400" />
             </div>
             <input
-            placeholder="Kullanıcı ara..."
-            value={search}
-            onChange={(e)=>setSearch(e.target.value)} 
-            onBlur={handleBlur}
-                type="text"
+              placeholder="Kullanıcı ara..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onBlur={handleBlur}
+              type="text"
               className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
             />
-{search && (
-  <FilterUsers filteredUsers={filteredUsers} />
-) }
-
-
+            {search && <FilterUsers filteredUsers={filteredUsers} />}
           </div>
         </div>
 
