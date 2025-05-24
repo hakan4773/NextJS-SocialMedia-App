@@ -19,13 +19,14 @@ function ResponsiveBar() {
       const [isFollowingOpen, setIsFollowingOpen] = useState(false);
    
      useEffect(()=>{
-     
+       if (typeof window !== "undefined") {
+
      const fetchData=async()=>{
      const userData=await getUserDetails();
      setUserData(userData.user)
      }
      fetchData();
-     
+    }
      },[])
   return (
     <div className="relative md:hidden block ">

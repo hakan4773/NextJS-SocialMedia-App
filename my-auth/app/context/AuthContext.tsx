@@ -40,11 +40,16 @@ export default function AuthProvider({ children }: AuthProviderProps) {
                 setUser(null);
               }
             })
-            .catch((err) => console.error("Fetch error:", err));
+          .catch((err) => {
+        console.error("Fetch error:", err);
+        setUser(null);
+      })
+      .finally(() => {
+        setLoading(false); 
+      });
         } else {
           setUser(null);
         }
-        setLoading(false);
       }, []);
       
     const login = (userData:UserType) => {

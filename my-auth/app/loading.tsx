@@ -1,16 +1,11 @@
 "use client"
 import React from 'react'
-import { ThreeDot } from 'react-loading-indicators'
-import { useAuth } from './context/AuthContext'
-
 function loading() {
-const {loading}=useAuth();
   return (  
-    <div className="flex justify-center items-center h-screen">
-      {loading && (
-  <ThreeDot variant="bounce" color="#32cd32" size="medium" text="" textColor="" />
-  )}
-  </div>
+   <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500">
+        </div>
+              </div>
   )
 }
 

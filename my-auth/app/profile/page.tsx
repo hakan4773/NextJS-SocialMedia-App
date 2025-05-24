@@ -42,6 +42,14 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
     };
     fetchProfile();
   }, []);
+  
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-700 via-purple-600 to-pink-400  py-24">

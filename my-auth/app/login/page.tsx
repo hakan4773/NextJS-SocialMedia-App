@@ -5,7 +5,6 @@ import AuthForm from '../components/AuthForm'
 import { LoginFormData } from '../types/auth';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
-import { ThreeDot } from "react-loading-indicators";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie"
@@ -37,16 +36,16 @@ function page() {
     const verifyResponse = await fetch("/api/protected", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         "Authorization": `Bearer ${result.token}`,
       },
     });
     const verifyResult = await verifyResponse.json();
 
     if (verifyResponse.ok && verifyResult.user) {
-      setLoading(false)
       login(verifyResult.user);
       router.push("/");
+      setLoading(false)
+
     } 
   } else {
     toast.error(result.message || "Login failed ❌");
@@ -59,13 +58,14 @@ function page() {
 
 
 };
-if(loading){
 
-  return(
-    <div className="flex items-center justify-center h-screen">
-<ThreeDot variant="bounce" color="#32cd32" size="medium" text="" textColor="" />  </div>
-  )
-}
+ if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
 
@@ -78,8 +78,6 @@ if(loading){
     <div className="pt-6 w-full text-center "> 
        <h1 className='text-3xl'>Login</h1>
            <AuthForm type="login" onSubmit={handleSubmit} />
-        
-        
     </div>
     </motion.div>
   )
