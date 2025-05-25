@@ -7,6 +7,7 @@ import fs, { existsSync } from 'fs';
 import { writeFile } from "fs/promises";
 import Auth from "@/app/models/auth";
 import Comment from "../../models/Comments";
+import Notifications from "@/app/models/Notifications";
 export async function POST(req: NextRequest) {
     await connectDB();
      try{
@@ -42,9 +43,23 @@ fs.mkdirSync(uploadDir,{recursive:true})
         await newPost.save();
         await Auth.findByIdAndUpdate(
           decoded._id,
-          { $push: { posts: newPost._id } }, // Yeni postun ID’sini ekle
+          { $push: { posts: newPost._id } },
           { new: true }
         );
+
+         const currentUser = await Auth.findById(decoded._id).populate("followers");
+         console.log(currentUser);
+        for(const follower  of currentUser.followers){
+         const notification=new Notifications({
+userId: follower._id ,
+senderId:decoded._id,
+message:`${currentUser.name} yeni bir post paylaştı.`,
+type:"new_post",
+postId:newPost._id
+
+         })
+await notification.save();
+}
         return NextResponse.json({ message: "Post created successfully" }, { status: 201 });
     } catch (error: any) {
         console.error("Post creation error:", error.message);
