@@ -31,7 +31,6 @@ export async function POST(req: NextRequest) {
         }
         await post.save();
              
-              const currentUser = await Auth.findById(decoded._id);
 
              if (!hasLiked && post.user.toString() !== userId) {
   const currentUser = await Auth.findById(userId); 

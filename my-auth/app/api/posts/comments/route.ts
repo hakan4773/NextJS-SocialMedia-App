@@ -1,6 +1,7 @@
 import connectDB from "@/app/libs/mongodb";
 import Auth from "@/app/models/auth";
 import Comments from "@/app/models/Comments";
+import Notifications from "@/app/models/Notifications";
 import Post from "@/app/models/Post";
 import { verifyToken } from "@/app/utils/jwtUtils";
 import { NextRequest, NextResponse } from "next/server";
@@ -31,7 +32,19 @@ try {
           post.comments.push(newComment._id);
           await post.save();
 
-          const currentUser=await Auth.findById(decoded._id);
+
+        if (newComment && post.user.toString() !== userId) {
+          const currentUser = await Auth.findById(userId).select("name");
+          const notification = new Notifications({
+            userId: post.user,
+            senderId: userId,
+            message: `${currentUser?.name} gönderinize yorum yaptı.`,
+            type: "comment",
+            postId: post._id,
+          });
+          await notification.save();
+        }
+
     
         return NextResponse.json({ message: "Yorum eklendi", post }, { status: 200 });
     } catch (error) {
