@@ -1,4 +1,5 @@
 import connectDB from "@/app/libs/mongodb";
+import Auth from "@/app/models/auth";
 import Comments from "@/app/models/Comments";
 import Post from "@/app/models/Post";
 import { verifyToken } from "@/app/utils/jwtUtils";
@@ -29,6 +30,8 @@ try {
           });
           post.comments.push(newComment._id);
           await post.save();
+
+          const currentUser=await Auth.findById(decoded._id);
     
         return NextResponse.json({ message: "Yorum eklendi", post }, { status: 200 });
     } catch (error) {

@@ -9,6 +9,7 @@ import { FiSearch } from "react-icons/fi";
 import ResponsiveBar from "./ResponsiveBar";
 import FilterUsers from "./FilterUsers";
 import { NotificationType, UserType } from "../types/user";
+import { format } from "timeago.js";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -126,13 +127,14 @@ if (res.ok && nfc.ok){
 
     {open && (
       <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg py-2 z-50">
-        <h3 className="font-semibold text-gray-800 px-4 pb-2 border-b">Bildirimler</h3>
-        <div className="max-h-96 overflow-y-auto">
+ <div className="px-4 py-2 border-b border-gray-100">
+                    <h3 className="font-semibold text-gray-800">Bildirimler</h3>
+                  </div>        <div className="max-h-96 overflow-y-auto">
           {notification.length > 0 ? (
             notification.map((notif: NotificationType, i: number) => (
-              <div key={i} className="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b">
+              <div key={i} className="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-b-gray-100">
                 <p className="text-sm text-gray-800">{notif.message}</p>
-                <p className="text-xs text-gray-500 mt-1">2 dakika önce</p>
+                <p className="text-xs text-gray-500 mt-1">{format(notif.createdAt)}</p>
               </div>
             ))
           ) : (

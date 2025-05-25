@@ -13,13 +13,13 @@ export async function POST(req: NextRequest) {
       if (!decoded) {
           return NextResponse.json({ message: "Invalid token" }, { status: 401 });
       }
-      const userId=decoded._id;
+        const userId=decoded._id;
         const { postId } = await req.json();
         if (!postId) {
           return NextResponse.json({ message: "Post ID is required" }, { status: 400 });
         }
         
-        const post = await Post.findById(postId);
+        const post = await Post.findById(postId)
         if (!post) {
           return NextResponse.json({ message: "Post not found" }, { status: 404 });
         }
@@ -30,19 +30,21 @@ export async function POST(req: NextRequest) {
           post.likes.push(userId);
         }
         await post.save();
-     
-             const currentUser = await Auth.findById(decoded._id).populate("following");
-                for(const follow  of currentUser.following){
-                 const notification=new Notifications({
-        userId: follow._id ,
-        senderId:decoded._id,
-        message:`${currentUser.name} postunuzu beğendi.`,
-        type:"like",
-        postId:post._id
-        
-                 })
-        await notification.save();
-        }
+             
+              const currentUser = await Auth.findById(decoded._id);
+
+             if (!hasLiked && post.user.toString() !== userId) {
+  const currentUser = await Auth.findById(userId); 
+
+  const notification = new Notifications({
+    userId: post.user,
+    senderId: userId, 
+    message: `${currentUser?.name} gönderinizi beğendi.`,
+    type: "like",
+    postId: post._id
+  });
+                 await notification.save();
+               }
 
 
         return NextResponse.json({
