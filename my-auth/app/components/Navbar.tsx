@@ -8,26 +8,39 @@ import { MdOutlineNotificationsActive } from "react-icons/md";
 import { FiSearch } from "react-icons/fi";
 import ResponsiveBar from "./ResponsiveBar";
 import FilterUsers from "./FilterUsers";
-import { UserType } from "../types/user";
+import { NotificationType, UserType } from "../types/user";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [notification, setNotification] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [notification, setNotification] = useState<NotificationType[]>([]);
   const { user, logout } = useAuth();
   const [users, setUsers] = useState<UserType[]>([]);
   const [search, setSearch] = useState("");
   const [filteredUsers, setFilteredUser] = useState<UserType[]>([]);
   const [loading, setLoading] = useState(false);
-
+  
   //Tüm kullanıcıları getir
   useEffect(() => {
     const fetchUsers = async () => {
+      const token =localStorage.getItem("token");
           setLoading(true);
       try {
-        const res = await fetch("/api/users");
-        const data = await res.json();
-        if (res.ok)
-           setUsers(data.users);
+         const [res, nfc] = await Promise.all([
+        fetch("/api/users"),
+        fetch("/api/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      ]);
+      const [data, datanfc] = await Promise.all([res.json(), nfc.json()]);
+
+
+if (res.ok && nfc.ok){
+   setUsers(data.users);
+   setNotification(datanfc.notifications);
+}
       } catch (error) {
         console.error("Kullanıcılar yüklenirken hata oluştu:", error);
       }
@@ -37,7 +50,7 @@ export default function Navbar() {
     };
     fetchUsers();
   }, []);
-  console.log(users);
+
   //Aramaya göre filtreleme
   useEffect(() => {
     if (!search) {
@@ -99,45 +112,45 @@ export default function Navbar() {
         {/* Masaüstü Menü */}
         <div className="flex items-center space-x-4">
           {/* Bildirimler */}
-          {user && (
-            <div className="relative">
-              <button
-                onClick={() => setNotification((prev) => !prev)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors relative"
-              >
-                <MdOutlineNotificationsActive
-                  size={24}
-                  className="text-white"
-                />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  3
-                </span>
-              </button>
-              {notification && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg py-2 z-50">
-                  <div className="px-4 py-2 border-b border-gray-100">
-                    <h3 className="font-semibold text-gray-800">Bildirimler</h3>
-                  </div>
-                  <div className="max-h-96 overflow-y-auto">
-                    <div className="px-4 py-3 hover:bg-gray-50 cursor-pointer">
-                      <p className="text-sm text-gray-800">
-                        Yeni bir mesajınız var
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        2 dakika önce
-                      </p>
-                    </div>
-                    <div className="px-4 py-3 hover:bg-gray-50 cursor-pointer">
-                      <p className="text-sm text-gray-800">
-                        Profiliniz beğenildi
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">1 saat önce</p>
-                    </div>
-                  </div>
-                </div>
-              )}
+        {user && (
+  <div className="relative">
+    <button
+      onClick={() => setOpen((prev) => !prev)}
+      className="p-2 hover:bg-gray-100 rounded-full transition-colors relative"
+    >
+      <MdOutlineNotificationsActive size={24} className="text-white" />
+      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+        3
+      </span>
+    </button> 
+
+    {open && (
+      <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg py-2 z-50">
+        <h3 className="font-semibold text-gray-800 px-4 pb-2 border-b">Bildirimler</h3>
+        <div className="max-h-96 overflow-y-auto">
+          {notification.length > 0 ? (
+            notification.map((notif: NotificationType, i: number) => (
+              <div key={i} className="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b">
+                <p className="text-sm text-gray-800">{notif.message}</p>
+                <p className="text-xs text-gray-500 mt-1">2 dakika önce</p>
+              </div>
+            ))
+          ) : (
+            <div className="px-4 py-3 text-sm text-gray-500">
+              Bildirimin yok.
             </div>
           )}
+        </div>
+      </div>
+    )}
+  </div>
+)}
+
+
+
+
+         
+          
 
           {/* Auth Butonları */}
           <div className="hidden md:flex items-center space-x-4">

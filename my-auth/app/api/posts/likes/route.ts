@@ -1,4 +1,6 @@
 import connectDB from "@/app/libs/mongodb";
+import Auth from "@/app/models/auth";
+import Notifications from "@/app/models/Notifications";
 import Post from "@/app/models/Post";
 import { verifyToken } from "@/app/utils/jwtUtils";
 import { NextRequest, NextResponse } from "next/server";
@@ -28,6 +30,21 @@ export async function POST(req: NextRequest) {
           post.likes.push(userId);
         }
         await post.save();
+     
+             const currentUser = await Auth.findById(decoded._id).populate("following");
+                for(const follow  of currentUser.following){
+                 const notification=new Notifications({
+        userId: follow._id ,
+        senderId:decoded._id,
+        message:`${currentUser.name} postunuzu beğendi.`,
+        type:"like",
+        postId:post._id
+        
+                 })
+        await notification.save();
+        }
+
+
         return NextResponse.json({
           message: hasLiked ? "Beğeni kaldırıldı" : "Beğenildi",
           likes: post.likes,

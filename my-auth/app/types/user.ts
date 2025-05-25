@@ -91,3 +91,14 @@ export  interface Survey{
     profileImage: string;
   };
 };
+
+
+export type NotificationType={
+userId:string
+senderId:string
+postId:string
+type:string,
+message:string
+notification:string,
+createdAt:Date
+}

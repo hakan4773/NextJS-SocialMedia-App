@@ -4,6 +4,7 @@ userId:mongoose.Types.ObjectId
 senderId:mongoose.Types.ObjectId
 postId:mongoose.Types.ObjectId
 type:string,
+message:string,
 notification:string,
 createdAt:Date
 }
