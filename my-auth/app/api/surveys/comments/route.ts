@@ -1,5 +1,7 @@
 import connectDB from "@/app/libs/mongodb";
+import Auth from "@/app/models/auth";
 import Comments from "@/app/models/Comments";
+import Notifications from "@/app/models/Notifications";
 import Survey from "@/app/models/Survey";
 import { verifyToken } from "@/app/utils/jwtUtils";
 import { NextRequest, NextResponse } from "next/server";
@@ -26,6 +28,19 @@ try {
           });
           survey.comments.push(newComment._id);
           await survey.save();
+           
+          if (newComment && survey.creator.toString() !== userId) {
+                const currentUser = await Auth.findById(userId);
+                const notification = new Notifications({
+                  userId: survey.creator,
+                  senderId: userId,
+                  message: `${currentUser?.name} gönderinizi beğendi.`,
+                  type: "like",
+                  postId: survey._id,
+                });
+          
+                await notification.save();
+              }
     
         return NextResponse.json({ message: "Yorum eklendi", survey }, { status: 200 });
     } catch (error) {
