@@ -21,7 +21,7 @@ function Survey({isSurveyOpen,setIsSurveyOpen,setPreview,setSelectedImage}:any) 
 useEffect(()=>{
   setPreview(null);
   setSelectedImage(null);
-})
+}, [])
 
 const handleSubmit =async(e: React.MouseEvent<HTMLButtonElement>)=>{
 e.preventDefault();

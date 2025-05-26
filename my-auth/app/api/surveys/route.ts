@@ -6,6 +6,7 @@ import Auth from "@/app/models/auth";
 import path from "path";
 import fs, { existsSync } from 'fs';
 import Comment from "../../models/Comments";
+import Notifications from "@/app/models/Notifications";
 
 export async function POST(req: NextRequest) {
     await connectDB();
@@ -45,6 +46,18 @@ export async function POST(req: NextRequest) {
               { $push: { surveys: survey._id } },
               { new: true }
             );
+    // Bildirim gönderme
+         const currentUser = await Auth.findById(decoded._id).populate("followers");
+    for (const follower of currentUser.followers) {
+      const notification = new Notifications({
+        userId: follower._id,
+        senderId: decoded._id,
+        message: `${currentUser.name} yeni bir anket paylaştı.`,
+        type: "new_survey",
+        postId: survey._id
+      });
+      await notification.save();
+    }
 
     return NextResponse.json({
       message: "Anket başarıyla oluşturuldu",

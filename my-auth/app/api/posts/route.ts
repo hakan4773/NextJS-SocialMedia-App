@@ -48,7 +48,6 @@ fs.mkdirSync(uploadDir,{recursive:true})
         );
 
          const currentUser = await Auth.findById(decoded._id).populate("followers");
-         console.log(currentUser);
         for(const follower  of currentUser.followers){
          const notification=new Notifications({
 userId: follower._id ,

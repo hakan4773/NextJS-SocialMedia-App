@@ -94,11 +94,11 @@ export  interface Survey{
 
 
 export type NotificationType={
-userId:string
-senderId:string
-postId:string
+userId:string,
+senderId:string,
+postId:string,
 type:string,
-message:string
+message:string,
 notification:string,
 createdAt:Date
 }
