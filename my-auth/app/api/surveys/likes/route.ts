@@ -1,4 +1,6 @@
 import connectDB from "@/app/libs/mongodb";
+import Auth from "@/app/models/auth";
+import Notifications from "@/app/models/Notifications";
 import Survey from "@/app/models/Survey";
 import { verifyToken } from "@/app/utils/jwtUtils";
 import { NextRequest, NextResponse } from "next/server";
@@ -28,11 +30,28 @@ export async function POST(req: NextRequest) {
             surveys.likes.push(userId);
         }
         await surveys.save();
+if (!hasLiked && surveys.creator.toString() !== userId) {
+      const currentUser = await Auth.findById(userId);
+
+      const notification = new Notifications({
+        userId: surveys.creator,
+        senderId: userId,
+        message: `${currentUser?.name} gönderinizi beğendi.`,
+        type: "like",
+        postId: surveys._id,
+      });
+
+      await notification.save();
+    }
+
+
+
         return NextResponse.json({
           message: hasLiked ? "Beğeni kaldırıldı" : "Beğenildi",
           likes: surveys.likes,
         });
     }
+
         catch (error: any) {
           console.error("Like error:", error.message);
           return NextResponse.json({ message: "Like failed", error: error.message }, { status: 500 });
