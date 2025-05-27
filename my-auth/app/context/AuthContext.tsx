@@ -49,6 +49,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       });
         } else {
           setUser(null);
+          setLoading(false);
         }
       }, []);
       
@@ -71,7 +72,13 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 
     return (
         <AuthContext.Provider value={{ user ,login, logout,loading,setUser }}>
-            {children}
+            {loading ? (
+        <div className="h-screen flex justify-center items-center">
+          <p className="text-white text-lg">Yükleniyor...</p>
+        </div>
+      ) : (
+        children
+      )}
         </AuthContext.Provider>
     );
 }
