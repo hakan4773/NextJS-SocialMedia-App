@@ -9,55 +9,51 @@ import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie"
 
-function page() {
+function Page() {
   const router=useRouter();
   const {login}=useAuth();
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (data: LoginFormData) => {
-    setLoading(true)
-
+ const handleSubmit = async (data: LoginFormData) => {
+    setLoading(true);
     try {
-      
-  const response =await fetch("/api/login",{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json"
-    },
-    body:JSON.stringify(data)
-  });
-  const result=await response.json();
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
 
-  if(response.ok){
-    Cookies.set("token", result.token, { expires: 1, path: "/" });
+      const result = await response.json();
 
-    localStorage.setItem("token", result.token);
-    
-    const verifyResponse = await fetch("/api/protected", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${result.token}`,
-      },
-    });
-    const verifyResult = await verifyResponse.json();
+      if (response.ok) {
+        Cookies.set("token", result.token, { expires: 1, path: "/" });
+        localStorage.setItem("token", result.token);
 
-    if (verifyResponse.ok && verifyResult.user) {
-      login(verifyResult.user);
-      router.push("/");
-      setLoading(false)
+        const verifyResponse = await fetch("/api/protected", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${result.token}`,
+          },
+        });
 
-    } 
-  } else {
-    toast.error(result.message || "Login failed ❌");
+        const verifyResult = await verifyResponse.json();
+
+        if (verifyResponse.ok && verifyResult.user) {
+          login(verifyResult.user);
+          router.push("/");
+        } 
+      } else {
+        toast.error(result.message || "Login failed ❌");
       }
-} catch (error) {
-  toast.error("An error occurred during login ❌"); 
-} finally {
-  setLoading(false);
-}
 
-
-};
+    } catch (error) {
+      toast.error("An error occurred during login ❌"); 
+    } finally {
+      setLoading(false);
+    }
+  };
 
  if (loading) {
     return (
@@ -77,10 +73,10 @@ function page() {
    
     <div className="pt-6 w-full text-center "> 
        <h1 className='text-3xl'>Login</h1>
-           <AuthForm type="login" onSubmit={handleSubmit} />
+           <AuthForm type="login" loading={loading} onSubmit={handleSubmit} />
     </div>
     </motion.div>
   )
 }
 
-export default page
+export default Page

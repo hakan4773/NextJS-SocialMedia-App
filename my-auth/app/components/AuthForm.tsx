@@ -23,9 +23,10 @@ type FormType = "register" | "login";
 
 interface AuthFormProps{
 type:FormType,
-onSubmit:(data:RegisterFormData | LoginFormData)=>void
+onSubmit:(data:RegisterFormData | LoginFormData)=>void,
+loading:boolean
 }
-function AuthForm({type,onSubmit}:AuthFormProps) {
+function AuthForm({type,onSubmit,loading}:AuthFormProps) {
 
 const {
   register,
@@ -34,6 +35,7 @@ const {
 }=useForm<RegisterFormData | LoginFormData>({
 resolver:zodResolver(type==="register" ? registerSchema:loginSchema)
 })
+
   return (
 
     <form  onSubmit={handleSubmit(onSubmit)} 
@@ -75,7 +77,7 @@ resolver:zodResolver(type==="register" ? registerSchema:loginSchema)
 <button
         type="submit"
         className="w-full bg-blue-500 text-white cursor-pointer p-2 rounded hover:bg-blue-600" >
-        {type === "register" ? "Register" : "Login"}
+                {loading ? "Logging in..." : type === "login" ? "Login" : "Register"}
       </button>
 
       <div className='mt-2 w-full flex flex-col justify-center items-center'>
