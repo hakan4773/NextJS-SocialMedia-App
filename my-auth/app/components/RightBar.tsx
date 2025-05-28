@@ -39,7 +39,7 @@ fetchNotifications();
           <FiBell className="mr-2" /> Son hareketler
         </h3>
         <ul className="mt-2 space-y-2">
-          {notifications.map((notification,index) => (
+          {notifications.slice(0,3).map((notification,index) => (
             <li key={index} className="text-sm">
               {notification.message} • <span className="text-gray-400">{format(notification.createdAt)}</span>
             </li>
