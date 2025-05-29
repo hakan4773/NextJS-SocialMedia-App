@@ -26,7 +26,7 @@ const Posts = ({ userId}: PostsProps) => {
      setPosts(data.posts);
    }
    fetchPosts();
-   },[])
+   },[userId])
    
 
     return (

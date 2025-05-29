@@ -45,7 +45,8 @@ const fetchAll=async()=>{
     ...activityRes.data.activities.map((item: { [key: string]: any }) => ({ ...item, type: "activity" })),
   ]
 merged.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-setMergedContent(merged);
+setMergedContent(merged || []);
+
 }
 catch (err: any) {
   console.error("İçerikler alınamadı:", err);
@@ -66,6 +67,7 @@ fetchAll();
       </div>
     );
   }
+ 
   return (
     <div className=" min-h-screen bg-slate-100  py-24 p-4  flex justify-center  ">
       {/* Sol kısım */}
@@ -77,7 +79,10 @@ fetchAll();
        <PostCreation />
         {/* buraya bak */}
         {mergedContent.length === 0 ? (
-  <div className="text-center text-gray-500 mt-10">Henüz hiç içerik yok.</div>
+  <div className="text-center text-gray-500 mt-10">
+    <p>Henüz paylaşım yok.</p>
+    <p>Paylaşımlarınızı görmek için bekleyin veya yeni bir paylaşım yapın.</p>
+  </div>
 ) : (
   mergedContent.map((item, index) => {
     if (item.type === "post") return <Posts key={`post-${index}`} item={item as Post} />;
