@@ -10,6 +10,7 @@ function Modal({ isOpen,onClose }:any) {
   const [description, setDescription] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedTime, setSelectedTime] = useState<string>("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const handleSubmit =async(e: React.FormEvent)=>{
     e.preventDefault();
 
@@ -19,21 +20,36 @@ function Modal({ isOpen,onClose }:any) {
     alert("Lütfen tarih ve saat seçin");
     return;
   }
-  const [hours, minutes] = selectedTime.split(":").map(Number);
+  if (!activityName || !activityType || !description) {
+    alert("Lütfen tüm alanları doldurun");
+    return;
+  }
+  if (!token) {
+    alert("Lütfen giriş yapın");
+    return;
+  }
+  if (!selectedImage) {
+    alert("Lütfen bir resim seçin");
+    return;
+  }
+const formData = new FormData();
+const [hours, minutes] = selectedTime.split(":").map(Number);
   const startDate = new Date(selectedDate);
   startDate.setHours(hours);
   startDate.setMinutes(minutes);
+  formData.append("activityName", activityName);
+  formData.append("activityType", activityType);
+  formData.append("description", description);
+  formData.append("startDate", startDate.toISOString());
+  formData.append("activityDate", selectedTime);
+  formData.append("image", selectedImage);
+  
 const res=await fetch("/api/activity",{
   method:"POST",
   headers:{
     Authorization: `Bearer ${token}`
   },
-  body:JSON.stringify({activityName,
-    activityType,
-    description,
-    startDate: startDate.toISOString(), 
-    activityDate: { hours, minutes },
-  }),
+  body:formData,
 });
 
 const data=await res.json();
@@ -43,6 +59,7 @@ if(res.ok){
   setActivityType("");
   setDescription("");
   setSelectedDate("");
+  setSelectedImage(null);
   onClose();
   }
   else {
@@ -74,7 +91,7 @@ if(res.ok){
                 onChange={(e) => setActivityName(e.target.value)}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Etkinlik Adı" />
               </div>
-              <div className="col-span-2 sm:col-span-1">
+              <div className="md:col-span-2 sm:col-span-1">
                 <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tarih</label>
                 <input type="date" 
                 value={selectedDate}
@@ -83,7 +100,7 @@ if(res.ok){
              
               </div>
               
-              <div className="col-span-2 sm:col-span-1">
+              <div className="md:col-span-2 sm:col-span-1">
                 <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Saat</label>
                 <input type="time" 
                 value={selectedTime}
@@ -103,17 +120,35 @@ if(res.ok){
                   <option value="Yüz Yüze">Yüz Yüze</option>
                 </select>
               </div>
+                 
               <div className="col-span-2">
                 <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Açıklama</label>  
                 <textarea id="description" 
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                rows={4} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Örn: konular, program vb."></textarea>
+                rows={3} className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Örn: konular, program vb."></textarea>
               </div>
             </div>
+            <div className='flex justify-between items-center '>
+               <input type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setSelectedImage(file)
+                      ;};
+                    reader.readAsDataURL(file);
+                  }
+                }}
+                className="w-52 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500  p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                ></input>
             <button type="submit" className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
              Yeni Etkinlik Oluştur
             </button>
+           
+              </div>
           </form>
         </div>
       </div>

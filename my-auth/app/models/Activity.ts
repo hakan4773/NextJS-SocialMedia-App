@@ -5,6 +5,7 @@ export interface ActivityProps extends Document {
   activityType: string;
   description: string;
   creator: mongoose.Types.ObjectId;
+  image: string;
   activityDate: {
     hours: number;
     minutes: number;
@@ -18,6 +19,7 @@ const ActivitySchema=new mongoose.Schema({
     activityName:{type:String,required:true},
     activityType:{type:String,required:true},
     description:{type:String,required:true},
+    image:{type:String},
     creator:{type:mongoose.Schema.Types.ObjectId,ref:'Auth',required:true},
     activityDate:{
       hours: { type: Number, min: 0, max: 23, default: 0 },

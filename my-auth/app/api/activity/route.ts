@@ -6,30 +6,52 @@ import Auth from "@/app/models/auth";
 import path from "path";
 import fs, { existsSync } from 'fs';
 import Comment from "@/app/models/Comments";
+import { writeFile } from "fs/promises";
 
 export async function POST(req:NextRequest) {
+  await connectDB();
 const decoded=verifyToken(req);
   if (!decoded) {
     return NextResponse.json({ message: "Invalid token" }, { status: 401 });
   }
-  const { activityName, startDate , activityType, description,activityDate,createdAt  } = await req.json();
-  if (!activityName || !activityType || !description || !startDate) {
-    return NextResponse.json(
-      { message: "Tüm alanlar (isim, tip, açıklama) zorunludur" },
-      { status: 400 }
-    );
-  }
+  const formData = await req.formData();
+  const activityName = formData.get("activityName")?.toString();
+  const activityType = formData.get("activityType")?.toString();
+  const description = formData.get("description")?.toString();
+  const startDate = formData.get("startDate")?.toString();
+  const activityDate = formData.get("activityDate");
+  const image = formData.get("image") as File | null;
+
   try {
-    await connectDB();
-    const activity = await Activity.create({
-      activityName, 
+     //Resim paylaşma bölümü
+       const uploadDir = path.join(process.cwd(),"public/image")
+      if(!existsSync(uploadDir)){
+  fs.mkdirSync(uploadDir,{recursive:true})
+      }
+  
+      let imagePath = null;
+     if(image){
+      const filePath=path.join(uploadDir,image?.name)
+      const fileBuffer =await image.arrayBuffer();
+       await writeFile(filePath,Buffer.from(fileBuffer))
+  
+       imagePath = `/image/${image.name}`;
+    }
+    if (!activityName || !activityType || !description || !startDate) {
+      return NextResponse.json({ message: "All fields are required" }, { status: 400 });
+    }
+    const activity = new Activity({
+      activityName,
       activityType,
       description,
-      startDate: new Date(startDate), 
-      activityDate: activityDate || { hours: 0, minutes: 0 },
-      createdAt,
+      startDate,
+      activityDate: activityDate ? new Date(activityDate.toString()) : null,
+      image: image ? imagePath : null,
       creator: decoded._id,
     });
+    await activity.save();
+
+    //  Kullanıcının etkinliklerini güncelle   
      await  Auth.findByIdAndUpdate(
                   decoded._id,
                   { $push: { activities: activity._id } },

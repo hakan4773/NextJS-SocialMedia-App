@@ -56,6 +56,7 @@ export  interface Survey{
     activityName: string;
       activityType: string;
       description: string;
+      image?: string;
       creator: {
         _id:string;
         email:string;

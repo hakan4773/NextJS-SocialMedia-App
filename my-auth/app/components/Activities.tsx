@@ -52,8 +52,11 @@ setUser((prevUser) => {
     console.error("Failed to fetch saved activities");
   }
 }
-console.log("subscribe: " ,+ item.subscribeUsers.length)
 
+useEffect(() => {
+  setSaveCount(item.subscribeUsers?.length || 0);
+  setSavedActivities(item.subscribeUsers?.includes(user?._id ?? "") || false);
+},[]);
   return (
 <div className="space-y-6">
   {activities && activities.length > 0 ? (
@@ -97,7 +100,7 @@ console.log("subscribe: " ,+ item.subscribeUsers.length)
         {/* Etkinlik Görseli */}
         <div className="relative rounded-lg overflow-hidden mb-3 border border-gray-100">
           <Image
-            src={ "/image/yedo.jpg"}
+            src={ post.image || "/images/default-activity.jpg"}
             alt="Etkinlik Görseli"
             width={600}
             height={300}
