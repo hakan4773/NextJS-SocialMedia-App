@@ -115,7 +115,12 @@ export async function DELETE(req: NextRequest) {
 await Comment.deleteMany({ survey: postId });
     // 3.postu sil 
         await Activity.findByIdAndDelete(postId);
-            
+        // Kullanıcının etkinliklerini güncelle
+        await Auth.findByIdAndUpdate(
+          decoded._id,
+          { $pull: { activities: postId } },
+          { new: true }
+        );
         return NextResponse.json({ message: "Activity deleted successfully" }, { status: 200 });
 } catch (error:any) {
         return NextResponse.json({ message: "Activity deletion failed", error:error.message }, { status: 500 });

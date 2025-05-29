@@ -123,7 +123,13 @@ export async function DELETE(req: NextRequest) {
 await Comment.deleteMany({ post: postId });
     // 3.postu sil 
         await Post.findByIdAndDelete(postId);
-            
+        // Kullanıcının post listesinden postu kaldır
+            await Auth.findByIdAndUpdate(
+          decoded._id,
+          { $pull: { posts: postId } },
+          { new: true }
+        );
+
         return NextResponse.json({ message: "Post deleted successfully" }, { status: 200 });
 } catch (error:any) {
         return NextResponse.json({ message: "Post deletion failed", error:error.message }, { status: 500 });

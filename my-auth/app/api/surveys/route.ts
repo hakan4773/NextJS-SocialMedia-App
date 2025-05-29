@@ -59,6 +59,7 @@ export async function POST(req: NextRequest) {
       await notification.save();
     }
 
+
     return NextResponse.json({
       message: "Anket başarıyla oluşturuldu",
       survey,
@@ -120,7 +121,12 @@ export async function DELETE(req: NextRequest) {
 await Comment.deleteMany({ survey: postId });
     // 3.postu sil 
         await Survey.findByIdAndDelete(postId);
-            
+        // Kullanıcının anket listesinden sil
+        await Auth.findByIdAndUpdate(
+          decoded._id,
+          { $pull: { surveys: postId } },
+          { new: true }
+        );
         return NextResponse.json({ message: "Survey deleted successfully" }, { status: 200 });
 } catch (error:any) {
         return NextResponse.json({ message: "Survey deletion failed", error:error.message }, { status: 500 });
