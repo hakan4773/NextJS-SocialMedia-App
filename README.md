@@ -9,6 +9,7 @@ Bu proje, kullanıcıların postlar ve anketler oluşturabileceği, paylaşabile
 - **Anket Sistemi**: Kullanıcılar çoktan seçmeli anketler oluşturabilir ve diğer kullanıcılar bu anketlere oy verebilir.
 - **Kaydetme (Bookmark)**: Kullanıcılar hem postları hem anketleri kaydedip daha sonra görüntüleyebilir.
 - **Arama**: Kaydedilen içeriklerde metin bazlı arama yapma imkanı.
+- **Bildirimler**:İçeriklerin oluşturulması ya da etkileşim gerçekleşmesi sonuucnda kullanıcılara özgü bildirim gönderilmektedir.
 - **Kullanıcı Profilleri**: Kullanıcıların isim, e-posta ve profil resmi ile özelleştirilmiş profilleri.
 - **Etkileşimler**: Postlar ve anketler için beğenme, yorum yapma ve paylaşma (gelecekte eklenecek).
 - **Mobil Uyumluluk**: Responsive tasarım ile mobil cihazlarda sorunsuz kullanım.
