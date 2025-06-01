@@ -21,31 +21,55 @@ function getSurveys({item}:SurveyProps) {
 
 
   //Anketlere oy verme
-  const vote = async (surveyId: string, choiceIndex: number) => {
-    const token = localStorage.getItem("token");
-    try {
-      const res = await fetch("/api/surveys/vote", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ surveyId, choiceIndex }),
-      });
+const vote = async (surveyId: string, choiceIndex: number) => {
+  const token = localStorage.getItem("token");
 
-      const data = await res.json();
-      if (res.ok) {
-        setVotedSurveyId(surveyId);
-        setVotedChoiceIndex(choiceIndex);
-      } else {
-        alert(data.error || "Oylama başarısız");
-      }
-    } catch (error) {
-      alert("Oy verme sırasında hata oluştu.");
+  try {
+    const res = await fetch("/api/surveys/vote", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ surveyId, choiceIndex }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setSurveys((prevSurveys) =>
+        prevSurveys.map((survey) => {
+          if (survey._id === surveyId) {
+            // Kullanıcının ID'sini oy verdiği seçeneğe ekliyoruz
+            const updatedChoices = survey.choices.map((choice, index) => {
+              if (index === choiceIndex) {
+                return {
+                  ...choice,
+                  voters: [...choice.voters, user?._id || ""],
+                };
+              }
+              return choice;
+            });
+
+            return {
+              ...survey,
+              choices: updatedChoices,
+            };
+          }
+          return survey;
+        })
+      );
+    } else {
+      alert(data.error || "Oylama başarısız");
     }
-  };
+  } catch (error) {
+    alert("Oy verme sırasında hata oluştu.");
+  }
+};
+
 
   if (loading) return <div>Yükleniyor...</div>;
-  // if (error) return <div className="text-red-500">{error}</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
   return (
     <div>
       {surveys.length === 0 ? (
