@@ -26,6 +26,7 @@ useEffect(() => {
 {/* Profil özeti */}
 <div className='w-full text-white '>
 <div className=" flex bg-gradient-to-r from-blue-500 to-purple-500 p-6 rounded-md shadow-md" >
+   <Link href={"/profile"}  className='flex items-center space-x-4'>
   <img
               src={userData?.profileImage}
               alt="Avatar"
@@ -34,8 +35,9 @@ useEffect(() => {
             <div className='p-2 '>
                 <p className='font-bold text-xl'>{userData?.name}</p>
               
-              <p className='text-sm '>{userData?.bio ||<Link href={"/profile/edit"}>Profil yazısı ekleyin ✏️</Link>}</p>
-            </div>
+ {userData?.bio || "Profil yazısı ekleyin ✏️"}
+             </div>
+            </Link>
          
   </div>
 
