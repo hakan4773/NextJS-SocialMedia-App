@@ -1,4 +1,3 @@
-import { FiBell } from "react-icons/fi";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import Link from "next/link";
 import { PiDotsThreeBold } from "react-icons/pi";

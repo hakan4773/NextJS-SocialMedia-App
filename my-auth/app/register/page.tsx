@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import { motion } from "motion/react"
+import { motion } from 'framer-motion';
 import AuthForm from '../components/AuthForm'
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
@@ -13,7 +13,9 @@ interface RegisterTypes{
 }
 function page() {
   const router=useRouter();
+  const [loading,setLoading]=useState(false);
   const handleSubmit =async (data: RegisterTypes) => {
+    setLoading(true);
     const response =await fetch("/api/register", {
       method: "POST",
     headers:{
@@ -29,9 +31,11 @@ function page() {
     } else {
       console.error("User ID is undefined");
     }
+    setLoading(false);
   }
   else  {
      toast.error("Kayıt başarısız oldu ❌"); 
+     setLoading(false)
   }
 
   };
@@ -45,7 +49,7 @@ function page() {
        <h1 className='text-4xl'>Register</h1>
   
 
-     <AuthForm type='register' onSubmit={handleSubmit} />
+     <AuthForm type='register' loading={loading} onSubmit={handleSubmit} />
     </div>
     </motion.div>
   )

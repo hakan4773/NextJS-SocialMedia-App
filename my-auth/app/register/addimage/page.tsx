@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { motion } from "motion/react";
+import { motion } from 'framer-motion';
 import { useRouter } from "next/navigation";
 function page() {
   const router = useRouter();
