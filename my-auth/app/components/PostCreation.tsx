@@ -130,7 +130,7 @@ function PostCreation() {
 
         </textarea>
         {isSurveyOpen && (
-           <Survey isSurveyOpen={isSurveyOpen} setSelectedImage={setSelectedImage} setPreview={setPreview} setIsSurveyOpen={setIsSurveyOpen}/>
+           <Survey  setSelectedImage={setSelectedImage} setPreview={setPreview} setIsSurveyOpen={setIsSurveyOpen}/>
         
         )}
 
