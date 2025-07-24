@@ -8,7 +8,7 @@ import Modal from "./ActivityModal";
 import { getUserDetails } from "../utils/getUsers";
 import { ThreeDot } from "react-loading-indicators";
 import { toast } from "react-toastify";
-import Survey from "../components/Survey";
+// import Survey from "./Survey";
 import { UserType } from "../types/user";
 function PostCreation() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null); //resim ekleme için
@@ -129,10 +129,10 @@ function PostCreation() {
         >
 
         </textarea>
-        {isSurveyOpen && (
+        {/* {isSurveyOpen && (
            <Survey  setSelectedImage={setSelectedImage} setPreview={setPreview} setIsSurveyOpen={setIsSurveyOpen}/>
         
-        )}
+        )} */}
 
         {/* Butonlar ve araçlar */}
         <div className=" h-auto p-2  flex flex-row justify-between">
