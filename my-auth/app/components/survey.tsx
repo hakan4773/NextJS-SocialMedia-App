@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react'
 import { IoAdd } from 'react-icons/io5'
 
-function Survey({isSurveyOpen,setIsSurveyOpen,setPreview,setSelectedImage}:any) {
+
+function Survey({setIsSurveyOpen,setPreview,setSelectedImage}:any) {
   const [choices, setChoices] = useState(["Seçenek 1", "Seçenek 2"]);
   const [choicesInput,setChoicesInput] = useState<string[]>([]);
   const [question,setQuestion]=useState<string>("");
