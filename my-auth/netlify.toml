@@ -1,6 +1,8 @@
 [build]
   command = "npm run build"
-  publish = ".next"  # Burası .next olacak!
+  publish = ".next/server/pages"  # Correct publish directory for Next.js
 
-[plugins]
-  package = "@netlify/plugin-nextjs"
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
