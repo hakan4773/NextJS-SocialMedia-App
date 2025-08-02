@@ -1,5 +1,8 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/__render"
+  from = "/*"
+  to = "/index.html"
   status = 200
-  force = true
