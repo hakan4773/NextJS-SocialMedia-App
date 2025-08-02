@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/__render"
+  status = 200
+  force = true
