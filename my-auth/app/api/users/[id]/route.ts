@@ -12,13 +12,11 @@ type Params = {
   };
 };
   
-export async function GET( req: NextRequest,
-  context: Params
-  ) {
+export async function GET( req: NextRequest, { params }: { params: { id: string } }) {
   await connectDB();
 
   try {
-  const { id } = context.params;
+  const { id } = params;
 
     const user = await Auth.findById(id).select("-password");
     if (!user) {
