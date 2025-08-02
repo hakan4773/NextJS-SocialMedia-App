@@ -6,17 +6,14 @@ import { verifyToken } from "@/app/utils/jwtUtils";
 import Survey from "@/app/models/Survey";
 import Activity from "@/app/models/Activity";
 
-type Params = {
-  params: {
-    id: string;
-  };
-};
+
   
-export async function GET( req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET( req: NextRequest, context: { params: Record<string, string> }
+) {
   await connectDB();
 
   try {
-  const { id } = params;
+  const { id } = context.params;
 
     const user = await Auth.findById(id).select("-password");
     if (!user) {
