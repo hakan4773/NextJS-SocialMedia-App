@@ -1,8 +1,9 @@
 [build]
-  command = "npm run build"
-  publish = ".next/server/pages"  # Correct publish directory for Next.js
+  command = "npm run build && npm run export"
+  publish = "out"
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = true
