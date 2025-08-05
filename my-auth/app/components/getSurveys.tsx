@@ -14,7 +14,6 @@ function getSurveys({item}:SurveyProps) {
   const { user } = useAuth();
   const [surveys, setSurveys] = useState<Survey[]>(item ? [item] : []); 
 
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [votedSurveyId, setVotedSurveyId] = useState<string | null>(null); // Oy verilen anketin ID’si
   const [votedChoiceIndex, setVotedChoiceIndex] = useState<number | null>(null); // Oy verilen seçenek index’i
@@ -68,7 +67,7 @@ const vote = async (surveyId: string, choiceIndex: number) => {
 };
 
 
-  if (loading) return <div>Yükleniyor...</div>;
+
   if (error) return <div className="text-red-500">{error}</div>;
   return (
     <div>
