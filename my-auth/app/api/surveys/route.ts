@@ -83,7 +83,7 @@ export async function GET(req: NextRequest) {
       const Mysurveys = await Survey.find({ creator: decoded._id }).sort({ createdAt: -1 }).populate("creator", "_id name email profileImage");
      
      if (!surveys || surveys.length === 0) {
-      return NextResponse.json({ message: 'Aktif anket bulunamadı', surveys: [] },{status:400});
+      return NextResponse.json({ message: 'Aktif anket bulunamadı', surveys: [] },{status:200});
     }
 
      return NextResponse.json({surveys,Mysurveys},{status:200})

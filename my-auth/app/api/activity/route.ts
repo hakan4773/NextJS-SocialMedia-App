@@ -78,7 +78,11 @@ await connectDB();
     const userIds = [decoded._id, ...userBody.following];
 
     const activities = await Activity.find({ creator: { $in: userIds } }).sort({ createdAt: -1 }).populate("creator", "_id name email profileImage");
-  const Myactivity = await Activity.find({ creator: decoded._id }).sort({ createdAt: -1 }).populate("creator", "name email profileImage");
+     const Myactivity = await Activity.find({ creator: decoded._id }).sort({ createdAt: -1 }).populate("creator", "name email profileImage");
+      
+        if (!activities || activities.length === 0) {
+           return NextResponse.json({ message: 'Aktif anket bulunamadı', surveys: [] },{status:200});
+         }
 
     return NextResponse.json({ activities,Myactivity }, { status: 200 });
   } catch (error:any) {

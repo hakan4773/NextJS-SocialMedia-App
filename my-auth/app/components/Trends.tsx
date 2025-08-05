@@ -10,25 +10,37 @@ function Trends() {
  const toggleSetting=(index:any)=>{
     setOpenSettingIndex(openSettingIndex === index ? null: index)
  }
- useEffect(()=>{
-
-    const fetchTags=async()=>{
-      const res=await fetch('/api/posts',{
-        method:'GET',
-        headers:{
-          Authorization:`Bearer ${localStorage.getItem('token')}`,
+useEffect(() => {
+  const fetchTags = async () => {
+    try {
+      const res = await fetch("/api/posts", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-     } )
-      const data=await res.json()
-      if(res.ok){
-        setTrends(data.posts)
-        setLoading(false);
-      }else{
-        console.error('Tag verisi alınamadı:',data.error)
+      });
+
+      const data = await res.json();
+
+      if (res.ok && Array.isArray(data.posts)) {
+        setTrends(data.posts);
+      } else {
+        console.error(
+          "Tag verisi alınamadı:",
+          data?.error || "Geçersiz yanıt yapısı"
+        );
       }
+    } catch (error) {
+      console.error("İstek sırasında hata oluştu:", error);
+    } finally {
+      setLoading(false);
     }
-    fetchTags();
-  },[])
+  };
+
+  fetchTags();
+}, []);
+
+
   const allTags: string[] = trends.map((trend) => trend.tags).flat();
     const tagFrequency: { [key: string]: number } = {};
     allTags.forEach((tag) => {
@@ -37,9 +49,7 @@ function Trends() {
     });
     const sortedTags = Object.entries(tagFrequency).sort((a, b) => b[1] - a[1]);
 
-    if (loading) {
-        return <div className="p-4 bg-white rounded-lg shadow-md h-full">Yükleniyor...</div>;
-    }
+ 
 
 
   return (

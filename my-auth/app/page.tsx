@@ -12,53 +12,52 @@ export default function Home() {
   type MergedItem = (Post | Survey | Activity) & { type: "post" | "survey" | "activity" };
   const [mergedContent, setMergedContent] = useState<MergedItem[]>([]);
   const [loading, setLoading] = useState(true);
-useEffect(()=>{
 
-const fetchAll=async()=>{
-  try {
-  setLoading(true);
-  const token=localStorage.getItem("token");
-  const [postRes,surveyRes,activityRes]=await Promise.all([
-    axios.get("/api/posts",{
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }),
-    axios.get("/api/surveys",{
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }),
-    axios.get("/api/activity",{
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+useEffect(() => {
+    const fetchAll = async () => {
+      try {
+        setLoading(true);
+        const token = localStorage.getItem("token");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
 
-    }),
+        const [postRes, surveyRes, activityRes] = await Promise.all([
+          axios.get("/api/posts", { headers }),
+          axios.get("/api/surveys", { headers }),
+          axios.get("/api/activity", { headers }),
+        ]);
 
+         const posts = (postRes.data?.posts || []).map((item: Post) => ({
+          ...item,
+          type: "post" as const,
+        }));
+        console.log(postRes.data)
+        const surveys = (surveyRes.data?.surveys || []).map((item: Survey) => ({
+          ...item,
+          type: "survey" as const,
+        }));
+        const activities = (activityRes.data?.activities || []).map((item: Activity) => ({
+          ...item,
+          type: "activity" as const,
+        }));
 
-  ]);
+        const merged = [...posts, ...surveys, ...activities].sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
 
-  const merged=[
-    ...postRes.data.posts.map((item: { [key: string]: any }) => ({ ...item, type: "post" })),
-    ...surveyRes.data.surveys.map((item: { [key: string]: any }) => ({ ...item, type: "survey" })),
-    ...activityRes.data.activities.map((item: { [key: string]: any }) => ({ ...item, type: "activity" })),
-  ]
-merged.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-setMergedContent(merged || []);
+        setMergedContent(merged);
+      } catch (err:any) {
+      console.error("Beklenmeyen hata:", err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-}
-catch (err: any) {
-  console.error("İçerikler alınamadı:", err);
-}
-finally {
-  setLoading(false);
-}
-
-
-}
 fetchAll();
 },[])
+
+console.log(mergedContent)
 
   if (loading) {
     return (
@@ -77,10 +76,10 @@ fetchAll();
       {/* orta kısım (içerik kısmı) */}
       <div className="w-full md:w-1/2 flex flex-col justify-center  max-w-[500px] ">
        <PostCreation />
-        {/* buraya bak */}
+
         {mergedContent.length === 0 ? (
-  <div className="text-center text-gray-500 mt-10">
-    <p>Henüz paylaşım yok.</p>
+  <div className="flex-grow flex items-center justify-center min-h-[300px] text-center text-gray-500">
+    
     <p>Paylaşımlarınızı görmek için bekleyin veya yeni bir paylaşım yapın.</p>
   </div>
 ) : (
