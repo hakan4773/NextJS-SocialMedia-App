@@ -4,10 +4,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/app/utils/jwtUtils";
 import path from "path";
 import fs, { existsSync } from 'fs';
-import { writeFile } from "fs/promises";
 import Auth from "@/app/models/auth";
 import Comment from "../../models/Comments";
 import Notifications from "@/app/models/Notifications";
+import { v2 as cloudinary } from "cloudinary";
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
+});
 export async function POST(req: NextRequest) {
     await connectDB();
      try{
@@ -25,40 +30,48 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ message: "Content  is required" }, { status: 400 });
          }
     //Resim paylaşma bölümü
-     const uploadDir = path.join(process.cwd(),"public/image")
-    if(!existsSync(uploadDir)){
-fs.mkdirSync(uploadDir,{recursive:true})
+ 
+    let imagePath = null;
+    if (image) {
+      const arrayBuffer = await image.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      const uploadResult = await new Promise<any>((resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream({ folder: "posts" }, (error, result) => {
+            if (error) reject(error);
+            resolve(result);
+          })
+          .end(buffer);
+      });
+
+      imagePath = uploadResult.secure_url;
     }
 
-    let imagePath = null;
-   if(image){
-    const filePath=path.join(uploadDir,image?.name)
-    const fileBuffer =await image.arrayBuffer();
-     await writeFile(filePath,Buffer.from(fileBuffer))
+    const newPost = new Post({
+      content,
+      tags,
+      image: image ? imagePath : null,
+      user: decoded._id,
+    });
+    await newPost.save();
+    await Auth.findByIdAndUpdate(
+      decoded._id,
+      { $push: { posts: newPost._id } },
+      { new: true }
+    );
 
-     imagePath = `/image/${image.name}`;
-  }
-
-        const newPost = new Post({ content,tags, image:image ? imagePath : null,  user: decoded._id }); 
-        await newPost.save();
-        await Auth.findByIdAndUpdate(
-          decoded._id,
-          { $push: { posts: newPost._id } },
-          { new: true }
-        );
-
-         const currentUser = await Auth.findById(decoded._id).populate("followers");
-        for(const follower  of currentUser.followers){
-         const notification=new Notifications({
-userId: follower._id ,
-senderId:decoded._id,
-message:`${currentUser.name} yeni bir post paylaştı.`,
-type:"new_post",
-postId:newPost._id
-
-         })
-await notification.save();
-}
+    const currentUser = await Auth.findById(decoded._id).populate("followers");
+    for (const follower of currentUser.followers) {
+      const notification = new Notifications({
+        userId: follower._id,
+        senderId: decoded._id,
+        message: `${currentUser.name} yeni bir post paylaştı.`,
+        type: "new_post",
+        postId: newPost._id,
+      });
+      await notification.save();
+    }
         return NextResponse.json({ message: "Post created successfully" }, { status: 201 });
     } catch (error: any) {
         console.error("Post creation error:", error.message);
