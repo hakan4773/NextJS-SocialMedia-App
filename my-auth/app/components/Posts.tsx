@@ -13,6 +13,13 @@ type PostsProps = {
 export default function Posts({ item }: PostsProps) {
 const {user}=useAuth();
 
+
+  const getOptimizedImageUrl = (url: string) => {
+    if (!url.includes('res.cloudinary.com')) return url;
+    
+    return url.replace('/upload/', '/upload/q_auto,f_auto/');
+  };
+
   return (
         <div 
           className="p-5 hover:bg-gray-50  cursor-pointer  bg-white shadow-sm hover:shadow-md transition-shadow duration-400 border border-gray-100"
@@ -25,7 +32,7 @@ const {user}=useAuth();
               <div className="relative">
             
                 <Image
-                  src={item.user.profileImage}
+                  src={getOptimizedImageUrl(item?.image ?? "")}
                   alt="Profile"
                   width={44}
                   height={44}
