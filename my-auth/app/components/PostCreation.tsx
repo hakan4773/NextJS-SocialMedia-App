@@ -8,7 +8,7 @@ import Modal from "./ActivityModal";
 import { getUserDetails } from "../utils/getUsers";
 import { ThreeDot } from "react-loading-indicators";
 import { toast } from "react-toastify";
-import Survey from "./Survey";
+import Survey from "./Surveys";
 import { UserType } from "../types/user";
 function PostCreation() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null); //resim ekleme için
