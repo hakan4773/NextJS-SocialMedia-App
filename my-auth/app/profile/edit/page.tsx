@@ -179,7 +179,7 @@ function Page() {
             <input
             type='text'
            name='bio'
-            value={formData.bio}
+            value={formData.bio || ""}
             onChange={handleChange}
               className={`w-full p-2 border rounded 
                  "border-red-500"
