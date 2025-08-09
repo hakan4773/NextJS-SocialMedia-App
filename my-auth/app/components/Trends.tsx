@@ -74,7 +74,7 @@ function Trends() {
 
             <li className="text-blue-400 text-sm p-2 flex justify-between">
               <Link href={`/tweets/${item.tag.replace("#", "")}`}>
-                #{item.tag} <span className="text-gray-400 ml-1">• {item.count} paylaşım</span>
+                {item.tag} <span className="text-gray-400 ml-1">• {item.count} paylaşım</span>
               </Link>
             </li>
           </div>

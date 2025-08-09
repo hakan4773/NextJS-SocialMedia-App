@@ -47,8 +47,21 @@ export async function POST(req: NextRequest) {
       }
     );
 
-    return NextResponse.json(
-      { message: "User logged in successfully", token },
+     return NextResponse.json(
+      {
+        message: "User logged in successfully",
+        token,
+        user: {
+          _id: user._id,
+          name: user.name,
+          bio: user.bio,
+          profileImage: user.profileImage,
+          email: user.email,
+          savedPosts: user.savedPosts,
+          savedActivity: user.savedActivity,
+          subscribeUsers: user.subscribeUsers,
+        }
+      },
       { status: 200 }
     );
   } catch (error: any) {

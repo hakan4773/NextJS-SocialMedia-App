@@ -14,46 +14,37 @@ function Page() {
   const {login}=useAuth();
   const [loading, setLoading] = useState(false);
 
- const handleSubmit = async (data: LoginFormData) => {
-    setLoading(true);
-    try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
+const handleSubmit = async (data: LoginFormData) => {
+  setLoading(true);
+  try {
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-      const result = await response.json();
+    const result = await response.json();
 
-      if (response.ok) {
-        Cookies.set("token", result.token, { expires: 1, path: "/" });
-        localStorage.setItem("token", result.token);
+    if (response.ok) {
+      Cookies.set("token", result.token, { expires: 1, path: "/" });
+      localStorage.setItem("token", result.token);
 
-        const verifyResponse = await fetch("/api/protected", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${result.token}`,
-          },
-        });
-
-        const verifyResult = await verifyResponse.json();
-
-        if (verifyResponse.ok && verifyResult.user) {
-          login(verifyResult.user);
-          router.push("/");
-        } 
+      if (result.user) {
+        login(result.user);
+        router.push("/");
       } else {
-        toast.error(result.message || "Login failed ❌");
+        toast.error("User data missing from response");
       }
-
-    } catch (error) {
-      toast.error("An error occurred during login ❌"); 
-    } finally {
-      setLoading(false);
+    } else {
+      toast.error(result.message || "Login failed ❌");
     }
-  };
+  } catch (error) {
+    toast.error("An error occurred during login ❌");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
  if (loading) {
     return (
