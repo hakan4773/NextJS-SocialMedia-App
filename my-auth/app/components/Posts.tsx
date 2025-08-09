@@ -32,7 +32,7 @@ const {user}=useAuth();
               <div className="relative">
             
                 <Image
-                  src={getOptimizedImageUrl(item?.image ?? "")}
+                  src={item.user.profileImage}
                   alt="Profile"
                   width={44}
                   height={44}
@@ -79,12 +79,10 @@ const {user}=useAuth();
             {item.image && (
               <div className="mt-3 rounded-lg overflow-hidden border border-gray-100">
                 <Image
-                  src={item.image}
+                  src={getOptimizedImageUrl(item?.image ?? "")}
                   alt="Post"
-                  width={600}
-                  height={300}
-                  className="w-full h-auto object-cover"
-                  layout="responsive"
+                  fill
+                  className="mt-3 relative w-full aspect-[16/9] rounded-lg overflow-hidden border border-gray-100"
                 />
               </div>
             )}
