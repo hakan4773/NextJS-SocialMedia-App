@@ -6,6 +6,12 @@ import fs from "fs";
 import path from "path";
 import { writeFile } from "fs/promises";
 import { UserType } from "@/app/types/user";
+import { v2 as cloudinary } from "cloudinary";
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
+});
 export async function POST(req: NextRequest) {
   await connectDB();
   try {
@@ -41,6 +47,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }
+
 export async function PUT(req: NextRequest) {
   await connectDB();
   try {
@@ -62,24 +69,31 @@ export async function PUT(req: NextRequest) {
         { status: 404 }
       );
     }
+   let imagePath = user.profileImage; 
 
-    const uploadDir = path.join(process.cwd(), "public/image");
-    console.log(uploadDir);
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+    if (file) {
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      const uploadResult = await new Promise<any>((resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream({ folder: "users" }, (error, result) => {
+            if (error) reject(error);
+            resolve(result);
+          })
+          .end(buffer);
+      });
+
+      imagePath = uploadResult.secure_url;
+      user.profileImage = imagePath; 
     }
-    const filePath = path.join(uploadDir, file.name);
 
-    const fileBuffer = await file.arrayBuffer();
-    await writeFile(filePath, Buffer.from(fileBuffer));
 
-    user.profileImage = `/image/${file.name}`;
     await user.save();
-    console.log(filePath);
     return NextResponse.json(
       {
         message: "Profil resmi başarıyla güncellendi",
-        imageUrl: user.profileImage,
+        imageUrl: imagePath,
       },
       { status: 200 }
     );
