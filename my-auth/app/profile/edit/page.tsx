@@ -8,7 +8,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 
 const resetSchema = z.object({
   name: z.string().min(2, "Ad en az 2 karakter olmalı"),
-  bio: z.string().max(150, "Bio en fazla 150 karakter olabilir").optional(),
+  bio: z.string().max(100, "Bio en fazla 150 karakter olabilir").optional(),
   oldPassword: z.string().optional(),
   newPassword: z.string().optional().refine(val => !val || val.length >= 6, {
     message: "Yeni şifre en az 6 karakter olmalı"
@@ -20,6 +20,7 @@ function Page() {
   const { user, setUser } = useAuth();
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: user?.name || "",
@@ -35,9 +36,14 @@ function Page() {
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
+   if (e.target.files && e.target.files[0]) {
+    const file = e.target.files[0];
+    if (file.size > 2 * 1024 * 1024) { 
+      toast.error("Resim boyutu 2MB'den küçük olmalıdır");
+      return;
     }
+    setSelectedFile(file);
+  }
   };
 
   useEffect(() => {
@@ -49,12 +55,14 @@ function Page() {
       });
       const data = await res.json();
       if (res.ok) {
-        setFormData({
-          ...formData,
-          name: data.user.name,
-          bio: data.user.bio,
-          profileImage: data.user.profileImage,
-        });
+     setFormData({
+        name: data.user.name,
+        bio: data.user.bio,
+        profileImage: data.user.profileImage,
+        oldPassword: "",
+        newPassword: "",
+      });
+
       } else {
         console.error("Profil verisi alınamadı:", data.error);
       }
@@ -64,7 +72,7 @@ function Page() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setLoading(true);
     const result = resetSchema.safeParse(formData);
     if (!result.success) {
       const fieldErrors = result.error.format();
@@ -72,16 +80,18 @@ function Page() {
         name: fieldErrors.name?._errors[0] || "",
         newPassword: fieldErrors.newPassword?._errors[0] || "",
       });
+      setLoading(false);
       return;
     }
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) return;
-
+      if (!token) {
+      setLoading(false);
+      toast.error("Giriş yapmanız gerekiyor.");
+      return;
+    }
       const fd = new FormData();
-      fd.append("email", user?.email || "");
-
       fd.append("name", formData.name);
       if (formData.bio !== user?.bio) fd.append("bio", formData.bio);
       if (formData.newPassword) {
@@ -105,7 +115,7 @@ function Page() {
         const updatedUser = await response.json();
         toast.success("Profil başarıyla güncellendi");
 
-        setUser(updatedUser);
+        setUser(updatedUser.user);
         setFormData({
           ...formData,
           oldPassword: "",
@@ -118,9 +128,13 @@ function Page() {
     } 
 
       catch (err) {
+        setLoading(false);
         console.error(err);
         toast.error("Bir hata oluştu, lütfen tekrar deneyin.");
       }
+      finally {
+  setLoading(false);
+}
     };
 
 
@@ -138,7 +152,7 @@ function Page() {
         <div className="flex justify-center">
           <div className="relative">
             <img
-              src={user?.profileImage}
+              src={user?.profileImage || "/5.jpg"}
               alt="Avatar"
               className="w-24 h-24 rounded-full border-2 border-white mx-auto mb-4 object-cover"
             />
@@ -221,19 +235,17 @@ function Page() {
   )}
           </div>
 
-          <button
-            type="submit" 
-            className="w-full bg-gradient-to-r cursor-pointer from-blue-500 to-indigo-600 text-white p-2 rounded hover:from-blue-600 hover:to-indigo-700 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-          Güncelle
-          </button>
-          {/* <button
-            type="button"
-            onClick={()=>router.push("/")}
-            className="w-full bg-gray-500 cursor-pointer text-white p-2 rounded hover:bg-gray-600 transition-all mt-2"
-          >
-            Geri Dön
-          </button> */}
+    <button
+        type="submit"
+        disabled={loading}
+        className={`w-full bg-gradient-to-r cursor-pointer from-blue-500 to-indigo-600 text-white p-2 rounded
+          hover:from-blue-600 hover:to-indigo-700 transition-all
+          ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+      >
+        {loading ? "Güncelleniyor..." : "Güncelle"}
+      </button>
+
+        
         </form>
       </div>
     </div>

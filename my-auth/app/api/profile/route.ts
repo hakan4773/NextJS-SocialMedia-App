@@ -3,13 +3,16 @@ import Auth from "../../models/auth";
 import connectDB from "../../libs/mongodb";
 import bcryptjs from "bcryptjs";
 import { verifyToken } from "@/app/utils/jwtUtils";
-import fs from "fs";
-import path from "path";
-import { writeFile } from "fs/promises";
 import Post from "@/app/models/Post";
 import Survey from "@/app/models/Survey";
 import Activity from "@/app/models/Activity";
 import Notifications from "@/app/models/Notifications";
+import { v2 as cloudinary } from "cloudinary";
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
+});
 export async function PUT(req: NextRequest) {
   await connectDB();
 
@@ -56,32 +59,56 @@ export async function PUT(req: NextRequest) {
     
 
     // Profil resmi varsa kaydet
+    let imagePath = user.profileImage; 
+
     if (file) {
-      const uploadDir = path.join(process.cwd(), "public/image");
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-      }
 
-      const uniqueName = `${Date.now()}-${file.name}`;
-      const filePath = path.join(uploadDir, uniqueName);
-      const fileBuffer = await file.arrayBuffer();
-      await writeFile(filePath, Buffer.from(fileBuffer));
+    if (user.profileImage) {
+            try {
+              const publicId = user.profileImage
+                .split("/")
+                .slice(-2)
+                .join("/")
+                .split(".")[0];
 
-      user.profileImage = `/image/${uniqueName}`;
+              await cloudinary.uploader.destroy(publicId);
+            } catch (err) {
+              console.error("Eski resim silinemedi:", err);
+            }
+          }
+
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      const uploadResult = await new Promise<any>((resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream({ folder: "users" }, (error, result) => {
+            if (error) reject(error);
+            resolve(result);
+          })
+          .end(buffer);
+      });
+
+      imagePath = uploadResult.secure_url;
+      user.profileImage = imagePath; 
     }
+
 
     await user.save();
 
-    return NextResponse.json(
-      {
-        
-        message: "Profil başarıyla güncellendi",
-        name: user.name,
-        bio: user.bio,
-        profileImage: user.profileImage,
-      },
-      { status: 200 }
-    );
+     return NextResponse.json(
+  {
+    message: "Profil başarıyla güncellendi",
+    user: {
+      _id: user._id,
+      name: user.name,
+      bio: user.bio,
+      profileImage: user.profileImage,
+      email: user.email,
+    }
+  },
+  { status: 200 }
+);
 
   } catch (error: any) {
     console.error("Güncelleme hatası:", error);
