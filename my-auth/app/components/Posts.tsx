@@ -81,8 +81,9 @@ const {user}=useAuth();
                 <Image
                   src={getOptimizedImageUrl(item?.image ?? "")}
                   alt="Post"
-                  fill
-                  className="mt-3 relative w-full aspect-[16/9] rounded-lg overflow-hidden border border-gray-100"
+                 width={600}
+                 height={400} 
+                className="w-full h-64 object-cover" 
                 />
               </div>
             )}
