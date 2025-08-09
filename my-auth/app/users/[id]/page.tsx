@@ -19,6 +19,7 @@ import { Activity } from "@/app/types/user";
 import Posts from "@/app/profile/Contents/Posts";
 import Activities from "@/app/profile/Contents/Activities";
 import Surveys from "@/app/profile/Contents/Surveys";
+import Loading from "../../loading";
 export default function ProfilePage({
   params,
 }: {
@@ -90,12 +91,7 @@ export default function ProfilePage({
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
-        <p className="text-gray-500 mt-4">Yükleniyor...</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
