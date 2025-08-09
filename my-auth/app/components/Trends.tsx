@@ -21,7 +21,7 @@ function Trends() {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const res = await fetch("/api/tags");
+        const res = await fetch("/api/posts/tags");
         const data = await res.json();
 
         if (res.ok && Array.isArray(data.tags)) {
@@ -55,7 +55,7 @@ function Trends() {
 
         <h3 className="text-lg font-semibold flex"><FaArrowTrendUp  className="mr-2" />Trendler</h3>
         <ul className="mt-2  text-xl">
-          {tags.map((item, index) => (
+          {tags.slice(0,5).map((item, index) => (
           <div key={index} className="hover:bg-gray-50">
             <div className="relative flex justify-end items-end">
               <button onClick={() => toggleSetting(index)} className="cursor-pointer">
