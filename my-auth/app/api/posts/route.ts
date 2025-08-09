@@ -124,20 +124,18 @@ export async function DELETE(req: NextRequest) {
         if (post.user.toString() !== decoded._id) {
             return NextResponse.json({ message: "You are not authorized to delete this post" }, { status: 403 });
         }
-        // Resim dosyasını sil
-  if (post.image) {
-  const imagePath = path.join(process.cwd(), "public", post.image);
-  console.log("Silinmek istenen resim:", imagePath);
+  
+       // Cloudinary resmi sil
+    if (post.image && post.image.includes("res.cloudinary.com")) {
+      const parts = post.image.split("/");
+      const publicIdWithExtension = parts.slice(-2).join("/"); 
+      const publicId = publicIdWithExtension.split(".")[0];
 
-  if (existsSync(imagePath)) {
-    console.log("Dosya bulundu.");
-    fs.unlinkSync(imagePath);
-    console.log("Dosya silindi.");
-  } else {
-    console.log("Dosya bulunamadı.");
-  }
-}
-
+      await cloudinary.uploader.destroy(publicId, (error: any, result: any) => {
+        if (error) console.error("Cloudinary silme hatası:", error);
+        else console.log("Cloudinary silme sonucu:", result);
+      });
+    }
                 // 2. yorumları sil 
 await Comment.deleteMany({ post: postId });
     // 3.postu sil 
