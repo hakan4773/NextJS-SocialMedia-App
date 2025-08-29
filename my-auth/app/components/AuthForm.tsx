@@ -1,9 +1,7 @@
 "use client"  
 import Link from 'next/link';
 import React from 'react'
-import { FcGoogle } from "react-icons/fc";
-import { SlSocialFacebook } from "react-icons/sl";
-import { FaXTwitter } from "react-icons/fa6";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -87,11 +85,7 @@ Already have an account?
 <Link href={type === "register" ? "/login" :"/register"} className='text-blue-200 mx-1 underline hover:text-blue-600'> {type === "register" ? "Login " : "Register"}</Link>
 </div>
 
-<div className='flex justify-center items-center mt-4 space-x-4'>
- <Link href={"google"}> <FcGoogle className='text-4xl mt-2 transition-all delay-150 hover:scale-120' /></Link>
-<Link href={"facebook"}> <SlSocialFacebook className='text-4xl mt-2 text-blue-600  transition-all delay-150 hover:scale-120' /></Link>
-<Link href={"twitter"}> <FaXTwitter className='text-4xl mt-2 text-black transition-all delay-150 hover:scale-120' /></Link>
-</div>
+
 </div>
     </form>
   )
