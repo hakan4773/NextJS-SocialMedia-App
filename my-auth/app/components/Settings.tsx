@@ -15,12 +15,11 @@ interface SettingsProps {
 
 function Settings({ postId, isOwner,type }: SettingsProps) {
     const [openSettingIndex, setOpenSettingIndex] = useState<number | string |null>(null);
-  //Menüyü açma işlevi için tıklama olayını dinleme
+
     const handleSettingsToggle = (index: string | number) => {
       setOpenSettingIndex(openSettingIndex === index ? null: index)
     };
 
-//Menüyü kapatma işlevi için dışarı tıklama olayını dinleme
       useEffect(() => {
           const handleOutsideClick = (event: MouseEvent) => {
         const target = event.target as HTMLElement;
@@ -34,7 +33,6 @@ function Settings({ postId, isOwner,type }: SettingsProps) {
       };
     },[] )
 
-//post silme işlevi
     const handleRemove=async(postId:string |number)=>{
       const confirmDelete = window.confirm("Bu postu silmek istediğinize emin misiniz?");
       if (!confirmDelete) {

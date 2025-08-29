@@ -54,7 +54,7 @@ function ResponsiveBar() {
       <img
         src={userData?.profileImage}
         alt="Avatar"
-        className="lg:w-16 lg:h-16 w-24 h-16 rounded-full border-2 border-white shadow-lg object-cover hover:scale-105 transition-transform duration-200"
+        className="lg:w-16 lg:h-16 w-12 h-12 rounded-full border-2 border-white shadow-lg object-cover hover:scale-105 transition-transform duration-200"
       />
      
     </Link> <div className='text-white'>
@@ -97,24 +97,17 @@ function ResponsiveBar() {
           <div className=" flex-1 overflow-y-auto ">
             <ul className="p-6  space-y-4 ">
               <li className=" ">
-              
-                <Link href={"/Saves"} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+
+                <Link href={"/Bookmark"} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                  <FaBookmark size={20} className="text-blue-500"/> 
                  <span className='font-medium'>Kaydedilenler</span>                    </Link>
               </li>
               <li className=" ">
-            
-                <Link href={"/Bookmark"} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+
+                <Link href={"/Bookmark/Activities"} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                      <SlCalender size={20} className="text-blue-500" />
                      <span className='font-medium'>Etkinliklerim</span>
                 </Link>
-              </li>
-              <li className="">
-              
-                <Link href={"/interest"} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                  <MdFavoriteBorder size={20} className="text-blue-500" />
-                  <span className='font-medium'>İlgi Alanlarım</span>
-                  </Link>
               </li>
             </ul>
       

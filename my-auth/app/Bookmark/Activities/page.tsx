@@ -5,7 +5,7 @@ import { Activity } from '@/app/types/user';
 import Image from 'next/image';
 import { useEffect, useState } from 'react'
 import React from 'react'
-import { FiCheck, FiMapPin, FiSave, FiUsers } from 'react-icons/fi';
+import { FiCheck, FiMapPin, FiUsers } from 'react-icons/fi';
 import { format } from 'timeago.js';
 
 function page() {

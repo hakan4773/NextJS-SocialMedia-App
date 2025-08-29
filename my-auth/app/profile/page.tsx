@@ -54,10 +54,10 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-700 via-purple-600 to-pink-400  py-24">
       <div className="max-w-4xl mx-auto px-4">
-        {/* Profil bilgisi */}
+      
         <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6">
      <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
-    {/* Profil Fotoğrafı */}
+
     <div className="relative mx-auto md:mx-0">
       <div className="relative">
         <Image
@@ -76,7 +76,6 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
       </div>
     </div>
 
-    {/* Profil Bilgileri */}
     <div className="flex-1 w-full">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div className="flex justify-center text-center flex-col">
@@ -119,7 +118,6 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
 </div>
       </div>
 
-      {/* Bio ve Açıklama */}
       <div className="mt-3 space-y-2 text-center md:text-left">
         {userData?.bio && (
           <p className="text-gray-700 text-sm md:text-base break-words">
@@ -132,9 +130,7 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
   </div>
 </div>
 
-        {/* İstatistikler */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-  {/* Paylaşımlar Kartı */}
   <div className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100">
     <div className="flex items-center justify-between">
       <div>
@@ -152,7 +148,6 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
     <p className="text-xs text-gray-400 mt-2">Toplam paylaşım sayısı</p>
   </div>
 
-  {/* Takipçiler Kartı */}
   <div 
     className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 cursor-pointer"
     onClick={() => setIsFollowersOpen(true)}
@@ -171,7 +166,6 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
     <p className="text-xs text-gray-400 mt-2">Profilini takip edenler</p>
   </div>
 
-  {/* Takip Edilenler Kartı */}
   <div 
     className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 cursor-pointer"
     onClick={() => setIsFollowingOpen(true)}
@@ -190,13 +184,11 @@ const [activeTab,setActiveTab]=useState<'posts' | 'surveys' | 'activities'>('pos
     <p className="text-xs text-gray-400 mt-2">Takip ettiğin kişiler</p>
   </div>
 
-  {/* Modaller */}
   <Followers isFollowersOpen={isFollowersOpen} setIsFollowersOpen={setIsFollowersOpen} />
   <Following isFollowingOpen={isFollowingOpen} setIsFollowingOpen={setIsFollowingOpen} />
 </div>
 
 
-        {/* Gönderiler*/}
         <div className="bg-white border-slate-100 shadow-md rounded-lg mb-6">
           <ul className="flex items-center justify-center  p-4 space-x-6">
           

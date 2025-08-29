@@ -21,7 +21,6 @@ export default function Navbar() {
   const [filteredUsers, setFilteredUser] = useState<UserType[]>([]);
   const [loading, setLoading] = useState(false);
   
-  //Tüm kullanıcıları getir
   useEffect(() => {
     const fetchUsers = async () => {
       const token =localStorage.getItem("token");
@@ -52,7 +51,6 @@ if (res.ok && nfc.ok){
     fetchUsers();
   }, []);
 
-  //Aramaya göre filtreleme
   useEffect(() => {
     if (!search) {
       setFilteredUser([]);
@@ -78,7 +76,7 @@ if (res.ok && nfc.ok){
 {user && typeof window !== "undefined" && <ResponsiveBar />}
 
       <nav className="container mx-auto flex justify-between items-center p-4">
-        {/* Logo */}
+
         <div className="flex items-center lg:mx-2 mx-12">
           <Link href="/" className="flex items-center ">
             <Image
@@ -92,7 +90,6 @@ if (res.ok && nfc.ok){
           </Link>
         </div>
 
-        {/* Arama çubuğu - Orta */}
         <div className="hidden md:block flex-1 max-w-md mx-8 relative">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -110,9 +107,8 @@ if (res.ok && nfc.ok){
           </div>
         </div>
 
-        {/* Masaüstü Menü */}
         <div className="flex items-center space-x-4">
-          {/* Bildirimler */}
+
         {user && (
   <div className="relative">
     <button
@@ -126,10 +122,11 @@ if (res.ok && nfc.ok){
     </button> 
 
     {open && (
-      <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg py-2 z-50">
- <div className="px-4 py-2 border-b border-gray-100">
+      <div className="absolute lg:right-0 -right-6 mt-2 w-80 bg-white rounded-lg shadow-lg py-2 z-50">
+             <div className="px-4 py-2 border-b border-gray-100">
                     <h3 className="font-semibold text-gray-800">Bildirimler</h3>
-                  </div>        <div className="max-h-96 overflow-y-auto">
+              </div>  
+        <div className="max-h-96 overflow-y-auto">
           {notification.length > 0 ? (
             notification.map((notif: NotificationType, i: number) => (
               <div key={i} className="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-b-gray-100">
