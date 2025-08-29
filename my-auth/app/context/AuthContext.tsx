@@ -20,38 +20,41 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     const router=useRouter();
     const [user, setUser] = useState<UserType | null>(null);
     const [loading, setLoading] = useState(true);
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-      
-        if (token) {
-          fetch("/api/protected", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              if (data.user) {
-                setUser(data.user);
-              } else {
-                localStorage.removeItem("token");
-                setUser(null);
-              }
-            })
-          .catch((err) => {
-        console.error("Fetch error:", err);
-        setUser(null);
-      })
-      .finally(() => {
-        setLoading(false); 
+ useEffect(() => {
+  const checkUser = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/protected", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}` 
+        },
       });
-        } else {
-          setUser(null);
-          setLoading(false);
-        }
-      }, []);
+      const data = await res.json();
+      if (data.user) {
+        setUser(data.user);
+      } else {
+        localStorage.removeItem("token");
+        setUser(null);
+      }
+    } catch (err) {
+      console.error(err);
+      setUser(null);
+      localStorage.removeItem("token");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  checkUser();
+}, []);
       
     const login = (userData:UserType) => {
         setUser(userData);
