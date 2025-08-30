@@ -14,8 +14,8 @@ function page() {
     const { user } = useAuth();
     const [posts, setPosts] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
-    console.log(posts);
-   useEffect(() => {
+
+    useEffect(() => {
   if (!slug) return;
 
   const fetchPostsByTag = async () => {
@@ -34,9 +34,6 @@ function page() {
           post.tags.some((t: string) => t.toLowerCase() === tagToMatch)
         );
         setPosts(postsWithTag);
-        console.log("slug:", slug);
-        console.log("post tags:", postsWithTag);
-
       } else {
         console.error("Postlar alınamadı:", data.error);
       }

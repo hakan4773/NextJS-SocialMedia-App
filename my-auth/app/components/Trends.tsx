@@ -3,6 +3,7 @@ import { FaArrowTrendUp } from "react-icons/fa6";
 import Link from "next/link";
 import { PiDotsThreeBold } from "react-icons/pi";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 type TagType = {
   tag: string;
@@ -38,7 +39,18 @@ function Trends() {
 
     fetchTags();
   }, []);
-  console.log(tags)
+
+
+  const handleSpam = (tag: string) => {
+    setTags((prevTags) => prevTags.filter((t) => t.tag !== tag));
+    toast.success("Spam bildirildi");
+  };
+
+  const handleNotRecommend = (tag: string) => {
+    setTags((prevTags) => prevTags.filter((t) => t.tag !== tag));
+    toast.info("Bu tag önerilmedi");
+  };
+
 
   if (loading) {
     return (
@@ -66,8 +78,8 @@ function Trends() {
               {openSettingIndex === index && (
                 <div className="absolute right-0 top-full mt-2 p-2 w-52 text-sm bg-white rounded-lg shadow-lg z-50">
                   <div className="max-h-96 overflow-y-auto">
-                    <p className="relative p-2 hover:bg-gray-50 cursor-pointer">Bunu önerme</p>
-                    <p className="relative p-2 hover:bg-gray-50 cursor-pointer">Spam</p>
+                    <p className="relative p-2 hover:bg-gray-50 cursor-pointer" onClick={() => handleNotRecommend(item.tag)}>Bunu önerme</p>
+                    <p className="relative p-2 hover:bg-gray-50 cursor-pointer" onClick={() => handleSpam(item.tag)}>Spam</p>
                   </div>
                 </div>
               )}

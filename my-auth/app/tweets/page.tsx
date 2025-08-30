@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { PiDotsThreeBold } from "react-icons/pi";
 import { Post } from "../types/user";
+import { toast } from "react-toastify";
 
 export default function Page() {
   const router = useRouter();
@@ -25,6 +26,10 @@ export default function Page() {
     setHiddenTags([...hiddenTags, tag.toLowerCase()]);
     setOpenSettingIndex(null);
   };
+   const handleSpam = (tag: string) => {
+      setHiddenTags((prevTags) => [...prevTags, tag]);
+      toast.success("Spam bildirildi");
+    };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -142,7 +147,7 @@ export default function Page() {
                         >
                           Bunu önerme
                         </p>
-                        <p className="p-2 hover:bg-indigo-50 cursor-pointer">Spam</p>
+                        <p className="p-2 hover:bg-indigo-50 cursor-pointer" onClick={() => handleSpam(tag)}>Spam</p>
                       </div>
                     </div>
                   )}

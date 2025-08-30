@@ -6,7 +6,6 @@ export async function GET() {
     await connectDB();
     try {
         const posts=await Post.find({}).populate("user","name email profileImage");
-        console.log(posts)
         const tagCount: Record <string,number>={}
         posts.forEach(post=>{
             post.tags.forEach((tag: string) => {
