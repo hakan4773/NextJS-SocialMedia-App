@@ -38,6 +38,7 @@ function Trends() {
 
     fetchTags();
   }, []);
+  console.log(tags)
 
   if (loading) {
     return (
@@ -73,7 +74,7 @@ function Trends() {
             </div>
 
             <li className="text-blue-400 text-sm p-2 flex justify-between">
-              <Link href={`/tweets/${item.tag.replace("#", "")}`}>
+              <Link href={`/tweets`}>
                 {item.tag} <span className="text-gray-400 ml-1">• {item.count} paylaşım</span>
               </Link>
             </li>

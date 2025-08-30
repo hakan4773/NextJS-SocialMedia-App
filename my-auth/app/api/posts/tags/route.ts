@@ -5,7 +5,8 @@ import Post from "../../../models/Post";
 export async function GET() {
     await connectDB();
     try {
-        const posts=await Post.find({},"tags")
+        const posts=await Post.find({}).populate("user","name email profileImage");
+        console.log(posts)
         const tagCount: Record <string,number>={}
         posts.forEach(post=>{
             post.tags.forEach((tag: string) => {
@@ -18,7 +19,7 @@ export async function GET() {
              .sort((a, b) => b[1] - a[1])
               .map(([tag, count]) => ({ tag, count }));
 
-         return NextResponse.json({ tags: sortedTags }, { status: 200 });
+         return NextResponse.json({ tags: sortedTags,posts }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json(
       { error: "Bir hata oluştu", details: error.message },

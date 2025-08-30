@@ -11,13 +11,13 @@ import { toast } from "react-toastify";
 import Survey from "./Surveys";
 import { UserType } from "../types/user";
 function PostCreation() {
-  const [selectedImage, setSelectedImage] = useState<File | null>(null); //resim ekleme için
-  const [preview, setPreview] = useState<string | null>(null); //resim görüntüleme için
-  const [isModalOpen, setIsModalOpen] = useState(false); //Etkinlik modalı için
+  const [selectedImage, setSelectedImage] = useState<File | null>(null); 
+  const [preview, setPreview] = useState<string | null>(null); 
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   const [content, setContent] = useState<string | number | any>("");
-  const [userData, setUserData] = useState<UserType | null>(); //Kullanıcı bilgisi için
+  const [userData, setUserData] = useState<UserType | null>(); 
   const [loading, setLoading] = useState(false);
-  const [isSurveyOpen, setIsSurveyOpen] = useState(false); //Anket modalı için
+  const [isSurveyOpen, setIsSurveyOpen] = useState(false);
   const handleOpen = () => {
     setIsModalOpen(true);
   };
@@ -28,7 +28,7 @@ function PostCreation() {
 
   const handleSelectImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    setIsSurveyOpen(false);//Açıksa anket modalını kapat
+    setIsSurveyOpen(false);
     if (file) {
       setSelectedImage(file);
       const reader = new FileReader();
@@ -61,8 +61,8 @@ function PostCreation() {
       return;
     }
     try {
-      const extractedTags = content.match(/#\w+/g) || []; //tagleri ayır
-      const cleanedContent = content.replace(/#\w+/g, "").trim(); //sil
+      const extractedTags = content.match(/#\w+/g) || []; 
+      const cleanedContent = content.replace(/#\w+/g, "").trim(); 
       const formData = new FormData();
       formData.append("content", cleanedContent);
       formData.append("tags", JSON.stringify(extractedTags));
@@ -85,12 +85,12 @@ function PostCreation() {
         setLoading(false);
         toast.success("Gönderi başarıyla paylaşıldı");
       } else {
-        console.error("Gönderi paylaşma başarısız:", data.message);
-        alert("Gönderi paylaşılırken bir hata oluştu: " + data.message);
+        toast.error("Gönderi paylaşılırken bir hata oluştu: " + data.message);
+        setLoading(false);
       }
     } catch (error) {
-      console.error("Gönderi paylaşma hatası:", error);
-      alert("Bir hata meydana geldi. Lütfen tekrar dene.");
+      toast.error("Bir hata meydana geldi. Lütfen tekrar dene.");
+      setLoading(false);
     }
   };
   if (loading) {
@@ -109,7 +109,6 @@ function PostCreation() {
 
   return (
     <div className="flex w-full bg-white shadow-md">
-      {/* resim-avatar */}
 
       <div className="m-2">
         <img
@@ -119,7 +118,6 @@ function PostCreation() {
         />
       </div>
 
-      {/* textarea */}
       <div className="w-full p-4 ">
           <textarea
           value={content}
@@ -134,7 +132,6 @@ function PostCreation() {
         
         )} 
 
-        {/* Butonlar ve araçlar */}
         <div className=" h-auto p-2  flex flex-row justify-between">
           <div className="flex gap-8 ">
             <div className="flex">
@@ -154,7 +151,6 @@ function PostCreation() {
               </label>
             </div>
 
-            {/* Etkinlik oluşturma */}
             <div>
               <button
                 data-modal-target="crud-modal"
@@ -171,7 +167,6 @@ function PostCreation() {
               <Modal isOpen={isModalOpen} onClose={handleClose} />
             </div>
 
-            {/* Anket oluşturma */}
             <div>
               <button className="cursor-pointer" onClick={()=>setIsSurveyOpen(!isSurveyOpen)} type="button">
               <RiSurveyLine
@@ -181,18 +176,17 @@ function PostCreation() {
             </div>
           </div>
 
-          {/*gönderi paylaş butonu */}
-          <div className="flex  text-white">
+          <div className="flex flex-col text-white">
             <button
               disabled={!content.trim()}
               onClick={handleSubmit}
               className={`${
                 content
                   ? "p-2 bg-blue-600 rounded-full cursor-pointer hover:bg-blue-300"
-                  : "p-2 bg-gray-500 rounded-full  "
+                  : "p-2  bg-gray-500 rounded-full  "
               } `}
             >
-              Post Yayınla
+              Paylaş
             </button>
           </div>
           
